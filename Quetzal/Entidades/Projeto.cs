@@ -7,7 +7,7 @@ namespace Quetzal.Domain.Entidades;
 // O cliente vai ter acesso a vários projetos, e cada projeto vai ter um cliente associado a ele.
 // A relação entre Cliente e Projeto é de um para muitos, ou seja, um cliente pode ter vários projetos, mas cada projeto pertence a apenas um cliente.
 
-internal class Projeto
+public class Projeto
 {
     public int Id { get; set; }
     public string? NomeCliente { get; set; } //FK da tabela Cliente
