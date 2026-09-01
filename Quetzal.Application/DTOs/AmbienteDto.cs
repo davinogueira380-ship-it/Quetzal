@@ -8,7 +8,7 @@ namespace Quetzal.Application.DTOs
     public class AmbienteDto
 {
     public int Id { get; set; }
-        public string Nome { get; set; } = string.Empty;
+    public string Nome { get; set; } = string.Empty;
     public string? Descricao { get; set; }
     public bool Ativo {  get; set; }
     public DateTime DataCastro { get; set; }
@@ -18,7 +18,7 @@ namespace Quetzal.Application.DTOs
 }
 
 // Dto para criação e atualização dos AMBIENTES
-public class CriarAbienteDto
+public class CriarAmbienteDto
 {
     [Required(ErrorMessage = "O nome do ambiente é obrigatório")]
     [MaxLength(100, ErrorMessage = "O nome não pode execeder 100 caracteres.")]
