@@ -66,7 +66,7 @@ namespace Quetzal.Application.DTOs
     }
     // Dto para alteração de senha
     public class AlterarSenhaDto
-    {
+{
         [Required(ErrorMessage = "A Senha Atual é obrigatória.")]
         public string SenhaAtual { get; set; } = string.Empty;
 

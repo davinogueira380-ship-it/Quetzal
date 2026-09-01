@@ -1,0 +1,18 @@
+﻿using AutoMapper;
+using Quetzal.Domain.Entidades;
+using Quetzal.Application.DTOs;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace Quetzal.Application.Mapeamentos;
+
+public class PerfilMapeamento : Profile
+{
+    public PerfilMapeamento()
+    {
+        CreateMap<Ambiente, AmbienteDto>().ReverseMap();
+        CreateMap<Projeto, ProjetoDto>().ReverseMap();
+
+        // Só inclua se existir uma entidade Usuario no Domain.
+        // CreateMap<Usuario, UsuarioDto>().ReverseMap();
+    }
+}

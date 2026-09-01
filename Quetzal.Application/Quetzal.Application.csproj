@@ -12,4 +12,12 @@
     <Folder Include="Servicos\Interfaces\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="16.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Quetzal\Quetzal.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

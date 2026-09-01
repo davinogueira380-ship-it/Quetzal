@@ -26,13 +26,13 @@ namespace Quetzal.Application.DTOs
     // DTO utilizado para receber dados de criação de um novo ambiente
 
     public class CriarProjetoDto
-    {
+{
         [Required(ErrorMessage = "O título é obrigatório")]
         [MaxLength(200, ErrorMessage = "O Título não pode ter mais que 200 caracteres.")]
-        public string Titulo { get; set; } = string.Empty;
+    public string Titulo { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "A Descrição é obrigatória.")]
-        public string Descricao { get; set; } = string.Empty;
+    public string Descricao { get; set; } = string.Empty;
         public string ImagemUpload { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "O ambiente é obrigatoria.")]
