@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="Quetzal.API/Quetzal.API.csproj" Id="8d12eaee-6bdd-4ce1-90bd-49db41e51678" />
   <Project Path="Quetzal.Application/Quetzal.Application.csproj" Id="7d6f0abd-1c4f-4b97-84fd-0891245ce5d3" />
   <Project Path="Quetzal.Infrastructure/Quetzal.Infrastructure.csproj" Id="d3071738-aa75-4153-bcdd-eabf8709c110" />
   <Project Path="Quetzal/Quetzal.Domain.csproj" />
