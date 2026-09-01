@@ -14,6 +14,8 @@ namespace Quetzal.Domain.Entidades
 
         public ICollection<Ambiente> Ambientes { get; set; } = new List<Ambiente>();
 
+        public DateTime? DataAtualizacao { get; set; }
+
 
     }
 
