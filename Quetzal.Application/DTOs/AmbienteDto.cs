@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Quetzal.Application.DTOs;
-
-internal class AmbienteDto
+namespace Quetzal.Application.DTOs
+{
+    public class AmbienteDto
 {
     public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
+    public string Nome { get; set; } = string.Empty;
     public string? Descricao { get; set; }
     public bool Ativo {  get; set; }
     public DateTime DataCastro { get; set; }
@@ -18,7 +18,7 @@ internal class AmbienteDto
 }
 
 // Dto para criação e atualização dos AMBIENTES
-public class CriarAbienteDto
+public class CriarAmbienteDto
 {
     [Required(ErrorMessage = "O nome do ambiente é obrigatório")]
     [MaxLength(100, ErrorMessage = "O nome não pode execeder 100 caracteres.")]
@@ -26,5 +26,8 @@ public class CriarAbienteDto
 
     [MaxLength(500, ErrorMessage = "A descrição não pode exceder 500 caracteres")]
     public string? Descricao { get; set; }
+        public string? ImagemUpload { get; set; }
+
 }
 
+}
