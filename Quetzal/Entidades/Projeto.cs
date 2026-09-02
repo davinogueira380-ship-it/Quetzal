@@ -12,7 +12,7 @@ public class Projeto
     public int Id { get; set; }
     public string? NomeCompleto { get; set; } //FK da tabela Usuario
     public int UsuarioId { get; set; } // FK da tabela Usuario
-    public Usuario Usuario { get; set; } = null!;
+    public ApplicationUser Usuario { get; set; } = null!;
     public string Descricao { get; set; } = string.Empty; // Descrição do projeto
     public string? ImagemUpload { get; set; } // Imagem que vai ser exibida no site
    
