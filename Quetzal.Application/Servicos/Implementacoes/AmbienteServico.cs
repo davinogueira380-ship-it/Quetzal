@@ -109,7 +109,7 @@ namespace Quetzal.Application.Servicos.Implementacoes
                 await _repositorio.AtualizarAsync(ambienteExistente);
 
                 var ambienteDto = _mapper.Map<AmbienteDto>(ambienteExistente);
-                return ApiResposta<AmbienteDto>.Ok(ambienteDto, "Ambiente atualizada com sucesso.");
+                return ApiResposta<AmbienteDto>.Ok(ambienteDto, "Ambiente atualizado com sucesso.");
             }
             catch (Exception ex)
             {
@@ -157,9 +157,9 @@ namespace Quetzal.Application.Servicos.Implementacoes
             {
                 var ambiente = await _repositorio.ObterPorIdAsync(id);
                 if (ambiente == null)
-                    return ApiResposta<bool>.Falha("Categoria nao encontrada.");
+                    return ApiResposta<bool>.Falha("Ambiente não encontrada.");
 
-                if (ambiente.Projeto != null && ambiente.Projeto.Any(f => !p.Ativo || p.Ativo))
+                if (ambiente.Projeto != null && ambiente.Projeto.Any(p => !p.Ativo || p.Ativo))
                 {
                     return ApiResposta<bool>.Falha("Não é possível excluir um ambiente que esteja sendo utilizado por algum projeto.");
                 }
