@@ -24,7 +24,7 @@ namespace Quetzal.API.Controllers
                 new Projeto
                 {
                     Id = 1,
-                    NomeCliente = "Sistema Quetzal",
+                    NomeProjeto = "Sistema Quetzal",
                     Descricao = "Projeto de exemplo"
                 }
             };

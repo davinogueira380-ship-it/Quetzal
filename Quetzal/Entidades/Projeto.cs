@@ -10,7 +10,7 @@ namespace Quetzal.Domain.Entidades;
 public class Projeto
 {
     public int Id { get; set; }
-    public string? NomeCompleto { get; set; } //FK da tabela Usuario
+    public string? NomeProjeto { get; set; } //FK da tabela Usuario
     public int UsuarioId { get; set; } // FK da tabela Usuario
     public ApplicationUser Usuario { get; set; } = null!;
     public string Descricao { get; set; } = string.Empty; // Descrição do projeto

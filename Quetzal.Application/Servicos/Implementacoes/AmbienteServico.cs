@@ -109,7 +109,7 @@ namespace Quetzal.Application.Servicos.Implementacoes
                 await _repositorio.AtualizarAsync(ambienteExistente);
 
                 var ambienteDto = _mapper.Map<AmbienteDto>(ambienteExistente);
-                return ApiResposta<AmbienteDto>.Ok(ambienteDto, "Ambiente atualizada com sucesso.");
+                return ApiResposta<AmbienteDto>.Ok(ambienteDto, "Ambiente atualizado com sucesso.");
             }
             catch (Exception ex)
             {
