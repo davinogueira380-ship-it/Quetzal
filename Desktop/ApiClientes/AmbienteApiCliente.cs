@@ -40,7 +40,7 @@ public class AmbienteDto
     /// Classe responsavel por toda comunicacao HTTP relativa a categorias.
     /// Herda de ClienteHttp para reutilizar autenticacao e serializacao.
     /// </summary>
-    public class AmbienteApiCliente : ClienteHttp
+    public class AmbienteApiUsuario : UsuarioHttp
 {
     // --------------------------------------------------------
     // Prefixo base das rotas de categorias
