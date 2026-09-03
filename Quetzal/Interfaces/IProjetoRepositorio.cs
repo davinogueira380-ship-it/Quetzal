@@ -24,17 +24,17 @@ namespace Quetzal.Domain.Interfaces
     public interface IProjetoRepositorio
     {
 
-        Task<IEnumerable<Projeto>> ObterTodosAsync(bool incluirInativos = false);
+        Task<IEnumerable<Portfolio>> ObterTodosAsync(bool incluirInativos = false);
 
-        Task<Projeto?> ObterPorIdAsync(int id);
+        Task<Portfolio?> ObterPorIdAsync(int id);
 
-        Task<IEnumerable<Projeto>> FiltrarPorAsync(string? termo, int? categoriaId = null);
+        Task<IEnumerable<Portfolio>> FiltrarPorAsync(string? termo, int? categoriaId = null);
 
-        Task<IEnumerable<Projeto>> ObterPorCategoriaAsync(int categoriaId);
+        Task<IEnumerable<Portfolio>> ObterPorCategoriaAsync(int categoriaId);
 
-        Task<Projeto> AdicionarAsync(Projeto filme);
+        Task<Portfolio> AdicionarAsync(Portfolio filme);
 
-        Task AtualizarAsync(Projeto projeto);
+        Task AtualizarAsync(Portfolio projeto);
 
         Task DesativarAsync(int id);
 
