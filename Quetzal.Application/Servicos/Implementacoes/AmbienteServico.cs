@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Quetzal.Application.Servicos.Implementacoes
 {
-    public class CategoriaServico : IAmbienteServico
+    public class AmbienteServico : IAmbienteServico
     {
         private readonly IAmbienteRepositorio _repositorio;
         private readonly IMapper _mapper;
 
-        public CategoriaServico(IAmbienteRepositorio repositorio, IMapper mapper)
+        public AmbienteServico(IAmbienteRepositorio repositorio, IMapper mapper)
         {
             _repositorio = repositorio;
             _mapper = mapper;
@@ -157,9 +157,9 @@ namespace Quetzal.Application.Servicos.Implementacoes
             {
                 var ambiente = await _repositorio.ObterPorIdAsync(id);
                 if (ambiente == null)
-                    return ApiResposta<bool>.Falha("Ambiente não encontrada.");
+                    return ApiResposta<bool>.Falha("Ambiente nao encontrado.");
 
-                 if (ambiente.Projeto != null && ambiente.Projeto.Any(p => !p.Ativo || p.Ativo))
+                if (ambiente.Projeto != null && ambiente.Projeto.Any(p => !p.Ativo || p.Ativo)) //Obs
                 {
                     return ApiResposta<bool>.Falha("Não é possível excluir um ambiente que esteja sendo utilizado por algum projeto.");
                 }

@@ -9,7 +9,7 @@ namespace Quetzal.Application.Servicos.Interfaces
     {
         Task<ApiResposta<IEnumerable<AmbienteDto>>> ObterTodasAsync(bool incluirInativas = false);
         Task<ApiResposta<AmbienteDto>> ObterPorIdAsync(int id);
-        Task<ApiResposta<IEnumerable<AmbienteDto>>> FiltrarPorAsync(string? termo, int? categoriaId = null);
+        Task<ApiResposta<IEnumerable<AmbienteDto>>> FiltrarPorAsync(string? termo, int? ambienteId = null);
         Task<ApiResposta<AmbienteDto>> CadastrarAsync(CriarAmbienteDto dto);
         Task<ApiResposta<AmbienteDto>> AtualizarAsync(int id, CriarAmbienteDto dto);
         Task<ApiResposta<bool>> DesativarAsync(int id);
