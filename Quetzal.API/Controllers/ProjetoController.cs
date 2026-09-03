@@ -19,9 +19,9 @@ namespace Quetzal.API.Controllers
         [HttpGet]
         public IActionResult Listar()
         {
-            var projetos = new List<Projeto>
+            var projetos = new List<Portfolio>
             {
-                new Projeto
+                new Portfolio
                 {
                     Id = 1,
                     NomeProjeto = "Sistema Quetzal",
@@ -29,7 +29,7 @@ namespace Quetzal.API.Controllers
                 }
             };
 
-            var projetosDto = _mapper.Map<List<ProjetoDto>>(projetos);
+            var projetosDto = _mapper.Map<List<PortfolioDto>>(projetos);
 
             return Ok(projetosDto);
         }
