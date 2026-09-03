@@ -19,9 +19,9 @@ namespace Quetzal.API.Controllers
         [HttpGet]
         public IActionResult Listar()
         {
-            var projetos = new List<Projeto>
+            var projetos = new List<Portfolio>
             {
-                new Projeto
+                new Portfolio
                 {
                     Id = 1,
                     NomeProjeto = "Sistema Quetzal",

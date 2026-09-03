@@ -6,7 +6,7 @@ using System.Text;
 namespace Quetzal.Application.DTOs
 {
     // Dto para exibir informações do usuário
-    public class UsuarioDto
+    public class ApplicationUserDto
     {
         public string Id { get; set; } = string.Empty;
         public string NomeCompleto { get; set; } = string.Empty;
@@ -19,7 +19,7 @@ namespace Quetzal.Application.DTOs
         public List<string> Perfis { get; set; } = new List<string>();
     }
 
-    public class RegistrarUsuarioDto
+    public class RegistrarApplicationUserDto
     {
         [Required(ErrorMessage = "O Nome Completo é obrigatorio.")]
         public string NomeCompleto { get; set; } = string.Empty;
