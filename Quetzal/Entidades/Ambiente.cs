@@ -13,10 +13,11 @@ namespace Quetzal.Domain.Entidades
         public Portfolio Portfolio { get; set; } = null!; // Referência ao portfolio
 
         public bool Ativo { get; set; } // Indica se o ambiente está ativo ou não
+        public DateTime? DataAtualizacao { get; set; }
+        public DateTime? DataExclusao { get; set; }
 
         public ICollection<Portfolio> Portfolios { get; set; } = new List<Portfolio>();
 
-        public DateTime? DataAtualizacao { get; set; }
 
 
     }

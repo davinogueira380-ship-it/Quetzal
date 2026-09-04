@@ -1,7 +1,5 @@
 ﻿using Quetzal.Domain.Entidades;
-using System;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace Quetzal.Domain.Interfaces
 {
@@ -11,7 +9,7 @@ namespace Quetzal.Domain.Interfaces
 
         Task<Ambiente?> ObterPorIdAsync(int id);
 
-        Task<IEnumerable<Ambiente>> FiltrarPorAsync(string? termo, int? categoriaId = null);
+        Task<IEnumerable<Ambiente>> FiltrarPorAsync(string? termo, int? ambienteId = null);
 
         Task<Ambiente> AdicionarAsync(Ambiente ambiente);
 

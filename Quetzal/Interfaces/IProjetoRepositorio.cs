@@ -21,7 +21,7 @@ using static System.Net.WebRequestMethods;
 
 namespace Quetzal.Domain.Interfaces
 {
-    public interface IProjetoRepositorio
+    public interface IPortfolioRepositorio
     {
 
         Task<IEnumerable<Portfolio>> ObterTodosAsync(bool incluirInativos = false);
@@ -30,7 +30,7 @@ namespace Quetzal.Domain.Interfaces
 
         Task<IEnumerable<Portfolio>> FiltrarPorAsync(string? termo, int? categoriaId = null);
 
-        Task<IEnumerable<Portfolio>> ObterPorCategoriaAsync(int categoriaId);
+        Task<IEnumerable<Portfolio>> ObterPorAmbienteAsync(int ambienteId);
 
         Task<Portfolio> AdicionarAsync(Portfolio filme);
 
