@@ -10,7 +10,7 @@ public class PerfilMapeamento : Profile
     public PerfilMapeamento()
     {
         CreateMap<Ambiente, AmbienteDto>().ReverseMap();
-        CreateMap<Portfolio, ProjetoDto>().ReverseMap();
+        CreateMap<Portfolio, PortfolioDto>().ReverseMap();
         CreateMap<ApplicationUser, ApplicationUserDto>().ReverseMap();
 
         // Só inclua se existir uma entidade Usuario no Domain.

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Quetzal.Application.DTOs
 {
-    public class ProjetoDto
+    public class PortfolioDto
     {
         public int Id { get; set; }
         public string NomeProjeto { get; set; } = string.Empty;
@@ -25,7 +25,7 @@ namespace Quetzal.Application.DTOs
 
     // DTO utilizado para receber dados de criação de um novo ambiente
 
-    public class CriarProjetoDto
+    public class CriarPortfolioDto
 {
         [Required(ErrorMessage = "O título é obrigatório")]
         [MaxLength(200, ErrorMessage = "O Título não pode ter mais que 200 caracteres.")]
@@ -41,7 +41,7 @@ namespace Quetzal.Application.DTOs
 
     // Dto recebe dados de atualização de um novo projeto existente
     // Herda de CriarProjetoDto e adiciona apenas o Id.
-    public class AtualizarProjetoDto : CriarProjetoDto
+    public class AtualizarPortfolioDto : CriarPortfolioDto
     {
         [Required(ErrorMessage = "O Id é obrigatório para atualizar.")]
         public int Id { get; set; }

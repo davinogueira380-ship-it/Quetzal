@@ -9,6 +9,7 @@
 // ============================================================
 
 
+using Quetzal.Desktop.ApiClientes;
 using System.Collections.Generic;  // Necessario para List<CategoriaDto>
 using System.Threading.Tasks;      // Necessario para operacoes assincronas
 
@@ -93,5 +94,4 @@ public class AmbienteDto
         // Chama DELETE /api/Ambiente/{id}/desativar para desativacao logica
         return await DeleteAsync<ApiRespostaSimples<object>>($"{RotaBase}/{id}/desativar");
     }
-}
 }
