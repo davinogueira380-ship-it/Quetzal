@@ -13,7 +13,7 @@ using Newtonsoft.Json;                 // Necessario para serializar/desserializ
 using System.Net.Http.Headers;         // Necessario para MediaTypeHeaderValue e AuthenticationHeaderValue
 using System.Text;                     // Necessario para Encoding.UTF8
 
-namespace Quetzal.Desktop.ApiClientes
+namespace Quetzal.Desktop.ApiUsuario
 {
     public abstract class UsuarioHttp
     {

@@ -20,7 +20,7 @@ namespace Quetzal.Desktop.ApiClientes
         public DateTime? DataAtualizacao { get; set; }
         public DateTime? DataExclusao { get; set; }
     }
-    public class FilmeApiCliente : UsuarioHttp
+    public class PortifolioApiCliente : UsuarioHttp
     {
         private const string RotaBase = "/api/portfolio";
 
@@ -35,12 +35,12 @@ namespace Quetzal.Desktop.ApiClientes
             return resposta?.Dados;
         }
 
-        public async Task<List<PortfolioDto>> BuscarAsync(string termo, int? categoriaId = null)
+        public async Task<List<PortfolioDto>> BuscarAsync(string termo, int? ambienteId = null)
         {
             var url = $"{RotaBase}/buscar?termo={termo}";
-            if (categoriaId.HasValue && categoriaId.Value > 0)
+            if (ambienteId.HasValue && ambienteId.Value > 0)
             {
-                url += $"&categoriaId={categoriaId.Value}";
+                url += $"&ambienteId={ambienteId.Value}";
             }
             var resposta = await GetAsync<ApiRespostaSimples<List<PortfolioDto>>>(url);
             return resposta?.Dados ?? new List<PortfolioDto>();

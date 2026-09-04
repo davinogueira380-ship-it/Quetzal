@@ -1,9 +1,9 @@
-﻿using SenacFlix.Desktop.ApiClientes;
+﻿using Quetzal.Desktop.ApiUsuario;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Quetzal.Desktop.ApiClientes
+namespace Quetzal.Desktop.ApiUsuario
 {
         
         public class LoginDto

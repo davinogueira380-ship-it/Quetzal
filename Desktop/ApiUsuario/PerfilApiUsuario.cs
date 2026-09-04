@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
+using Quetzal.Desktop.ApiUsuario;
 namespace Quetzal.Desktop.ApiUsuario
 {
     public class AtualizarPerfilDto
