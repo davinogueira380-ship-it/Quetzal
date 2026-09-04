@@ -6,7 +6,7 @@ using System.Text;
 namespace Quetzal.Application.DTOs
 {
     // Dto para exibir informações do usuário
-    public class ApplicationUserDto
+    public class UsuarioDto
     {
         public string Id { get; set; } = string.Empty;
         public string NomeCompleto { get; set; } = string.Empty;

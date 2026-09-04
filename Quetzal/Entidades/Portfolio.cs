@@ -12,7 +12,7 @@ public class Portfolio
     public int Id { get; set; }
     public string? NomeProjeto { get; set; } //FK da tabela Usuario
 
-    public Ambiente Ambiente { get; set; } // FK da tabela Ambiente
+    public Ambiente Ambiente { get; set; } = null!; // FK da tabela Ambiente
     public int AmbienteId { get; set; } // FK da tabela Ambiente
     public string Descricao { get; set; } = string.Empty; // Descrição do projeto
     public string? ImagemUpload { get; set; } // Imagem que vai ser exibida no site
