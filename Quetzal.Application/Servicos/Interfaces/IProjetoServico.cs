@@ -1,10 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Quetzal.Application.DTOs;
 
 namespace Quetzal.Application.Servicos.Interfaces
 {
-    internal class IProjetoServico
+    public interface IPortfolioServico
     {
+        Task<ApiResposta<PortfolioDto?>> ObterPortfolioDestaqueAsync();
+        Task<ApiResposta<IEnumerable<PortfolioDto>>> ObterTodosAsync(bool incluirInativos = false);
+        Task<ApiResposta<PortfolioDto>> ObterPorIdAsync(int id);
+        Task<ApiResposta<IEnumerable<PortfolioDto>>> FiltrarPorAsync(string? termo, int? ambienteId = null);
+        Task<ApiResposta<IEnumerable<PortfolioDto>>> ObterPorAmbienteAsync(int ambienteId);
+        Task<ApiResposta<PortfolioDto>> CadastrarAsync(CriarPortfolioDto dto);
+        Task<ApiResposta<PortfolioDto>> AtualizarAsync(int id, AtualizarPortfolioDto dto);
+        Task<ApiResposta<bool>> DesativarAsync(int id);
+        Task<ApiResposta<bool>> ExcluirPermanentementeAsync(int id);
+        Task<ApiResposta<bool>> ReativarAsync(int id);
     }
 }

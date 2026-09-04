@@ -159,9 +159,9 @@ namespace Quetzal.Application.Servicos.Implementacoes
                 if (ambiente == null)
                     return ApiResposta<bool>.Falha("Ambiente nao encontrado.");
 
-                if (ambiente.Projeto != null && ambiente.Projeto.Any(p => !p.Ativo || p.Ativo)) //Obs
+                if (ambiente.Portfolio != null && ambiente.Portfolio.Any(p => !p.Ativo || p.Ativo)) //Obs
                 {
-                    return ApiResposta<bool>.Falha("Não é possível excluir um ambiente que esteja sendo utilizado por algum projeto.");
+                    return ApiResposta<bool>.Falha("Não é possível excluir um ambiente que esteja sendo utilizado por algum portfolio.");
                 }
 
                 await _repositorio.ExcluirPermanentementeAsync(id);
