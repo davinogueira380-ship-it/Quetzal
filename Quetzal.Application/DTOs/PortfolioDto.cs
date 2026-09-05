@@ -41,8 +41,11 @@ namespace Quetzal.Application.DTOs
 
     // Dto recebe dados de atualização de um novo projeto existente
     // Herda de CriarProjetoDto e adiciona apenas o Id.
-    public class AtualizarPortfolioDto : CriarPortfolioDto
-    // Herda de CriarPortfolioDto e adiciona apenas o Id.
+
+
+    //public class AtualizarPortfolioDto : CriarPortfolioDto
+    //// Herda de CriarPortfolioDto e adiciona apenas o Id.
+
     public class AtualizarPortfolioDto : CriarPortfolioDto
     {
         [Required(ErrorMessage = "O Id é obrigatório para atualizar.")]

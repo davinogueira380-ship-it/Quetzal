@@ -10,6 +10,7 @@
 // ============================================================
 
 using Newtonsoft.Json;                 // Necessario para serializar/desserializar JSON
+using Quetzal.Desktop.Sessao;
 using System.Net.Http.Headers;         // Necessario para MediaTypeHeaderValue e AuthenticationHeaderValue
 using System.Text;                     // Necessario para Encoding.UTF8
 

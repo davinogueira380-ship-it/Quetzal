@@ -29,7 +29,7 @@ namespace Quetzal.Application.Servicos.Implementacoes
                 var todosPortfolio = await _repositorio.ObterTodosAsync(false);
                 var portfolioDestaque = new List<Portfolio>();
                 var portfolioElegiveis = new List<Portfolio>();
-                foreach (var = p in todosPortfolio)
+                foreach (var p in todosPortfolio)
                 {
                     if (!string.IsNullOrEmpty(p.ImagemBannerUrl) && !string.IsNullOrEmpty(p.TrailerYoutubeUrl))
                     {
