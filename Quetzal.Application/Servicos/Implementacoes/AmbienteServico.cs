@@ -6,6 +6,7 @@ using Quetzal.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Quetzal.Application.Servicos.Implementacoes
 {
@@ -159,7 +160,7 @@ namespace Quetzal.Application.Servicos.Implementacoes
                 if (ambiente == null)
                     return ApiResposta<bool>.Falha("Ambiente nao encontrado.");
 
-                if (ambiente.Portfolio != null && ambiente.Portfolio.Any(p => !p.Ativo || p.Ativo)) //Obs
+                if (ambiente.Portfolios != null && ambiente.Portfolios.Any())
                 {
                     return ApiResposta<bool>.Falha("Não é possível excluir um ambiente que esteja sendo utilizado por algum portfolio.");
                 }
