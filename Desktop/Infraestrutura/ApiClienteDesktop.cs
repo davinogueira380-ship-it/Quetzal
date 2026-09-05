@@ -21,6 +21,8 @@ namespace Quetzal.Desktop.Infraestrutura
         private readonly HttpClient _httpClient;
 
         public ApiClienteDesktop(IHttpClientFactory httpClientFactory)
+
+            //comentario adicional
         {
             _httpClient = httpClientFactory.CreateClient("QuetzalApi");
         }
