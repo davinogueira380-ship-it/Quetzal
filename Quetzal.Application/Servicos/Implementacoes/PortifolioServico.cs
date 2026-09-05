@@ -22,16 +22,16 @@ namespace Quetzal.Application.Servicos.Implementacoes
             _mapper = mapper;
         }
 
-        public async Task<ApiResposta<PortfolioDto?>> ObterProjetoDestaqueAsync()
+        public async Task<ApiResposta<PortfolioDto?>> ObterPortfolioDestaqueAsync()
         {
             try
             {
                 var todosPortfolio = await _repositorio.ObterTodosAsync(false);
                 var portfolioDestaque = new List<Portfolio>();
                 var portfolioElegiveis = new List<Portfolio>();
-                foreach (var = p in todosPortfolio)
+                foreach (var p in todosPortfolio)
                 {
-                    if (!string.IsNullOrEmpty(p.ImagemBannerUrl) && !string.IsNullOrEmpty(p.TrailerYoutubeUrl))
+                    if (!string.IsNullOrEmpty(p.ImagemUpload) && !string.IsNullOrEmpty(p.TrailerYoutubeUrl))
                     {
                         portfolioElegiveis.Add(p);
                         if (p.DestaqueHome)
