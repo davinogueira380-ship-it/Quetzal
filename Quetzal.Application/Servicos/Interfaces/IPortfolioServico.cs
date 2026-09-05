@@ -12,7 +12,7 @@ namespace Quetzal.Application.Servicos.Interfaces
 
         // Código para uso futuro - se necessário ↓
 
-        //Task<ApiResposta<IEnumerable<PortfolioDto>>> ObterPorAmbienteAsync(int ambienteId);
+        Task<ApiResposta<IEnumerable<PortfolioDto>>> ObterPorAsync(int ambienteId);
         Task<ApiResposta<PortfolioDto>> CadastrarAsync(CriarPortfolioDto dto);
         Task<ApiResposta<PortfolioDto>> AtualizarAsync(int id, AtualizarPortfolioDto dto);
         Task<ApiResposta<bool>> DesativarAsync(int id);

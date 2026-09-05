@@ -63,23 +63,22 @@ namespace Quetzal.Application.Servicos.Implementacoes
                 return ApiResposta<IEnumerable<PortfolioDto>>.Falha($"Erro ao buscar portfolios: {ex.Message}");
             }
         }
-        
-        // Código para uso futuro - se necessário ↓
 
+        //Código para uso futuro - ObterPorAsync - se necessário ↓
 
-        //public async Task<ApiResposta<IEnumerable<PortfolioDto>>> ObterPorAmbienteAsync(int ambienteId)
-        //{
-        //    try
-        //    {
-        //        var portfolios = await _repositorio.ObterPorAmbienteAsync(ambienteId);
-        //        var dtos = _mapper.Map<IEnumerable<PortfolioDto>>(portfolios);
-        //        return ApiResposta<IEnumerable<PortfolioDto>>.Ok(dtos);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return ApiResposta<IEnumerable<PortfolioDto>>.Falha($"Erro ao obter portfolios por ambiente: {ex.Message}");
-        //    }
-        //}
+        public async Task<ApiResposta<IEnumerable<PortfolioDto>>> ObterPorAsync(int ambienteId)
+        {
+            try
+            {
+                var portfolios = await _repositorio.ObterPorAsync(ambienteId);
+                var dtos = _mapper.Map<IEnumerable<PortfolioDto>>(portfolios);
+                return ApiResposta<IEnumerable<PortfolioDto>>.Ok(dtos);
+            }
+            catch (Exception ex)
+            {
+                return ApiResposta<IEnumerable<PortfolioDto>>.Falha($"Erro ao obter portfolios por ambiente: {ex.Message}");
+            }
+        }
 
         public async Task<ApiResposta<PortfolioDto>> CadastrarAsync(CriarPortfolioDto dto)
         {

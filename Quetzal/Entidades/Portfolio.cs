@@ -21,5 +21,6 @@ public class Portfolio
 
 
     public DateTime? DataAtualizacao { get; set; } // Data de atualização do projeto
+    public DateTime?  DataExclusao { get; set; }
 
 }
