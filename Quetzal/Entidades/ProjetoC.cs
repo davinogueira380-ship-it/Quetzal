@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Quetzal.Domain.Entidades;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,5 +18,12 @@ namespace Quetzal.Domain.Entidades
         public bool Ativo { get; set; } // Indica se o projeto está ativo ou não
 
         public DateTime? DataAtualizacao { get; set; } // Data de atualização do projeto
+        public DateTime? DataExclusao { get; set; } // Data de exclusão do projeto
+
+        public ICollection<Ambiente> Ambientes { get; set; } = new List<Ambiente>();
     }
 }
+
+//VOLTAR AQUI → STHEFANNY ↑
+
+//Obsservação: Inclui dataexclusao excluído e filtrar os projetos ativos ou inativos.

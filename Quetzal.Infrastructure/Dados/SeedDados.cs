@@ -23,7 +23,10 @@ namespace Quetzal.Infrastructure.Dados
             {
                 new Ambiente { Nome = "Sala" },
                 new Ambiente { Nome = "Cozinha" },
-                new Ambiente { Nome = "Quarto" }
+                new Ambiente { Nome = "Quarto" },
+                new Ambiente { Nome = "Banheiro" },
+                new Ambiente { Nome = "Escritorio" },
+                new Ambiente { Nome = "Lavanderia" }
             };
             var ambientesExistentes = context.Ambientes.Select(a => a.Nome).ToHashSet();
             var novosAmbientes = todosAmbientes.Where(a => !ambientesExistentes.Contains(a.Nome)).ToList();
@@ -33,6 +36,23 @@ namespace Quetzal.Infrastructure.Dados
                 context.SaveChanges();
             }
 
+            // ================================================================
+            // SEED DE PROJETOSC INDICATIVAS 
+            // ================================================================
+
+
+            //VOLTAR AQUI → STHEFANNY 
+
+            var todosProjetoC = new List<ProjetoC>
+            {
+                new ProjetoC {NomeProjeto = "Projeto Sala", Descricao = "Projeto de Sala de Estar"},
+                new ProjetoC {NomeProjeto = "Projeto Cozinha", Descricao = "Projeto de Cozinha Moderna"},
+                new ProjetoC {NomeProjeto = "Projeto Quarto", Descricao = "Projeto de Quarto Aconchegante"},
+                new ProjetoC {NomeProjeto = "Projeto Banheiro", Descricao = "Projeto de Banheiro Moderno"},
+                new ProjetoC {NomeProjeto = "Projeto Escritorio", Descricao = "Projeto de Escritório Moderno"},
+                new ProjetoC {NomeProjeto = "Projeto Lavanderia", Descricao = "Projeto de Lavanderia"}
+
+            };
 
 
 
@@ -41,6 +61,9 @@ namespace Quetzal.Infrastructure.Dados
                 var proSala = context.Ambientes.First(a => a.Nome == "Sala").Id;
                 var proCozinha = context.Ambientes.First(a => a.Nome == "Cozinha").Id;
                 var proQuarto = context.Ambientes.First(a => a.Nome == "Quarto").Id;
+                var proBanheiro = context.Ambientes.First(a => a.Nome == "Banheiro").Id;
+                var proEscritorio = context.Ambientes.First(a => a.Nome == "Escritorio").Id;
+                var proLavanderia = context.Ambientes.First(a => a.Nome == "Lavanderia").Id;
 
                 var portfolios = new List<Portfolio>
                 {
@@ -69,7 +92,36 @@ namespace Quetzal.Infrastructure.Dados
                         Descricao = "Projeto de Quarto Aconchegante",
                         ImagemUpload = "https://images.unsplash.com/photo-1616628180680-1e3f5b8c9f1e",
                         Ativo = true
-                    }
+                    },
+
+                    new Portfolio
+                    {
+                        NomeProjeto = "Projeto Banheiro",
+                        AmbienteId = proBanheiro,
+                        Descricao = "Projeto de Banheiro Moderno",
+                        ImagemUpload = "https://images.unsplash.com/photo-1616628180680-1e3f5b8c9f1e",
+                        Ativo = true
+                    },
+
+                    new Portfolio
+                    {
+                        NomeProjeto = "Projeto Escritorio",
+                        AmbienteId = proEscritorio,
+                        Descricao = "Projeto de Escritório Moderno",
+                        ImagemUpload = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
+                        Ativo = true
+                    },
+
+                    new Portfolio
+                    {
+                        NomeProjeto = "Projeto Lavanderia",
+                        AmbienteId = proLavanderia,
+                        Descricao = "Projeto de Lavanderia",
+                        ImagemUpload = "https://images.unsplash.com/photo-1616628180680-1e3f5b8c9f1e",
+                        Ativo = true
+                    },
+
+
                 };
 
                 context.Portfolios.AddRange(portfolios);

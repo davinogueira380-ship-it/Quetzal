@@ -14,9 +14,6 @@
 //======================================================================================
 
 using Quetzal.Domain.Entidades;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using static System.Net.WebRequestMethods;
 
 namespace Quetzal.Domain.Interfaces

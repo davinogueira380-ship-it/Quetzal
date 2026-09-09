@@ -10,12 +10,14 @@ namespace Quetzal.Infrastructure.Dados
     {
         public QuetzalContexto(DbContextOptions<QuetzalContexto> options) : base(options)
         {
+
         }
 
         public DbSet<Portfolio> Portfolios { get; set; }
         public DbSet<Ambiente> Ambientes { get; set; }
+        public DbSet<ProjetoC> ProjetoC { get; set; }
 
-       // Aqui configuramos relacionamentos, restrições e comportamentos usando Fluent API
+        // Aqui configuramos relacionamentos, restrições e comportamentos usando Fluent API
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -39,7 +41,7 @@ namespace Quetzal.Infrastructure.Dados
                     .HasMaxLength(500);
 
                 // Configuração do ambienteId como chave estrangeira para a tabela Ambientes
-                // Um projeto pertence a um ambiente, um ambiente pode ter varios projetos
+                // Um portfolio pertence a um ambiente, um ambiente pode ter varios portfolios
 
                 entidade.HasOne(p => p.Ambiente)
                     .WithMany(a => a.Portfolios)
@@ -47,7 +49,6 @@ namespace Quetzal.Infrastructure.Dados
                     .OnDelete(DeleteBehavior.Restrict);
 
             });
-
 
 
             builder.Entity<Ambiente>(entidade =>
@@ -65,6 +66,29 @@ namespace Quetzal.Infrastructure.Dados
 
 
             });
+
+            //VOLTAR AQUI → STHEFANNY  ↓
+
+            //builder.Entity<ProjetoC>(entidade =>
+            //{
+            //    entidade.ToTable("ProjetosC");
+
+            //    // Nome do projeto é obrigatório e tem maximo de 200 caracteres
+            //    entidade.Property(p => p.NomeProjeto)
+            //        .IsRequired()
+            //        .HasMaxLength(200);
+
+            //    // Descrição é obrigatória
+            //    entidade.Property(p => p.Descricao)
+            //        .IsRequired();
+
+            //    // Configuração do UsuarioId como chave estrangeira para a tabela ApplicationUser
+            //    // Um projeto pertence a um usuario, um usuario pode ter varios projetos
+            //    entidade.HasOne(p => p.Usuario)
+            //        .WithMany(u => u.ProjetoC)
+            //        .HasForeignKey(p => p.UsuarioId)
+            //        .OnDelete(DeleteBehavior.Restrict);
+            //});
 
 
 

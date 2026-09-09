@@ -17,5 +17,8 @@ public class ApplicationUser : IdentityUser
     public DateTime DataCadastro { get; set; }
     public DateTime? DataAtualizacao { get; set; }
     public DateTime? DataExclusao { get; set; }
-
+    public object ProjetoC { get; set; } = null!;
 }
+
+
+//VOLTAR AQUI → STHEFANNY ↑
