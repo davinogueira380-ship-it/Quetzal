@@ -54,7 +54,7 @@ namespace Quetzal.Application.Servicos.Implementacoes
         {
             try
             {
-                var portfolios = await _repositorio.FiltrarPorAsync(termo, ambienteId);
+                var portfolios = await _repositorio.FiltrarPorAmbienteAsync(termo, ambienteId);
                 var dtos = _mapper.Map<IEnumerable<PortfolioDto>>(portfolios);
                 return ApiResposta<IEnumerable<PortfolioDto>>.Ok(dtos, "Busca realizada com sucesso.");
             }

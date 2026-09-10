@@ -19,7 +19,7 @@ namespace Quetzal.Application.DTOs
         public List<string> Perfis { get; set; } = new List<string>();
     }
 
-    public class RegistrarApplicationUserDto
+    public class RegistrarUserDto
     {
         [Required(ErrorMessage = "O Nome Completo é obrigatorio.")]
         public string NomeCompleto { get; set; } = string.Empty;
