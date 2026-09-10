@@ -47,7 +47,7 @@ public class AmbienteController : ControllerBase
         return StatusCode(201, resposta);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id}/atualizar")]
     public async Task<IActionResult> Atualizar(int id, [FromBody] CriarAmbienteDto dto)
     {
         var resposta = await _ambienteServico.AtualizarAsync(id, dto);
