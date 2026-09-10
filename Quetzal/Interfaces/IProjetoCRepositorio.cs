@@ -10,9 +10,9 @@ namespace Quetzal.Domain.Interfaces
 
         Task<IEnumerable<ProjetoC>> ObterPorAsync(int ambienteId);
 
-        Task<ProjetoC> AdicionarAsync(ProjetoC filme);
+        Task<ProjetoC> AdicionarAsync(ProjetoC projetoC);
 
-        Task AtualizarAsync(ProjetoC projeto);
+        Task AtualizarAsync(ProjetoC projetoC);
 
         Task DesativarAsync(int id);
 
