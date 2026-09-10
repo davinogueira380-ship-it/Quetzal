@@ -6,7 +6,7 @@ namespace Quetzal.Domain.Interfaces
     {
         Task<IEnumerable<ProjetoC>> ObterTodosAsync(bool incluirInativos = false);
         Task<ProjetoC?> ObterPorIdAsync(int id);
-        Task<IEnumerable<ProjetoC>> FiltrarPorAmbienteAsync(string? termo, int? categoriaId = null);
+        Task<IEnumerable<ProjetoC>> FiltrarPorAmbienteAsync(string? termo, int? ambienteId = null);
 
         Task<IEnumerable<ProjetoC>> ObterPorAsync(int ambienteId);
 

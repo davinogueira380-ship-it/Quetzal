@@ -9,7 +9,7 @@ namespace Quetzal.Domain.Entidades
     {
         public int Id { get; set; }
         public string? NomeProjeto { get; set; } //FK da tabela Usuario
-        public int UsuarioId { get; set; } // FK da tabela Usuario
+        public string UsuarioId { get; set; } = string.Empty; // FK da tabela Usuario
         public ApplicationUser Usuario { get; set; } = null!;
 
         public string? Descricao { get; set; } // Descrição do projeto
@@ -24,6 +24,5 @@ namespace Quetzal.Domain.Entidades
     }
 }
 
-//VOLTAR AQUI → STHEFANNY ↑
 
 //Obsservação: Inclui dataexclusao excluído e filtrar os projetos ativos ou inativos.

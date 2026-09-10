@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Quetzal.Application\Quetzal.Application.csproj" />
     <ProjectReference Include="..\Quetzal\Quetzal.Domain.csproj" />
   </ItemGroup>
 

@@ -9,7 +9,7 @@ namespace Quetzal.Domain.Interfaces
 
         Task<Ambiente?> ObterPorIdAsync(int id);
 
-        Task<IEnumerable<Ambiente>> FiltrarPorAsync(string? termo, int? ambienteId = null);
+        Task<IEnumerable<Ambiente>> FiltrarPorAmbienteAsync(string? termo, int? ambienteId = null);
 
         Task<Ambiente> AdicionarAsync(Ambiente ambiente);
 

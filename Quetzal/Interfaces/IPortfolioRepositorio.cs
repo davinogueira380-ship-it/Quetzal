@@ -25,7 +25,7 @@ namespace Quetzal.Domain.Interfaces
 
         Task<Portfolio?> ObterPorIdAsync(int id);
 
-        Task<IEnumerable<Portfolio>> FiltrarPorAmbienteAsync(string? termo, int? categoriaId = null);
+        Task<IEnumerable<Portfolio>> FiltrarPorPortfolioAsync(string? termo, int? portfolioId = null);
 
         Task<IEnumerable<Portfolio>> ObterPorAsync(int ambienteId);
 

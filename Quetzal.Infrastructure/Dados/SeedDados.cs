@@ -41,8 +41,6 @@ namespace Quetzal.Infrastructure.Dados
             // ================================================================
 
 
-            //VOLTAR AQUI → STHEFANNY 
-
             var todosProjetoC = new List<ProjetoC>
             {
                 new ProjetoC {NomeProjeto = "Projeto Sala", Descricao = "Projeto de Sala de Estar"},
@@ -55,15 +53,16 @@ namespace Quetzal.Infrastructure.Dados
             };
 
 
-
             if (!context.Portfolios.Any())
             {
+                //recupera os Ids dos ambientes para associar aos projetos
                 var proSala = context.Ambientes.First(a => a.Nome == "Sala").Id;
                 var proCozinha = context.Ambientes.First(a => a.Nome == "Cozinha").Id;
                 var proQuarto = context.Ambientes.First(a => a.Nome == "Quarto").Id;
                 var proBanheiro = context.Ambientes.First(a => a.Nome == "Banheiro").Id;
                 var proEscritorio = context.Ambientes.First(a => a.Nome == "Escritorio").Id;
                 var proLavanderia = context.Ambientes.First(a => a.Nome == "Lavanderia").Id;
+
 
                 var portfolios = new List<Portfolio>
                 {

@@ -67,36 +67,29 @@ namespace Quetzal.Infrastructure.Dados
 
             });
 
-            //VOLTAR AQUI → STHEFANNY  ↓
 
-            //builder.Entity<ProjetoC>(entidade =>
-            //{
-            //    entidade.ToTable("ProjetosC");
+            builder.Entity<ProjetoC>(entidade =>
+            {
+                entidade.ToTable("ProjetosC");
 
-            //    // Nome do projeto é obrigatório e tem maximo de 200 caracteres
-            //    entidade.Property(p => p.NomeProjeto)
-            //        .IsRequired()
-            //        .HasMaxLength(200);
+                entidade.Property(p => p.NomeProjeto)
+                    .IsRequired()
+                    .HasMaxLength(200);
 
-            //    // Descrição é obrigatória
-            //    entidade.Property(p => p.Descricao)
-            //        .IsRequired();
+                entidade.Property(p => p.Descricao)
+                    .IsRequired();
 
-            //    // Configuração do UsuarioId como chave estrangeira para a tabela ApplicationUser
-            //    // Um projeto pertence a um usuario, um usuario pode ter varios projetos
-            //    entidade.HasOne(p => p.Usuario)
-            //        .WithMany(u => u.ProjetoC)
-            //        .HasForeignKey(p => p.UsuarioId)
-            //        .OnDelete(DeleteBehavior.Restrict);
-            //});
-
+                // Relacionamento correto: usuário -> muitos projetos (coleção em ApplicationUser)
+                entidade.HasOne(p => p.Usuario)
+                    .WithMany(u => u.ProjetosC)
+                    .HasForeignKey(p => p.UsuarioId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
 
 
             // ================================================================
             // RENOMEAR TABELAS DO IDENTITY PARA MELHOR ORGANIZACAO
             // ================================================================
-
-
 
             builder.Entity<ApplicationUser>().ToTable("Identidade_Usuarios");
             builder.Entity<IdentityRole>().ToTable("Identidade_Perfis");

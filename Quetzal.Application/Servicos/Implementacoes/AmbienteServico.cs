@@ -52,11 +52,11 @@ namespace Quetzal.Application.Servicos.Implementacoes
             }
         }
 
-        public async Task<ApiResposta<IEnumerable<AmbienteDto>>> FiltrarPorAsync(string? termo, int? categoriaId = null)
+        public async Task<ApiResposta<IEnumerable<AmbienteDto>>> FiltrarPorAmbienteAsync(string? termo, int? ambienteId = null)
         {
             try
             {
-                var projetos = await _repositorio.FiltrarPorAsync(termo, categoriaId);
+                var projetos = await _repositorio.FiltrarPorAmbienteAsync(termo, ambienteId);
                 var dtos = _mapper.Map<IEnumerable<AmbienteDto>>(projetos);
                 return ApiResposta<IEnumerable<AmbienteDto>>.Ok(dtos, "Filtro realizado com sucesso.");
             }

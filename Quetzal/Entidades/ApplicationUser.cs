@@ -10,15 +10,14 @@ namespace Quetzal.Domain.Entidades;
 public class ApplicationUser : IdentityUser
 
 {
-    public required string NomeCompleto { get; set; } 
+    public required string NomeCompleto { get; set; }
     public string Telefone { get; set; } = string.Empty;
     public string SenhaHash { get; set; } = string.Empty;
     public bool Ativo { get; set; }
     public DateTime DataCadastro { get; set; }
     public DateTime? DataAtualizacao { get; set; }
     public DateTime? DataExclusao { get; set; }
-    public object ProjetoC { get; set; } = null!;
+
+    // Navegação para os projetos do usuário
+    public ICollection<ProjetoC> ProjetosC { get; set; } = new List<ProjetoC>();
 }
-
-
-//VOLTAR AQUI → STHEFANNY ↑
