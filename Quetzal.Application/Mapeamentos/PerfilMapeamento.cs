@@ -66,6 +66,7 @@ public class PerfilMapeamento : Profile
             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email)) // UserName no Identity sera o Email
             .ForMember(dest => dest.DataCadastro, opt => opt.MapFrom(src => DateTime.UtcNow))
             .ForMember(dest => dest.Ativo, opt => opt.MapFrom(src => false));
+    }
 
         //=======================================================================================
         //
