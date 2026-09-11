@@ -19,7 +19,7 @@ public class Portfolio
 
     public bool Ativo { get; set; } // Indica se o projeto está ativo ou não
 
-
+    public DateTime DataCriacao { get; set; } // Data de criação do projeto
     public DateTime? DataAtualizacao { get; set; } // Data de atualização do projeto
     public DateTime?  DataExclusao { get; set; }
 

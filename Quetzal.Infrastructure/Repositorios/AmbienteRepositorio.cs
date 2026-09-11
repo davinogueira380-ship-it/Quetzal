@@ -29,7 +29,7 @@ namespace Quetzal.Infrastructure.Repositorios
             return await _contexto.Ambientes.Include(a => a.Portfolio).FirstOrDefaultAsync(a => a.Id == id);
         }
         
-        public async Task<IEnumerable<Ambiente>> FiltrarPorAsync(string? termo, int? ambienteId = null)
+        public async Task<IEnumerable<Ambiente>> FiltrarPorAmbienteAsync(string? termo, int? ambienteId = null)
         {
             IQueryable<Ambiente> query = _contexto.Ambientes.Include(a => a.Portfolio);
             if (!string.IsNullOrEmpty(termo))

@@ -87,14 +87,26 @@ namespace Quetzal.Application.Servicos.Implementacoes
         {
             try
             {
+                var ambiente = await _ambienteRepositorio.ObterPorIdAsync(dto.AmbienteId);
+
+                if (ambiente == null)
+                    return ApiResposta<ProjetoCDto>.Falha("Ambiente não encontrado.");
+
                 var projetoC = _mapper.Map<ProjetoC>(dto);
+                projetoC.Ambientes.Add(ambiente);
+
                 var projetoCAdicionado = await _repositorio.AdicionarAsync(projetoC);
+
                 var projetoCDto = _mapper.Map<ProjetoCDto>(projetoCAdicionado);
-                return ApiResposta<ProjetoCDto>.Ok(projetoCDto, "Projeto do cliente cadastrado com sucesso.");
+
+                return ApiResposta<ProjetoCDto>.Ok(
+                    projetoCDto,
+                    "Projeto do cliente cadastrado com sucesso.");
             }
             catch (Exception ex)
             {
-                return ApiResposta<ProjetoCDto>.Falha($"Erro ao cadastrar o projeto do cliente: {ex.Message}");
+                return ApiResposta<ProjetoCDto>.Falha(
+                    $"Erro ao cadastrar o projeto do cliente: {ex.Message}");
             }
         }
 
