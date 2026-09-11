@@ -33,13 +33,13 @@ public class PortfolioServico : IPortfolioServico
         }
     }
 
-    public async Task<ApiResposta<PortfolioDto>> ObterPorIdAsync(int id)
-    {
-        try
+        public async Task<ApiResposta<PortfolioDto>> ObterPorIdAsync(int id)
         {
-            var portfolios = await _repositorio.ObterPorIdAsync(id);
-            if (portfolios == null)
-                return ApiResposta<PortfolioDto>.Falha("Portfolio nao encontrado.");
+            try
+            {
+                var portfolios = await _repositorio.ObterPorIdAsync(id);
+                if (portfolios == null)
+                    return ApiResposta<PortfolioDto>.Falha("Portfolio não encontrado.");
 
             var dto = _mapper.Map<PortfolioDto>(portfolios);
             return ApiResposta<PortfolioDto>.Ok(dto);
@@ -80,14 +80,14 @@ public class PortfolioServico : IPortfolioServico
         }
     }
 
-    public async Task<ApiResposta<PortfolioDto>> CadastrarAsync(CriarPortfolioDto dto)
-    {
-        try
+        public async Task<ApiResposta<PortfolioDto>> CadastrarAsync(CriarPortfolioDto dto)
         {
-            // Verifica se o aAMBIENTE informado existe
-            var ambiente = await _ambienteRepositorio.ObterPorIdAsync(dto.AmbienteId);
-            if (ambiente == null)
-                return ApiResposta<PortfolioDto>.Falha("Ambiente invalido.");
+            try
+            {
+                // Verifica se o AMBIENTE informado existe
+                var ambiente = await _ambienteRepositorio.ObterPorIdAsync(dto.AmbienteId);
+                if (ambiente == null)
+                    return ApiResposta<PortfolioDto>.Falha("Ambiente invalido.");
 
             var portfolio = _mapper.Map<Portfolio>(dto);
             var portfolioCadastrado = await _repositorio.AdicionarAsync(portfolio);

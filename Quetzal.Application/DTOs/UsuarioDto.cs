@@ -21,6 +21,9 @@ namespace Quetzal.Application.DTOs
 
     public class RegistrarUserDto
     {
+        [Required(ErrorMessage = "O Nome de Usuario é obrigatorio.")]
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "O Nome Completo é obrigatorio.")]
         public string NomeCompleto { get; set; } = string.Empty;
 
@@ -61,7 +64,6 @@ namespace Quetzal.Application.DTOs
         [Required(ErrorMessage = "O E-mail e obrigatorio.")]
         [EmailAddress(ErrorMessage = "E-mail em formato invalido.")]
         public string Email { get; set; } = string.Empty;
-
         public string? Telefone { get; set; }
     }
     // Dto para alteração de senha
