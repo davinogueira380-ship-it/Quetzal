@@ -28,5 +28,4 @@ namespace Quetzal.Application
     }
 }
 
-
 // Voltar aqui Sthefanny ↑
