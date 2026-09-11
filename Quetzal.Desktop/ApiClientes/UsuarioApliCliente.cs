@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -30,6 +30,16 @@ namespace Quetzal.Desktop.ApiClientes
         public async Task<ApiRespostaSimples<object>> DesativarAsync(string id)
         {
             return await DeleteAsync<ApiRespostaSimples<object>>($"{RotaBase}/{id}");
+        }
+
+        public async Task<ApiRespostaSimples<object>> AtivarAsync(string id)
+        {
+            return await PutAsync<ApiRespostaSimples<object>>($"{RotaBase}/{id}/ativar", new { });
+        }
+
+        public async Task<ApiRespostaSimples<UsuarioDto>> AtualizarAsync(string id, UsuarioDto dados)
+        {
+            return await PutAsync<ApiRespostaSimples<UsuarioDto>>($"{RotaBase}/{id}", dados);
         }
     }
 
