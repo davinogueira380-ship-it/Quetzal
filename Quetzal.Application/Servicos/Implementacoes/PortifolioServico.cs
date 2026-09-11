@@ -39,7 +39,7 @@ namespace Quetzal.Application.Servicos.Implementacoes
             {
                 var portfolios = await _repositorio.ObterPorIdAsync(id);
                 if (portfolios == null)
-                    return ApiResposta<PortfolioDto>.Falha("Portfolio nao encontrado.");
+                    return ApiResposta<PortfolioDto>.Falha("Portfolio não encontrado.");
 
                 var dto = _mapper.Map<PortfolioDto>(portfolios);
                 return ApiResposta<PortfolioDto>.Ok(dto);
@@ -84,7 +84,7 @@ namespace Quetzal.Application.Servicos.Implementacoes
         {
             try
             {
-                // Verifica se o aAMBIENTE informado existe
+                // Verifica se o AMBIENTE informado existe
                 var ambiente = await _ambienteRepositorio.ObterPorIdAsync(dto.AmbienteId);
                 if (ambiente == null)
                     return ApiResposta<PortfolioDto>.Falha("Ambiente invalido.");
