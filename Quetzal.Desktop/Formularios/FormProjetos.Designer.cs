@@ -87,6 +87,7 @@ namespace Quetzal.Desktop.Formularios
             cmbCliente = new Guna.UI2.WinForms.Guna2ComboBox();
             lblCliente = new Label();
             lblTituloCard = new Label();
+            clbAmbientes = new CheckedListBox();
             pnlPrincipal.SuspendLayout();
             pnlGrid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvProjetos).BeginInit();
@@ -288,6 +289,7 @@ namespace Quetzal.Desktop.Formularios
             pnlCardFormulario.AutoScroll = true;
             pnlCardFormulario.BackColor = Color.Transparent;
             pnlCardFormulario.BorderRadius = 12;
+            pnlCardFormulario.Controls.Add(clbAmbientes);
             pnlCardFormulario.Controls.Add(grpGaleriaFotos);
             pnlCardFormulario.Controls.Add(btnDesativar);
             pnlCardFormulario.Controls.Add(btnSalvar);
@@ -325,7 +327,7 @@ namespace Quetzal.Desktop.Formularios
             grpGaleriaFotos.Controls.Add(lblAmbienteFoto);
             grpGaleriaFotos.CustomizableEdges = customizableEdges15;
             grpGaleriaFotos.FillColor = Color.FromArgb(248, 251, 255);
-            grpGaleriaFotos.Location = new Point(18, 241);
+            grpGaleriaFotos.Location = new Point(18, 295);
             grpGaleriaFotos.Name = "grpGaleriaFotos";
             grpGaleriaFotos.Padding = new Padding(12);
             grpGaleriaFotos.ShadowDecoration.CustomizableEdges = customizableEdges16;
@@ -337,7 +339,7 @@ namespace Quetzal.Desktop.Formularios
             lblTituloGaleria.AutoSize = true;
             lblTituloGaleria.Font = new Font("Segoe UI Semibold", 9.5F, FontStyle.Bold);
             lblTituloGaleria.ForeColor = Color.FromArgb(20, 50, 90);
-            lblTituloGaleria.Location = new Point(15, 0);
+            lblTituloGaleria.Location = new Point(3, 12);
             lblTituloGaleria.Name = "lblTituloGaleria";
             lblTituloGaleria.Size = new Size(339, 17);
             lblTituloGaleria.TabIndex = 6;
@@ -446,7 +448,7 @@ namespace Quetzal.Desktop.Formularios
             btnDesativar.Font = new Font("Segoe UI Semibold", 9.5F, FontStyle.Bold);
             btnDesativar.ForeColor = Color.FromArgb(190, 40, 50);
             btnDesativar.HoverState.FillColor = Color.FromArgb(250, 220, 223);
-            btnDesativar.Location = new Point(18, 540);
+            btnDesativar.Location = new Point(18, 584);
             btnDesativar.Name = "btnDesativar";
             btnDesativar.ShadowDecoration.CustomizableEdges = customizableEdges18;
             btnDesativar.Size = new Size(390, 38);
@@ -464,7 +466,7 @@ namespace Quetzal.Desktop.Formularios
             btnSalvar.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             btnSalvar.ForeColor = Color.White;
             btnSalvar.HoverState.FillColor = Color.FromArgb(11, 94, 215);
-            btnSalvar.Location = new Point(18, 490);
+            btnSalvar.Location = new Point(16, 534);
             btnSalvar.Name = "btnSalvar";
             btnSalvar.ShadowDecoration.CustomizableEdges = customizableEdges20;
             btnSalvar.Size = new Size(390, 44);
@@ -495,7 +497,7 @@ namespace Quetzal.Desktop.Formularios
             lblStatusAtivo.AutoSize = true;
             lblStatusAtivo.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
             lblStatusAtivo.ForeColor = Color.FromArgb(40, 50, 65);
-            lblStatusAtivo.Location = new Point(73, 457);
+            lblStatusAtivo.Location = new Point(69, 506);
             lblStatusAtivo.Name = "lblStatusAtivo";
             lblStatusAtivo.Size = new Size(88, 17);
             lblStatusAtivo.TabIndex = 11;
@@ -511,7 +513,7 @@ namespace Quetzal.Desktop.Formularios
             swAtivo.CheckedState.InnerColor = Color.White;
             swAtivo.Cursor = Cursors.Hand;
             swAtivo.CustomizableEdges = customizableEdges23;
-            swAtivo.Location = new Point(21, 452);
+            swAtivo.Location = new Point(18, 506);
             swAtivo.Name = "swAtivo";
             swAtivo.ShadowDecoration.CustomizableEdges = customizableEdges24;
             swAtivo.Size = new Size(45, 22);
@@ -633,6 +635,21 @@ namespace Quetzal.Desktop.Formularios
             lblTituloCard.TabIndex = 0;
             lblTituloCard.Text = "Dados do Projeto";
             // 
+            // clbAmbientes
+            // 
+            clbAmbientes.BackColor = Color.FromArgb(251, 234, 214);
+            clbAmbientes.BorderStyle = BorderStyle.None;
+            clbAmbientes.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            clbAmbientes.ForeColor = Color.FromArgb(125, 137, 149);
+            clbAmbientes.FormattingEnabled = true;
+            clbAmbientes.Location = new Point(21, 252);
+            clbAmbientes.MaximumSize = new Size(400, 400);
+            clbAmbientes.MinimumSize = new Size(20, 20);
+            clbAmbientes.MultiColumn = true;
+            clbAmbientes.Name = "clbAmbientes";
+            clbAmbientes.Size = new Size(390, 20);
+            clbAmbientes.TabIndex = 15;
+            // 
             // FormProjetos
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -693,5 +710,6 @@ namespace Quetzal.Desktop.Formularios
         private System.Windows.Forms.DataGridViewTextBoxColumn colCliente;
         private System.Windows.Forms.DataGridViewTextBoxColumn colAmbientes;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colAtivo;
+        public CheckedListBox clbAmbientes;
     }
 }

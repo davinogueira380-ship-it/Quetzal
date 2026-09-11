@@ -28,7 +28,7 @@ namespace Quetzal.Desktop.Formularios
         {
             try
             {
-                dgvAmbientes.Enabled = false;
+                dgvAmbientes.Enabled = false;//dgv data grid view
                 _listaAmbientes = await _apiAmbiente.ObterTodasAsync();
                 AtualizarGrid(_listaAmbientes);
             }

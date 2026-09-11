@@ -81,7 +81,7 @@ namespace Quetzal.Desktop.Formularios
             pnlPrincipal.Location = new Point(20, 20);
             pnlPrincipal.Name = "pnlPrincipal";
             pnlPrincipal.ShadowDecoration.CustomizableEdges = customizableEdges22;
-            pnlPrincipal.Size = new Size(910, 615);
+            pnlPrincipal.Size = new Size(910, 748);
             pnlPrincipal.TabIndex = 0;
             // 
             // pnlGrid
@@ -99,7 +99,7 @@ namespace Quetzal.Desktop.Formularios
             pnlGrid.Name = "pnlGrid";
             pnlGrid.Padding = new Padding(18);
             pnlGrid.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            pnlGrid.Size = new Size(565, 615);
+            pnlGrid.Size = new Size(565, 748);
             pnlGrid.TabIndex = 1;
             // 
             // dgvAmbientes
@@ -137,7 +137,7 @@ namespace Quetzal.Desktop.Formularios
             dgvAmbientes.ReadOnly = true;
             dgvAmbientes.RowHeadersVisible = false;
             dgvAmbientes.RowTemplate.Height = 35;
-            dgvAmbientes.Size = new Size(529, 524);
+            dgvAmbientes.Size = new Size(529, 657);
             dgvAmbientes.TabIndex = 1;
             dgvAmbientes.ThemeStyle.AlternatingRowsStyle.BackColor = Color.FromArgb(254, 250, 245);
             dgvAmbientes.ThemeStyle.GridColor = Color.FromArgb(242, 232, 222);
@@ -277,7 +277,7 @@ namespace Quetzal.Desktop.Formularios
             pnlCardFormulario.Name = "pnlCardFormulario";
             pnlCardFormulario.Padding = new Padding(20);
             pnlCardFormulario.ShadowDecoration.CustomizableEdges = customizableEdges20;
-            pnlCardFormulario.Size = new Size(345, 615);
+            pnlCardFormulario.Size = new Size(345, 748);
             pnlCardFormulario.TabIndex = 0;
             // 
             // lblStatusAtivo
@@ -455,7 +455,7 @@ namespace Quetzal.Desktop.Formularios
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(251, 247, 242);
-            ClientSize = new Size(950, 655);
+            ClientSize = new Size(950, 788);
             Controls.Add(pnlPrincipal);
             FormBorderStyle = FormBorderStyle.None;
             Name = "FormAmbientes";
