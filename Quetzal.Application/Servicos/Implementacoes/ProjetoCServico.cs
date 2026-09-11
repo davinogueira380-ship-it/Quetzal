@@ -53,7 +53,7 @@ namespace Quetzal.Application.Servicos.Implementacoes
         {
             try
             {
-                var projetos = await _repositorio.FiltrarPorProjetoCAsync(termo, ambienteId);
+                var projetos = await _repositorio.FiltrarPorAmbienteAsync(termo, ambienteId);
                 var dtos = _mapper.Map<IEnumerable<ProjetoCDto>>(projetos);
                 return ApiResposta<IEnumerable<ProjetoCDto>>.Ok(dtos, "Busca realizada com sucesso.");
             }
