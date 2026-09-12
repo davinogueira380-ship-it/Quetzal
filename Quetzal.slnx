@@ -3,5 +3,6 @@
   <Project Path="Quetzal.Application/Quetzal.Application.csproj" Id="7d6f0abd-1c4f-4b97-84fd-0891245ce5d3" />
   <Project Path="Quetzal.Desktop/Quetzal.Desktop.csproj" Id="c256f961-ffa2-4c6b-8982-0a0b517dc640" />
   <Project Path="Quetzal.Infrastructure/Quetzal.Infrastructure.csproj" Id="d3071738-aa75-4153-bcdd-eabf8709c110" />
+  <Project Path="Quetzal.UI/Quetzal.UI.csproj" Id="6d4960e5-9d5d-4e36-87af-84edc7c7a4e5" />
   <Project Path="Quetzal/Quetzal.Domain.csproj" />
 </Solution>
