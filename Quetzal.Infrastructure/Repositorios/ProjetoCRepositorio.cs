@@ -18,7 +18,6 @@ namespace Quetzal.Infrastructure.Repositorios
         {
             IQueryable<ProjetoC> query = _context.ProjetoC.Include(ProjetoC => ProjetoC.Usuario);
             if (!incluirInativos)
-            // Se incluirInativos for false, filtra apenas os projetos ativos
             {
                 query = query.Where(ProjetoC => ProjetoC.Ativo);
             }
@@ -30,12 +29,12 @@ namespace Quetzal.Infrastructure.Repositorios
             return await _context.ProjetoC.Include(ProjetoC => ProjetoC.Usuario).FirstOrDefaultAsync(ProjetoC => ProjetoC.Id == id);
         }
 
-        public async Task<IEnumerable<ProjetoC>> FiltrarPorAmbienteAsync(string? termo, int? usuarioId = null)
+        public async Task<IEnumerable<ProjetoC>> FiltrarPorAmbienteAsync(string? termo, string? usuarioId = null)
         {
             var query = _context.ProjetoC.Include(ProjetoC => ProjetoC.Usuario).Where(ProjetoC => ProjetoC.Ativo);
-            if (usuarioId.HasValue && usuarioId.Value > 0)
+            if (!string.IsNullOrWhiteSpace(usuarioId))
             {
-                query = query.Where(ProjetoC => ProjetoC.UsuarioId == usuarioId.Value);
+                query = query.Where(ProjetoC => ProjetoC.UsuarioId == usuarioId);
             }
             if (!string.IsNullOrWhiteSpace(termo))
             {
@@ -45,7 +44,7 @@ namespace Quetzal.Infrastructure.Repositorios
             return await query.ToListAsync();
         }
 
-        public async Task<IEnumerable<ProjetoC>> ObterPorAsync(int usuarioId)
+        public async Task<IEnumerable<ProjetoC>> ObterPorAmbienteAsync(string usuarioId)
         {
             return await _context.ProjetoC.Include(ProjetoC => ProjetoC.Usuario).Where(ProjetoC => ProjetoC.UsuarioId == usuarioId).ToListAsync();
         }
@@ -96,8 +95,15 @@ namespace Quetzal.Infrastructure.Repositorios
                 await _context.SaveChangesAsync();
             }
         }
+
+        public Task<IEnumerable<ProjetoC>> FiltrarPorAmbienteAsync(string? termo, int? ambienteId = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<ProjetoC>> ObterPorAmbienteAsync(int ambienteId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
-
-
-

@@ -10,6 +10,7 @@
 
 
 using Quetzal.Desktop.ApiClientes;
+using SenacFlix.Desktop.ApiClientes;
 using System.Collections.Generic;  // Necessario para List<CategoriaDto>
 using System.Threading.Tasks;      // Necessario para operacoes assincronas
 

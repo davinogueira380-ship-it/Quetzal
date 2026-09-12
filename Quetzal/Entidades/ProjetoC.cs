@@ -9,7 +9,7 @@ namespace Quetzal.Domain.Entidades
     {
         public int Id { get; set; }
         public string? NomeProjeto { get; set; } //FK da tabela Usuario
-        public string UsuarioId { get; set; } = string.Empty; // FK da tabela Usuario
+        public string UsuarioId { get; set; } = null!; // FK da tabela Usuario (ajustado para string)
         public ApplicationUser Usuario { get; set; } = null!;
 
         public string? Descricao { get; set; } // Descrição do projeto
@@ -23,6 +23,3 @@ namespace Quetzal.Domain.Entidades
         public ICollection<Ambiente> Ambientes { get; set; } = new List<Ambiente>();
     }
 }
-
-
-//Obsservação: Inclui dataexclusao excluído e filtrar os projetos ativos ou inativos.

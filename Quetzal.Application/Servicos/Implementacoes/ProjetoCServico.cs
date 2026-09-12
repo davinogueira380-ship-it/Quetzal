@@ -71,7 +71,7 @@ namespace Quetzal.Application.Servicos.Implementacoes
         {
             try
             {
-                var projetos = await _repositorio.ObterPorAsync(ambienteId);
+                var projetos = await _repositorio.ObterPorAmbienteAsync(ambienteId);
                 var dtos = _mapper.Map<IEnumerable<ProjetoCDto>>(projetos);
                 return ApiResposta<IEnumerable<ProjetoCDto>>.Ok(dtos, "Busca realizada com sucesso.");
             }

@@ -15,6 +15,8 @@ namespace SenacFlix.API.Controllers;
 public class UsuariosController : ControllerBase
 {
     private readonly UsuarioServico _usuarioServico;
+    private readonly UserManager<ApplicationUser> _userManager;
+
 
     public UsuariosController(UsuarioServico usuarioServico)
     {
@@ -24,12 +26,12 @@ public class UsuariosController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> ObterTodos()
     {
-        var users = await _usuarioServico.ObterTodosAsync();
+        var users = await _userManager.Users.ToListAsync();
         var dtos = new List<UsuarioDto>();
 
-        foreach (var user in )
+        foreach (var user in users)
         {
-            var roles = await _usuarioServico.ObterPorIdAsync(user.Id);
+            var roles = await _userManager.GetRolesAsync(user);
             dtos.Add(new UsuarioDto
             {
                 Id = user.Id,
@@ -58,25 +60,25 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Desativar(int id)
+    public async Task<IActionResult> Desativar(string id)
     {
-        var user = await _usuarioServico.ObterPorIdAsync(id);
+        var user = await _userManager.FindByIdAsync(id);
         if (user == null) return NotFound(ApiResposta<bool>.Falha("Usuario nao encontrado."));
 
         user.Ativo = false;
-        await _usuarioServico.AtualizarAsync(id, new AtualizarPerfilDto());
+        await _userManager.UpdateAsync(user);
 
         return Ok(ApiResposta<bool>.Ok(true, "Usuario desativado com sucesso."));
     }
 
     [HttpPut("{id}/ativar")]
-    public async Task<IActionResult> Ativar(int id)
+    public async Task<IActionResult> Ativar(string id)
     {
-        var user = await _usuarioServico.ObterPorIdAsync(id);
+        var user = await _userManager.FindByIdAsync(id);
         if (user == null) return NotFound(ApiResposta<bool>.Falha("Usuario nao encontrado."));
 
         user.Ativo = true;
-        await _usuarioServico.AtualizarAsync(id, new AtualizarPerfilDto());
+        await _userManager.UpdateAsync(user);
 
         return Ok(ApiResposta<bool>.Ok(true, "Usuario ativado com sucesso."));
     }
