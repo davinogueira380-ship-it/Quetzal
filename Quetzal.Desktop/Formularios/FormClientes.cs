@@ -1,17 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Quetzal.Desktop.ApiClientes;
-using Quetzal.Desktop.Controllers;
 
 namespace Quetzal.Desktop.Formularios
 {
     public partial class FormClientes : Form
 
     { // CONTROLLER
-        private readonly ClientesController _controller;
+        private readonly UsuarioApiCliente _apiUsuario;
         //  DADOS DA TELA
         private List<UsuarioDto> _listaClientes = new List<UsuarioDto>();
         private string? _clienteSelecionadoId = null;
@@ -19,7 +13,7 @@ namespace Quetzal.Desktop.Formularios
         public FormClientes()
         {
             InitializeComponent();
-            _controller = new ClientesController();
+            _apiUsuario = new UsuarioApiCliente();
         }// CARREGAMENTO DO FORMULÁRIO
         private async void FormClientes_Load(object sender, EventArgs e)
         {
@@ -32,7 +26,7 @@ namespace Quetzal.Desktop.Formularios
             try
             {
                 dgvClientes.Enabled = false;
-                _listaClientes = await _controller.ObterTodosAsync();
+                _listaClientes = await _apiUsuario.ObterTodosAsync();
                 AtualizarGrid(_listaClientes);
             }
             catch (Exception ex) { MessageBox.Show($"Não foi possível carregar a lista de clientes da API: {ex.Message}", "Aviso de Comunicação", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
@@ -81,12 +75,19 @@ namespace Quetzal.Desktop.Formularios
                 btnSalvar.Enabled = false;
                 // Busca o cliente que estava selecionado
                 var clienteAtual = _listaClientes.FirstOrDefault(c => c.Id == _clienteSelecionadoId);
-                // Atualiza os dados através do Controller
-                await _controller.AtualizarAsync(_clienteSelecionadoId, nome, txtEmail.Text, txtTelefone.Text, swPerfilAtivo.Checked);
+
+                // Cria um DTO com os dados atualizados e chama a API com a assinatura correta
+                var dto = new UsuarioDto
+                {
+                    NomeCompleto = nome,
+                    Email = txtEmail.Text,
+                    Telefone = txtTelefone.Text,
+                    Ativo = swPerfilAtivo.Checked
+                };
                 // Verifica se o status de ativação mudou
                 if (clienteAtual != null && clienteAtual.Ativo != swPerfilAtivo.Checked)
                 {
-                    await _controller.AlternarAtivacaoAsync(_clienteSelecionadoId, swPerfilAtivo.Checked);
+                    await _apiUsuario.AtualizarAsync(_clienteSelecionadoId, dto);
                 }
                 MessageBox.Show("Dados do cliente atualizados com sucesso!" + (swPerfilAtivo.Checked ? "\nO cliente agora tem permissão para visualizar as fotos na Área do Cliente." : "\nO acesso às fotos na Área do Cliente foi bloqueado."), "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information); await CarregarClientesAsync();
             }
@@ -110,24 +111,27 @@ namespace Quetzal.Desktop.Formularios
             {
                 if (novoStatus)
                 {
-                    await _controller.AtivarAsync(_clienteSelecionadoId);
+                    await _apiUsuario.AtivarAsync(_clienteSelecionadoId);
                     MessageBox.Show("Perfil ativado! O cliente agora consegue visualizar as fotos na área do cliente.", "Perfil Ativado",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    await _controller.DesativarAsync(_clienteSelecionadoId);
+                    await _apiUsuario.DesativarAsync(_clienteSelecionadoId);
                     MessageBox.Show("Perfil desativado! O cliente foi bloqueado de visualizar fotos até ser reativado.", "Perfil Desativado", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 await CarregarClientesAsync();
             }
             catch (Exception ex) { MessageBox.Show($"Erro ao alternar status do cliente: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error); }
-        } 
-        // PESQUISA 
-         private void txtBusca_TextChanged( object sender, EventArgs e) { var filtrados = _controller.Filtrar( _listaClientes, txtBusca.Text );
-            AtualizarGrid(filtrados);
-        } // ATUALIZAR LISTA
-         private async void btnAtualizar_Click( object sender, EventArgs e) { await CarregarClientesAsync(); 
+            //} 
+            //// PESQUISA 
+            // private void txtBusca_TextChanged( object sender, EventArgs e)
+
+            //{ var filtrados = _apiUsuario.Filtrar(_listaClientes, txtBusca.Text);
+            //    AtualizarGrid(filtrados);
+            //} // ATUALIZAR LISTA
+            // private async void btnAtualizar_Click( object sender, EventArgs e) { await CarregarClientesAsync(); 
+            //}
         }
     }
 }

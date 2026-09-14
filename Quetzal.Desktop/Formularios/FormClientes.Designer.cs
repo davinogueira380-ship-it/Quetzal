@@ -219,7 +219,7 @@ namespace Quetzal.Desktop.Formularios
             this.btnAtualizar.Size = new System.Drawing.Size(105, 34);
             this.btnAtualizar.TabIndex = 2;
             this.btnAtualizar.Text = "🔄 Atualizar";
-            this.btnAtualizar.Click += new System.EventHandler(this.btnAtualizar_Click);
+            //this.btnAtualizar.Click += new System.EventHandler(this.btnAtualizar_Click);
             // 
             // txtBusca
             // 
@@ -244,7 +244,7 @@ namespace Quetzal.Desktop.Formularios
             this.txtBusca.SelectedText = "";
             this.txtBusca.Size = new System.Drawing.Size(270, 34);
             this.txtBusca.TabIndex = 1;
-            this.txtBusca.TextChanged += new System.EventHandler(this.txtBusca_TextChanged);
+          //  this.txtBusca.TextChanged += new System.EventHandler(this.txtBusca_TextChanged);
             // 
             // lblBusca
             // 

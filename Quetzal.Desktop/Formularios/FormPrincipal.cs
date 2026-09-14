@@ -66,7 +66,7 @@ namespace Quetzal.Desktop
 
         private void btnProjetos_Click(object sender, EventArgs e)
         {
-            AbrirFormularioFilho(new FormProjetos(), "📁 Projetos de Clientes e Galeria por Ambiente", btnProjetos);
+            AbrirFormularioFilho(new FormProjetoC(), "📁 Projetos de Clientes e Galeria por Ambiente", btnProjetos);
         }
 
         private void btnPortfolio_Click(object sender, EventArgs e)

@@ -1,6 +1,6 @@
 namespace Quetzal.Desktop.Formularios
 {
-    partial class FormProjetos
+    partial class FormProjetoC
     {
         private System.ComponentModel.IContainer components = null;
 

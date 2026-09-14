@@ -97,5 +97,27 @@ namespace Quetzal.Desktop.Formularios
         {
 
         }
+
+        //private async Task CriarAdminAsync()
+        //{
+        //    var api = new UsuarioApiCliente();
+
+        //    var adminDto = new UsuarioDto
+        //    {
+        //        NomeCompleto = "Administrador",
+        //        Email = "admin@exemplo.local",
+        //        Telefone = "",
+        //        Ativo = true,
+        //        Perfis = new List<string> { "Admin" } // ajuste conforme roles do backend
+        //    };
+
+        //    var resposta = await api.CriarAsync(adminDto);
+
+        //    // Verifique a estrutura de ApiRespostaSimples para checar sucesso/erros
+        //    if (resposta != null)
+        //    {
+        //        MessageBox.Show("Admin criado (verifique se foi criado no servidor).", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        //    }
+        //}
     }
 }
