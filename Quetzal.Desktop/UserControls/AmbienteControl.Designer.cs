@@ -10,7 +10,8 @@ using static Guna.UI2.WinForms.Suite.Descriptions;
 
         namespace Quetzal.Desktop.UserControls
     {
-        partial class AmbientesControl: UserControl {
+        partial class AmbientesControl: System.Windows.Forms.UserControl
+    {
         
             private System.ComponentModel.IContainer components = null;
 

@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Quetzal.Desktop.UserControls
 {
-    public partial class AmbientesControl : UserControl
+    public partial class AmbientesControl : System.Windows.Forms.UserControl
     {
         private string? _ambienteSelecionadoId;
 

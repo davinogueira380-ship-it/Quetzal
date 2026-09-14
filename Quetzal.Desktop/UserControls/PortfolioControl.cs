@@ -9,7 +9,7 @@ using Quetzal.Desktop.ApiClientes;
 
 namespace Quetzal.Desktop.UserControls
 {
-    public partial class PortfolioControl : UserControl
+    public partial class PortfolioControl : System.Windows.Forms.UserControl
     {
         private readonly PortfolioApiCliente _apiPortfolio;
         private readonly AmbienteApiUsuario _apiAmbiente;

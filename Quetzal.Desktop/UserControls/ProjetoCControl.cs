@@ -9,7 +9,7 @@ using Quetzal.Desktop.ApiClientes;
 
 namespace Quetzal.Desktop.UserControls
 {
-    public partial class ProjetoCControl : UserControl
+    public partial class ProjetoCControl : System.Windows.Forms.UserControl
     {
         private readonly ProjetoCApiCliente _apiProjeto;
         private readonly UsuarioApiCliente _apiUsuario;

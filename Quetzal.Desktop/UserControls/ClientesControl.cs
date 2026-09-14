@@ -7,7 +7,7 @@ using Quetzal.Desktop.ApiClientes;
 
 namespace Quetzal.Desktop.UserControls
 {
-    public partial class ClientesControl : UserControl
+    public partial class ClientesControl : System.Windows.Forms.UserControl
     {
         // API
 
