@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Quetzal.UI;
 
+
 public class Program
 {
-    public static void Main(string[] args)
+
+        public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +32,7 @@ public class Program
         // Configura o HttpClient padrao para apontar para a API
         builder.Services.AddHttpClient("QuetzalAPI", client =>
         {
-        client.BaseAddress = new Uri(builder.Configuration["ApiConfiguracoes:UrlBase"] ?? "http://localhost:5277");
+            client.BaseAddress = new Uri(builder.Configuration["ApiConfiguracoes:UrlBase"] ?? "http://localhost:5277");
         })
             // Ignora validacao de certificado SSL apenas para ambiente de desenvolvimento local
             .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler

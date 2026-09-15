@@ -1,10 +1,17 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Quetzal.Domain.Entidades;
-using Quetzal.Infrastructure.Dados;
 using Quetzal.Application.Mapeamentos;
+using Quetzal.Domain.Entidades;
+using Quetzal.Infrastructure;
+using Quetzal.Infrastructure.Dados;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// 1. Registra os serviços da infraestrutura (DbContext, Identity, Jwt)
+builder.Services.AdicionarServicosDeInfraestrutura(builder.Configuration);
+
+// 3. Configura a Autenticação via JWT
+var chaveJwt = builder.Configuration["Jwt:Chave"] ?? "QuetzalChaveSecretaSuperSegura2026!";
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
