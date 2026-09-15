@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Quetzal.Application.DTOs;
@@ -17,35 +16,43 @@ namespace Quetzal.API.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
 
-        public AuthController(UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public AuthController(
+            UserManager<ApplicationUser> userManager,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _configuration = configuration;
         }
 
-        //gerar token jwt (token usado na autenticação das apis)
         private JwtSecurityToken GerarToken(List<Claim> authClaims)
         {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Chave"]!));
+            var chave = _configuration["Jwt:Chave"]
+                ?? throw new InvalidOperationException("A chave JWT não foi configurada.");
 
-            var token = new JwtSecurityToken(
+            var authSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(chave));
+
+            return new JwtSecurityToken(
                 issuer: _configuration["Jwt:Emissor"],
                 audience: _configuration["Jwt:Audiencia"],
-                expires: DateTime.Now.AddHours(8),
+                expires: DateTime.UtcNow.AddHours(8),
                 claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                signingCredentials: new SigningCredentials(
+                    authSigningKey,
+                    SecurityAlgorithms.HmacSha256)
             );
-
-            return token;
         }
-
 
         [HttpPost("registrar")]
         public async Task<IActionResult> Registrar([FromBody] RegistrarUserDto dto)
         {
             var userExists = await _userManager.FindByEmailAsync(dto.Email);
-            if (userExists != null)
-                return BadRequest(ApiResposta<object>.Falha("Ja existe um usuario com este e-mail."));
+
+            if (userExists is not null)
+            {
+                return BadRequest(
+                    ApiResposta<object>.Falha("Já existe um usuário com este e-mail."));
+            }
 
             var user = new ApplicationUser
             {
@@ -56,36 +63,60 @@ namespace Quetzal.API.Controllers
                 DataCadastro = DateTime.UtcNow
             };
 
-            //cria o usuario no banco
             var result = await _userManager.CreateAsync(user, dto.Senha);
+
             if (!result.Succeeded)
             {
-                var erros = result.Errors.Select(e => e.Description).ToList();
-                return BadRequest(ApiResposta<object>.FalhaValidacao(erros, "Erro ao criar usuario."));
+                var erros = result.Errors
+                    .Select(e => e.Description)
+                    .ToList();
+
+                return BadRequest(
+                    ApiResposta<object>.FalhaValidacao(
+                        erros,
+                        "Erro ao criar usuário."));
             }
 
-            //defini o "perfil" cliente para o usuario
-            await _userManager.AddToRoleAsync(user, "Cliente");
+            // Todo cadastro público recebe somente a role Cliente.
+            var roleResult = await _userManager.AddToRoleAsync(user, "Cliente");
 
-            return StatusCode(201, ApiResposta<object>.Ok(null!, "Usuario registrado com sucesso."));
+            if (!roleResult.Succeeded)
+            {
+                var erros = roleResult.Errors
+                    .Select(e => e.Description)
+                    .ToList();
+
+                return BadRequest(
+                    ApiResposta<object>.FalhaValidacao(
+                        erros,
+                        "Usuário criado, mas não foi possível definir o perfil Cliente."));
+            }
+
+            return StatusCode(
+                StatusCodes.Status201Created,
+                ApiResposta<object>.Ok(null!, "Usuário registrado com sucesso."));
         }
-
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
-            //verifica se o usuario existe
             var user = await _userManager.FindByEmailAsync(dto.Email);
 
-            if (user == null || !user.Ativo)
-                return Unauthorized(ApiResposta<LoginRespostaDto>.Falha("Usuario invalido ou inativo."));
+            if (user is null || !user.Ativo)
+            {
+                return Unauthorized(
+                    ApiResposta<LoginRespostaDto>.Falha("Usuário inválido ou inativo."));
+            }
 
-            //verifica se a senha valida
             var senhaValida = await _userManager.CheckPasswordAsync(user, dto.Senha);
-            if (!senhaValida)
-                return Unauthorized(ApiResposta<LoginRespostaDto>.Falha("Senha incorreta."));
 
-            //buscar as roles do usuario (perfis)
+            if (!senhaValida)
+            {
+                return Unauthorized(
+                    ApiResposta<LoginRespostaDto>.Falha("Senha incorreta."));
+            }
+
+            // Busca os perfis verdadeiros gravados no ASP.NET Identity.
             var roles = await _userManager.GetRolesAsync(user);
 
             var authClaims = new List<Claim>
@@ -111,7 +142,10 @@ namespace Quetzal.API.Controllers
                 Perfis = roles.ToList()
             };
 
-            return Ok(ApiResposta<LoginRespostaDto>.Ok(resposta, "Login realizado com sucesso."));
+            return Ok(
+                ApiResposta<LoginRespostaDto>.Ok(
+                    resposta,
+                    "Login realizado com sucesso."));
         }
 
     }
