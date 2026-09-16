@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Quetzal.Domain.Entidades;
@@ -16,7 +17,7 @@ namespace Quetzal.Infrastructure
             //Registra o contexto do banco de dados usando SQL Server
             services.AddDbContext<QuetzalContexto>(options => options.UseSqlServer(configuration.GetConnectionString("QuetzalDB")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            services.AddIdentityCore<ApplicationUser>(options =>
             {
                 // Configurações de senha
                 options.Password.RequireDigit = true;
@@ -26,9 +27,9 @@ namespace Quetzal.Infrastructure
                 options.Password.RequireLowercase = true;
 
             })
+
                 .AddEntityFrameworkStores<QuetzalContexto>()
                 .AddDefaultTokenProviders();
-
 
             services.AddScoped<IAmbienteRepositorio, AmbienteRepositorio>();
             services.AddScoped<IPortfolioRepositorio, PortfolioRepositorio>();

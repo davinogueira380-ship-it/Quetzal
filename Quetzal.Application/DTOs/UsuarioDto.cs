@@ -36,7 +36,6 @@ namespace Quetzal.Application.DTOs
         [StringLength(11, MinimumLength = 11, ErrorMessage = "O telefone deve conter 11 dígitos incluindo DDD.")]
         public string Telefone { get; set; } = string.Empty;
 
-
         [Required(ErrorMessage = "A Senha e obrigatoria.")]
         [MinLength(6, ErrorMessage = "A senha deve ter no minimo 6 caracteres.")]
         public string Senha { get; set; } = string.Empty;

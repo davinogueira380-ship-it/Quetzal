@@ -37,6 +37,7 @@ public class UsuariosController : ControllerBase
                 Id = user.Id,
                 NomeCompleto = user.NomeCompleto,
                 Email = user.Email!,
+                Telefone = user.Telefone,
                 Ativo = user.Ativo,
                 DataCadastro = user.DataCadastro,
                 Perfis = roles.ToList()
