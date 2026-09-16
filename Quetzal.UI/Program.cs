@@ -41,8 +41,8 @@ public class Program
             });
 
         // Registra os servicos customizados
-        builder.Services.AddScoped<ApiCliente>();
-        builder.Services.AddScoped<ServicoUpload>();
+        //builder.Services.AddScoped<ApiCliente>();
+        //builder.Services.AddScoped<ServicoUpload>();
 
         var app = builder.Build();
 

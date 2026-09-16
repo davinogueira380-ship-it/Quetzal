@@ -33,13 +33,13 @@ public class PortfolioServico : IPortfolioServico
         }
     }
 
-        public async Task<ApiResposta<PortfolioDto>> ObterPorIdAsync(int id)
+    public async Task<ApiResposta<PortfolioDto>> ObterPorIdAsync(int id)
+    {
+        try
         {
-            try
-            {
-                var portfolios = await _repositorio.ObterPorIdAsync(id);
-                if (portfolios == null)
-                    return ApiResposta<PortfolioDto>.Falha("Portfolio não encontrado.");
+            var portfolios = await _repositorio.ObterPorIdAsync(id);
+            if (portfolios == null)
+                return ApiResposta<PortfolioDto>.Falha("Portfolio não encontrado.");
 
             var dto = _mapper.Map<PortfolioDto>(portfolios);
             return ApiResposta<PortfolioDto>.Ok(dto);
@@ -49,7 +49,7 @@ public class PortfolioServico : IPortfolioServico
             return ApiResposta<PortfolioDto>.Falha($"Erro ao obter o portfolio: {ex.Message}");
         }
     }
-    
+
     public async Task<ApiResposta<IEnumerable<PortfolioDto>>> FiltrarPorAmbienteAsync(string? termo, int? ambienteId = null)
     {
         try
@@ -80,14 +80,14 @@ public class PortfolioServico : IPortfolioServico
         }
     }
 
-        public async Task<ApiResposta<PortfolioDto>> CadastrarAsync(CriarPortfolioDto dto)
+    public async Task<ApiResposta<PortfolioDto>> CadastrarAsync(CriarPortfolioDto dto)
+    {
+        try
         {
-            try
-            {
-                // Verifica se o AMBIENTE informado existe
-                var ambiente = await _ambienteRepositorio.ObterPorIdAsync(dto.AmbienteId);
-                if (ambiente == null)
-                    return ApiResposta<PortfolioDto>.Falha("Ambiente invalido.");
+            // Verifica se o AMBIENTE informado existe
+            var ambiente = await _ambienteRepositorio.ObterPorIdAsync(dto.AmbienteId);
+            if (ambiente == null)
+                return ApiResposta<PortfolioDto>.Falha("Ambiente invalido.");
 
             var portfolio = _mapper.Map<Portfolio>(dto);
             var portfolioCadastrado = await _repositorio.AdicionarAsync(portfolio);
@@ -170,7 +170,7 @@ public class PortfolioServico : IPortfolioServico
         try
         {
             var projeto = await _repositorio.ObterPorIdAsync(id);
-            if (projeto == null && await _repositorio.ObterPorIdAsync(id) == null)  
+            if (projeto == null && await _repositorio.ObterPorIdAsync(id) == null)
             {
                 //não possui o parâmetro
             }

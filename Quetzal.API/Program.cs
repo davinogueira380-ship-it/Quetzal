@@ -1,17 +1,16 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Quetzal.Application.Mapeamentos;
-using Quetzal.Domain.Entidades;
+using Quetzal.Application.Servicos;
+using Quetzal.Application.Servicos.Implementacoes;
+using Quetzal.Application.Servicos.Interfaces;
 using Quetzal.Infrastructure;
 using Quetzal.Infrastructure.Dados;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Registra os serviços da infraestrutura (DbContext, Identity, Jwt)
+// Registra DbContext, Identity e demais serviços da Infrastructure
 builder.Services.AdicionarServicosDeInfraestrutura(builder.Configuration);
-
-// 3. Configura a Autenticação via JWT
-var chaveJwt = builder.Configuration["Jwt:Chave"] ?? "QuetzalChaveSecretaSuperSegura2026!";
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -21,16 +20,11 @@ builder.Services.AddAutoMapper(
     cfg => { },
     typeof(PerfilMapeamento));
 
-builder.Services.AddDbContext<QuetzalContexto>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services
-    .AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<QuetzalContexto>()
-    .AddDefaultTokenProviders();
-
 builder.Services.AddAuthorization();
+
+builder.Services.AddScoped<IAmbienteServico, AmbienteServico>();
+builder.Services.AddScoped<IPortfolioServico, PortfolioServico>();
+
 
 var app = builder.Build();
 
@@ -44,9 +38,15 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Criação dos perfis padrão: deve ficar antes do app.Run()
+// Cria o banco e aplica as migrations pendentes
 using (var scope = app.Services.CreateScope())
 {
+    var context = scope.ServiceProvider
+        .GetRequiredService<QuetzalContexto>();
+
+    await context.Database.MigrateAsync();
+
+    // Cria os perfis padrão
     var roleManager = scope.ServiceProvider
         .GetRequiredService<RoleManager<IdentityRole>>();
 
