@@ -1,5 +1,5 @@
 ﻿using Quetzal.Desktop.ApiClientes;
-using SenacFlix.Desktop.ApiClientes;
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -48,7 +48,7 @@ namespace Quetzal.Desktop.ApiClientes
         // --------------------------------------------------------
 
         // Rota do endpoint de login da API
-        private const string RotaLogin = "/api/autenticacao/login";
+        private const string RotaLogin = "/api/auth/login";
 
         public async Task<ApiRespostaSimples<LoginRespostaDto>> LoginAsync(string email, string senha)
         {

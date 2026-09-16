@@ -10,7 +10,6 @@
 
 
 using Quetzal.Desktop.ApiClientes;
-using SenacFlix.Desktop.ApiClientes;
 using System.Collections.Generic;  // Necessario para List<CategoriaDto>
 using System.Threading.Tasks;      // Necessario para operacoes assincronas
 
@@ -95,4 +94,12 @@ public class AmbienteDto
         // Chama DELETE /api/Ambiente/{id}/desativar para desativacao logica
         return await DeleteAsync<ApiRespostaSimples<object>>($"{RotaBase}/{id}/desativar");
     }
+
+    public async Task<ApiRespostaSimples<object>> ReativarAsync(int id)
+    {
+        // Chama DELETE /api/Ambiente/{id}/reativar para reativacao logica
+        return await PutAsync<ApiRespostaSimples<object>>($"{RotaBase}/{id}/reativar", null);
+    }
+
+
 }

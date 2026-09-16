@@ -1,7 +1,7 @@
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Quetzal.Application.Mapeamentos;
-using Quetzal.Application.Servicos;
 using Quetzal.Application.Servicos.Implementacoes;
 using Quetzal.Application.Servicos.Interfaces;
 using Quetzal.Infrastructure;
@@ -9,36 +9,68 @@ using Quetzal.Infrastructure.Dados;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Registra DbContext, Identity e demais serviços da Infrastructure
+// INFRASTRUCTURE
+
 builder.Services.AdicionarServicosDeInfraestrutura(builder.Configuration);
 
+// CONTROLLERS
+
 builder.Services.AddControllers();
+
+
+// SWAGGER
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+// AUTOMAPPER
 
 builder.Services.AddAutoMapper(
     cfg => { },
     typeof(PerfilMapeamento));
 
+
+// AUTHORIZATION
+
 builder.Services.AddAuthorization();
+
+
+// SERVIÇOS DA APPLICATION
 
 builder.Services.AddScoped<IAmbienteServico, AmbienteServico>();
 builder.Services.AddScoped<IPortfolioServico, PortfolioServico>();
 
 
+// CONSTRUÇÃO DA APLICAÇÃO
+
 var app = builder.Build();
+
+
+// SWAGGER
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
+
+// HTTPS
+
 app.UseHttpsRedirection();
+
+
+// AUTENTICAÇÃO E AUTORIZAÇÃO
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+
+// CONTROLLERS
+
 app.MapControllers();
 
-// Cria o banco e aplica as migrations pendentes
+
+// BANCO DE DADOS E ROLES
+
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider
@@ -46,19 +78,27 @@ using (var scope = app.Services.CreateScope())
 
     await context.Database.MigrateAsync();
 
+
     // Cria os perfis padrão
     var roleManager = scope.ServiceProvider
         .GetRequiredService<RoleManager<IdentityRole>>();
 
-    var roles = new[] { "Cliente", "Administrador" };
+    var roles = new[]
+    {
+        "Cliente",
+        "Administrador"
+    };
 
     foreach (var role in roles)
     {
         if (!await roleManager.RoleExistsAsync(role))
         {
-            await roleManager.CreateAsync(new IdentityRole(role));
+            await roleManager.CreateAsync(
+                new IdentityRole(role));
         }
     }
 }
 
+
 app.Run();
+
