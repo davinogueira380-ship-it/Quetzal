@@ -27,5 +27,5 @@ namespace Quetzal.Application
         }
     }
 }
-
+//regras de negócio 
 // Voltar aqui Sthefanny ↑
