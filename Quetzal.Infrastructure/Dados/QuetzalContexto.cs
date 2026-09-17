@@ -89,46 +89,44 @@ namespace Quetzal.Infrastructure.Dados
 
             builder.Entity<ApplicationUser>(entidade =>
             {
-            entidade.ToTable("Indentidade_Usuarios");
+                entidade.ToTable("Indentidade_Usuarios");
 
-            entidade.Property(u => u.NomeCompleto)
-                .IsRequired()
-                .HasMaxLength(200);
+                entidade.Property(u => u.NomeCompleto)
+                    .IsRequired()
+                    .HasMaxLength(200);
 
-            entidade.Property(u => u.Email)
-                .IsRequired()
-                .HasMaxLength(200);
+                entidade.Property(u => u.Email)
+                    .IsRequired()
+                    .HasMaxLength(200);
 
-            entidade.Property(u => u.UserName)
-                .IsRequired()
-                .HasMaxLength(100);
-
-            entidade.Property(u => u.Telefone)
-                .HasMaxLength(11);
-
-            entidade.Property(u => u.SenhaHash)
+                entidade.Property(u => u.UserName)
+                    .IsRequired()
                     .HasMaxLength(100);
-        });
 
-            // ================================================================
+                entidade.Property(u => u.Telefone)
+                    .HasMaxLength(11);
+
+                entidade.Property(u => u.SenhaHash)
+                        .HasMaxLength(100);
+            });
+
+
+            
             // RENOMEAR TABELAS DO IDENTITY PARA MELHOR ORGANIZACAO
-            // ================================================================
 
             builder.Entity<ApplicationUser>().ToTable("Identidade_Usuarios");
-        builder.Entity<IdentityRole>().ToTable("Identidade_Perfis");
-        builder.Entity<IdentityUserRole<string>>().ToTable("Identidade_UsuarioPerfis");
-        builder.Entity<IdentityUserClaim<string>>().ToTable("Identidade_UsuarioClaims");
-        builder.Entity<IdentityUserLogin<string>>().ToTable("Identidade_UsuarioLogins");
-        builder.Entity<IdentityRoleClaim<string>>().ToTable("Identidade_PerfilClaims");
-        builder.Entity<IdentityUserToken<string>>().ToTable("Identidade_UsuarioTokens");
+            builder.Entity<IdentityRole>().ToTable("Identidade_Perfis");
+            builder.Entity<IdentityUserRole<string>>().ToTable("Identidade_UsuarioPerfis");
+            builder.Entity<IdentityUserClaim<string>>().ToTable("Identidade_UsuarioClaims");
+            builder.Entity<IdentityUserLogin<string>>().ToTable("Identidade_UsuarioLogins");
+            builder.Entity<IdentityRoleClaim<string>>().ToTable("Identidade_PerfilClaims");
+            builder.Entity<IdentityUserToken<string>>().ToTable("Identidade_UsuarioTokens");
 
-        // ================================================================
-        // APPLY SEED DATA
-        // ================================================================
-        // Os dados iniciais agora são injetados nativamente via SQL na migration SeedData.
+            // APPLY SEED DATA
+            // Os dados iniciais agora são injetados nativamente via SQL na migration SeedData.
 
 
 
+        }
     }
-}
 }

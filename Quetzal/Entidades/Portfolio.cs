@@ -12,12 +12,16 @@ public class Portfolio
     public int Id { get; set; }
     public string? NomeProjeto { get; set; } //FK da tabela Usuario
 
-    public Ambiente Ambiente { get; set; } = null!; // FK da tabela Ambiente
-    public int AmbienteId { get; set; } // FK da tabela Ambiente
-    public string Descricao { get; set; } = string.Empty; // Descrição do projeto
-    public string? ImagemUpload { get; set; } // Imagem que vai ser exibida no site
 
-    public bool Ativo { get; set; } // Indica se o projeto está ativo ou não
+    public Ambiente Ambiente { get; set; } = null!; 
+    public int AmbienteId { get; set; } 
+
+
+    public string Descricao { get; set; } = string.Empty; 
+    public string? ImagemUpload { get; set; } 
+
+
+    public bool Ativo { get; set; }
 
     public DateTime DataCriacao { get; set; } // Data de criação do projeto
     public DateTime? DataAtualizacao { get; set; } // Data de atualização do projeto
