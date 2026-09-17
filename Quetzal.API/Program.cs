@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 // INFRASTRUCTURE
 
 builder.Services.AdicionarServicosDeInfraestrutura(builder.Configuration);
+builder.Services.AddDataProtection(); //Adicionado Kelly 16-09
 
 // CONTROLLERS
 

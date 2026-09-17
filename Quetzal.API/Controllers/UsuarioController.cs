@@ -7,7 +7,7 @@ using Quetzal.Domain.Entidades;
 using Quetzal.Domain.Interfaces;
 
 
-namespace SenacFlix.API.Controllers;
+namespace Quetzal.API.Controllers;
 
 
 [Route("api/[controller]")]
