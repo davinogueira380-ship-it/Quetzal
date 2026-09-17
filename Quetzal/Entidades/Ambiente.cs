@@ -12,14 +12,14 @@ namespace Quetzal.Domain.Entidades
         public string PortfolioId { get; set; } = string.Empty; // FK da tabela Portfolio
         public Portfolio Portfolio { get; set; } = null!; // Referência ao portfolio
 
+
         public bool Ativo { get; set; } // Indica se o ambiente está ativo ou não
         public DateTime DataCadastro { get; set; } // Data de cadastro do ambiente
         public DateTime? DataAtualizacao { get; set; }
         public DateTime? DataExclusao { get; set; }
 
+
         public ICollection<Portfolio> Portfolios { get; set; } = new List<Portfolio>();
-
-
 
     }
 
