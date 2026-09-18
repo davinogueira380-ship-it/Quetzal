@@ -16,7 +16,7 @@ public class Portfolio
     public string Descricao { get; set; } = string.Empty; // Descrição do projeto
     public string? ImagemUpload { get; set; } // Imagem que vai ser exibida no site
 
-    public bool Ativo { get; set; } // Indica se o projeto está ativo ou não
+    public bool Ativo { get; set; }
 
     public DateTime DataCriacao { get; set; } // Data de criação do projeto
     public DateTime? DataAtualizacao { get; set; } // Data de atualização do projeto

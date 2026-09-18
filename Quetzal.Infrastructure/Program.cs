@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Quetzal.Domain.Entidades;
@@ -26,13 +27,14 @@ namespace Quetzal.Infrastructure
                 options.Password.RequireLowercase = true;
 
             })
+
                 .AddEntityFrameworkStores<QuetzalContexto>()
                 .AddDefaultTokenProviders();
-
 
             services.AddScoped<IAmbienteRepositorio, AmbienteRepositorio>();
             services.AddScoped<IPortfolioRepositorio, PortfolioRepositorio>();
             services.AddScoped<IProjetoCRepositorio, ProjetoCRepositorio>();
+            services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
 
             return services;
         }

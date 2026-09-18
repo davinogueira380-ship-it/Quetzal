@@ -17,10 +17,10 @@ using System.Threading.Tasks;          // Necessario para Task e operacoes assin
 using Newtonsoft.Json;                 // Necessario para serializar/desserializar JSON
 using Quetzal.Desktop.Sessao;        // Necessario para acessar o token JWT da sessao
 
-namespace SenacFlix.Desktop.ApiClientes
+namespace Quetzal.Desktop.ApiClientes
 {
     /// <summary>
-    /// Classe base abstrata para todos os clientes HTTP do SenacFlix Desktop.
+    /// Classe base abstrata para todos os clientes HTTP do Quetzal Desktop.
     /// Fornece metodos reutilizaveis para GET, POST, PUT e DELETE com suporte a JWT.
     /// </summary>
     public abstract class ClienteHttp
@@ -29,8 +29,8 @@ namespace SenacFlix.Desktop.ApiClientes
         // Constantes e campos internos
         // --------------------------------------------------------
 
-        // URL base da API REST do SenacFlix (backend ASP.NET Core)
-        private const string UrlBase = "http://localhost:5031";
+        // URL base da API REST do Quetzal (backend ASP.NET Core)
+        private const string UrlBase = "http://localhost:5275";
 
         // Instancia compartilhada do HttpClient (boas praticas: reutilizar)
         // O handler ignora erros de certificado SSL em ambiente de desenvolvimento local

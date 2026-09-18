@@ -1,19 +1,19 @@
-﻿using Quetzal.Domain.Entidades;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Quetzal.Domain.Entidades
+﻿namespace Quetzal.Domain.Entidades
 {
     public class ProjetoC
     {
         public int Id { get; set; }
-        public string? NomeProjeto { get; set; } //FK da tabela Usuario
-        public string UsuarioId { get; set; } = string.Empty; // FK da tabela Usuario (ajustado para string)
+        public string? NomeProjeto { get; set; } //FK da tabela Usuário
+        public string UsuarioId { get; set; } = string.Empty; // FK da tabela Usuario 
         public ApplicationUser Usuario { get; set; } = null!;
 
-        public string? Descricao { get; set; } // Descrição do projeto
-        public string? ImagemUpload { get; set; } // Imagem que vai ser exibida no site
+
+        // Descrição do projeto
+        public string? Descricao { get; set; }
+        // Imagem que vai ser exibida no site
+        public string? ImagemUpload { get; set; } 
+
+
 
         public bool Ativo { get; set; } // Indica se o projeto está ativo ou não
 

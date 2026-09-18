@@ -1,12 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Quetzal.Application.DTOs;
+using Quetzal.Domain.Entidades;
+using System.ComponentModel.DataAnnotations;
 
 namespace Quetzal.Application.DTOs
 {
     public class ProjetoCDto
     {
         public int Id { get; set; }
-        public string Nome { get; set; } = string.Empty;
+        public string Nome { get; set; } = string.Empty;        
         public string Descricao { get; set; } = string.Empty;
+
+        //Voltar aqui STHEFANNY ↓
+
+        //Para dados de cliente e usuário 
+        public string UsuarioId { get; set; } = string.Empty;
+        public string ClienteId { get; set; } = string.Empty;
+
 
         // Dados Ambiente
         public int AmbienteId { get; set; }
@@ -16,6 +25,7 @@ namespace Quetzal.Application.DTOs
         public DateTime DataCadastro { get; set; }
         public DateTime? DataAtualizacao { get; set; }
         public DateTime? DataExclusao { get; set; }
+        public ICollection<AmbienteDto> Ambientes { get; set; } = new List<AmbienteDto>();
     }
 
     public class CriarProjetoCDto
@@ -30,6 +40,12 @@ namespace Quetzal.Application.DTOs
 
         [Required(ErrorMessage = "O ambiente é obrigatório.")]
         public int AmbienteId { get; set; }
+
+        
+        public ICollection<AmbienteDto> Ambientes { get; set; } = new List<AmbienteDto>(); 
+
+        //Voltar aqui STHEFANNY ↑
+       
     }
 
     // Dto recebe dados de atualização de um novo projeto existente

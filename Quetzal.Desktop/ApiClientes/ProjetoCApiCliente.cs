@@ -1,4 +1,3 @@
-using SenacFlix.Desktop.ApiClientes;
 
 namespace Quetzal.Desktop.ApiClientes
 {

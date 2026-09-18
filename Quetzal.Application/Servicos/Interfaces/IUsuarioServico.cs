@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Quetzal.Application.Servicos.Interfaces
 {
-    internal interface IUsuarioServico
+    public interface IUsuarioServico
     {
         Task<ApiResposta<UsuarioDto>> CadastrarAsync(RegistrarUserDto dto);
         Task<ApiResposta<IEnumerable<UsuarioDto>>> ObterTodosAsync(bool incluirInativas = false);

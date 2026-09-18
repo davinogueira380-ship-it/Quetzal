@@ -2,15 +2,15 @@
 
 namespace Quetzal.Domain.Interfaces
 {
-    public interface IUsuarioRepositorio
+    public interface IUsuarioRepositorio 
     {
         Task<IEnumerable<ApplicationUser>> ObterTodosAsync(bool incluirInativos = false);
-        Task<ApplicationUser?> ObterPorIdAsync(int id);
+        Task<ApplicationUser?> ObterPorIdAsync(string id);
         Task<ApplicationUser> AdicionarAsync(ApplicationUser usuario);
-        Task<ApplicationUser> AtualizarAsync(int id, ApplicationUser usuario);
-        Task DesativarAsync(int id);
-        Task ExcluirPermanentementeAsync(int id);
-        Task ReativarAsync(int id);
+        Task<ApplicationUser> AtualizarAsync(string id, ApplicationUser usuario);
+        Task DesativarAsync(string id);
+        Task ExcluirPermanentementeAsync(string id);
+        Task ReativarAsync(string id);
         Task<ApplicationUser> AtualizarAsync(ApplicationUser usuarioExistente);
     }
 }

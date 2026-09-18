@@ -5,22 +5,24 @@ using Quetzal.Application.DTOs;
 using Quetzal.Application.Servicos.Implementacoes;
 using Quetzal.Domain.Entidades;
 using Quetzal.Domain.Interfaces;
+using Quetzal.Application.Servicos;
+using Quetzal.Application.Servicos.Interfaces;
 
-
-namespace SenacFlix.API.Controllers;
+namespace Quetzal.API.Controllers;
 
 
 [Route("api/[controller]")]
 [ApiController]
 public class UsuariosController : ControllerBase
 {
-    private readonly UsuarioServico _usuarioServico;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IUsuarioServico _usuarioServico;// incluido I no Usuario K 16-09
+    private readonly UserManager<ApplicationUser> _userManager; 
 
 
-    public UsuariosController(UsuarioServico usuarioServico)
+    public UsuariosController(IUsuarioServico usuarioServico , UserManager<ApplicationUser> userManager) // incluido I no Usuario k 16-09
     {
         _usuarioServico = usuarioServico;
+        _userManager = userManager;
     }
 
     [HttpGet]
@@ -37,6 +39,7 @@ public class UsuariosController : ControllerBase
                 Id = user.Id,
                 NomeCompleto = user.NomeCompleto,
                 Email = user.Email!,
+                Telefone = user.Telefone,
                 Ativo = user.Ativo,
                 DataCadastro = user.DataCadastro,
                 Perfis = roles.ToList()

@@ -14,7 +14,7 @@ namespace Quetzal.Application
         public static IServiceCollection AdicionarServicosAplicacao(this IServiceCollection services)
         {
             //registra os perfis do AutoMapper
-            services.AddAutoMapper(opt => opt.AddProfile<PerfilMapeamento>());
+            services.AddAutoMapper(cfg => cfg.AddProfile<PerfilMapeamento>());
 
             //registra os servicos da camada Application
             services.AddScoped<IAmbienteServico, AmbienteServico>();
@@ -27,5 +27,5 @@ namespace Quetzal.Application
         }
     }
 }
-
+//regras de negócio 
 // Voltar aqui Sthefanny ↑
