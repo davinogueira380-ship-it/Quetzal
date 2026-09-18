@@ -24,7 +24,7 @@ namespace Quetzal.UI.ViewModels
         // Só existe na UI — para onde redirecionar após o login.
         // Ex: usuário tentou acessar /Admin/Dashboard sem estar logado,
         // foi mandado para o login, e depois deve voltar para lá.
-        //public string? RetornoUrl { get; set; }
+        public string? RetornoUrl { get; set; }
     }
 }
 }
