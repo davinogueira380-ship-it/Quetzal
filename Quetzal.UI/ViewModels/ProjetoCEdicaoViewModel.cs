@@ -33,4 +33,4 @@ namespace Quetzal.UI.ViewModels
         public string ClienteNome { get; set; } = string.Empty;
     }
 }
-}
+

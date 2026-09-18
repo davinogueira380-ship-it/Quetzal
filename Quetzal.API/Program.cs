@@ -6,18 +6,19 @@ using Quetzal.Application.Servicos.Implementacoes;
 using Quetzal.Application.Servicos.Interfaces;
 using Quetzal.Infrastructure;
 using Quetzal.Infrastructure.Dados;
-
+using Quetzal.Application.Servicos; // k16-09
 var builder = WebApplication.CreateBuilder(args);
 
 // INFRASTRUCTURE
 
 builder.Services.AdicionarServicosDeInfraestrutura(builder.Configuration);
+builder.Services.AddDataProtection(); //Adicionado Kelly 16-09
 
 // CONTROLLERS
 
 builder.Services.AddControllers();
 
-
+builder.Services.AddScoped<IUsuarioServico, UsuarioServico>(); // k 16-09
 // SWAGGER
 
 builder.Services.AddEndpointsApiExplorer();
