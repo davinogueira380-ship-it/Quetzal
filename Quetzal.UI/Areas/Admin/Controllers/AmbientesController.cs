@@ -77,7 +77,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
                 Id = a.Id,
                 Nome = a.Nome,
                 Descricao = a.Descricao,
-                ImagemUrl = a.ImagemUrl
+                ImagemAtualUrl = a.ImagemAtualUrl
             };
 
             return View(model);
