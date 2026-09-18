@@ -12,8 +12,8 @@ using Quetzal.Infrastructure.Dados;
 namespace Quetzal.Infrastructure.Migrations
 {
     [DbContext(typeof(QuetzalContexto))]
-    [Migration("20260916004720_AtualizarModeloIdentity")]
-    partial class AtualizarModeloIdentity
+    [Migration("20260918225110_Davi")]
+    partial class Davi
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
