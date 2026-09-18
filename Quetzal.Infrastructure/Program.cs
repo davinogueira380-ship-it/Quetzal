@@ -34,7 +34,7 @@ namespace Quetzal.Infrastructure
             services.AddScoped<IAmbienteRepositorio, AmbienteRepositorio>();
             services.AddScoped<IPortfolioRepositorio, PortfolioRepositorio>();
             services.AddScoped<IProjetoCRepositorio, ProjetoCRepositorio>();
-            
+            services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
 
             return services;
         }

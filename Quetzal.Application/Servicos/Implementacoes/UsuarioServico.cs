@@ -38,7 +38,7 @@ public class UsuarioServico : IUsuarioServico
     {
         try
         {
-            var usuario = await _repositorio.ObterPorIdAsync(id);
+            var usuario = await _repositorio.ObterPorIdAsync(id.ToString());
             if (usuario == null)
                 return ApiResposta<UsuarioDto>.Falha("Usuário não encontrado.");
             var dto = _mapper.Map<UsuarioDto>(usuario);
@@ -68,7 +68,7 @@ public class UsuarioServico : IUsuarioServico
     {
         try
         {
-            var usuarioExistente = await _repositorio.ObterPorIdAsync(id);
+            var usuarioExistente = await _repositorio.ObterPorIdAsync(id.ToString());
             if (usuarioExistente == null)
                 return ApiResposta<UsuarioDto>.Falha("Usuário não encontrado.");
             _mapper.Map(dto, usuarioExistente);
@@ -86,7 +86,7 @@ public class UsuarioServico : IUsuarioServico
     {
         try
         {
-            var usuario = await _repositorio.ObterPorIdAsync(dto.Id);
+            var usuario = await _repositorio.ObterPorIdAsync(dto.Id.ToString());
             if (usuario != null)
                 return ApiResposta<UsuarioDto>.Falha("Usuário já existe.");
 
@@ -106,7 +106,7 @@ public class UsuarioServico : IUsuarioServico
     {
         try
         {
-            await _repositorio.DesativarAsync(id);
+            await _repositorio.DesativarAsync(id.ToString());
             return ApiResposta<bool>.Ok(true, "Usuário desativado com sucesso.");
         }
         catch (Exception ex)
@@ -118,7 +118,7 @@ public class UsuarioServico : IUsuarioServico
     {
         try
         {
-            await _repositorio.ExcluirPermanentementeAsync(id);
+            await _repositorio.ExcluirPermanentementeAsync(id.ToString());
             return ApiResposta<bool>.Ok(true, "Usuário excluído permanentemente com sucesso.");
         }
         catch (Exception ex)
@@ -130,16 +130,16 @@ public class UsuarioServico : IUsuarioServico
     {
         try
         {
-            var usuario = await _repositorio.ObterPorIdAsync(id);
-            if (usuario == null && _repositorio.ObterPorIdAsync(id) != null)
+            var usuario = await _repositorio.ObterPorIdAsync(id.ToString());
+            if (usuario == null && _repositorio.ObterPorIdAsync(id.ToString()) != null)
             {
-                await _repositorio.ReativarAsync(id);
+                await _repositorio.ReativarAsync(id.ToString());
                 return ApiResposta<bool>.Ok(true, "Usuário reativado com sucesso.");
             }
             if (usuario == null)
                 return ApiResposta<bool>.Falha("Usuário não encontrado.");
 
-            await _repositorio.ReativarAsync(id);
+            await _repositorio.ReativarAsync(id.ToString());
             return ApiResposta<bool>.Ok(true, "Usuário reativado com sucesso.");
         }
         catch (Exception ex)
