@@ -13,6 +13,8 @@ namespace Quetzal.UI.ViewModels
 
         [StringLength(500, ErrorMessage = "A descrição deve ter no máximo 500 caracteres")]
         public string? Descricao { get; set; }
+
+        public string? ImagemUrl { get; set; }
     }
 }
 
