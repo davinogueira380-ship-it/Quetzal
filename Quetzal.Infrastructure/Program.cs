@@ -17,7 +17,6 @@ namespace Quetzal.Infrastructure
             //Registra o contexto do banco de dados usando SQL Server
             services.AddDbContext<QuetzalContexto>(options => options.UseSqlServer(configuration.GetConnectionString("QuetzalDB")));
 
-     //       services.AddIdentityCore<ApplicationUser>(options =>
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 // Configurações de senha

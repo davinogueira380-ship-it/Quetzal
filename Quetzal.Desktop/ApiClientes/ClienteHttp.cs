@@ -30,7 +30,7 @@ namespace Quetzal.Desktop.ApiClientes
         // --------------------------------------------------------
 
         // URL base da API REST do Quetzal (backend ASP.NET Core)
-        private const string UrlBase = "http://localhost:5277";
+        private const string UrlBase = "http://localhost:5275";
 
         // Instancia compartilhada do HttpClient (boas praticas: reutilizar)
         // O handler ignora erros de certificado SSL em ambiente de desenvolvimento local

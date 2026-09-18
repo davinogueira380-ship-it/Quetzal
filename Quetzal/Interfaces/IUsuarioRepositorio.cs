@@ -2,7 +2,7 @@
 
 namespace Quetzal.Domain.Interfaces
 {
-    public interface IUsuarioRepositorio
+    public interface IUsuarioRepositorio 
     {
         Task<IEnumerable<ApplicationUser>> ObterTodosAsync(bool incluirInativos = false);
         Task<ApplicationUser?> ObterPorIdAsync(int id);

@@ -17,6 +17,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
     {
         //[Area("Admin")]
         //[Authorize(Roles = "Admin,Operador")]
+
         private readonly ApiCliente _api;
         public AmbientesController(ApiCliente api)
         {
@@ -29,6 +30,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             return View(resposta.Dados ?? new List<AmbienteViewModel>());
         }
 
+        [HttpGet]
         public IActionResult Criar()
         {
             return View(new AmbienteEdicaoViewModel());
@@ -55,6 +57,63 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             ModelState.AddModelError("", resposta.Mensagem ?? "Erro desconhecido.");
             return View(model);
         }
+        
+
+        //Só admin e operador faz mudanças
+        [Area("Admin")]
+        [Authorize(Roles = "Admin,Operador")]
+        [HttpGet]
+        public async Task<IActionResult> Editar(int id)
+        {
+            var resposta = await _api.GetAsync<AmbienteViewModel>($"/api/Ambientes/{id}");
+            if (!resposta.Sucesso || resposta.Dados == null)
+            {
+                TempData["Erro"] = "Ambiente não encontrado.";
+                return RedirectToAction(nameof(Index));
+            }
+            var a = resposta.Dados;
+            var model = new AmbienteEdicaoViewModel
+            {
+                Id = a.Id,
+                Nome = a.Nome,
+                Descricao = a.Descricao,
+                ImagemUrl = a.ImagemUrl
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Editar(AmbienteEdicaoViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var dto = new
+            {
+                model.Nome,
+                model.Descricao,
+                model.ImagemUrl
+            };
+
+            var resposta = await _api.PutAsync<AmbienteViewModel, object>($"/api/Ambientes/{model.Id}", dto);
+            
+            if (resposta.Sucesso)
+            {
+                TempData["Sucesso"] = "Ambiente atualizado com sucesso!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            ModelState.AddModelError("", resposta.Mensagem ?? "Erro desconhecido.");
+            return View(model);
+
+        }
+
+     
+
+
+
     }
 }
 
