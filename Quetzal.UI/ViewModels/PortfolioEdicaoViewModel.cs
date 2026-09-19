@@ -8,10 +8,10 @@ namespace Quetzal.UI.ViewModels
         // Só existe quando é edição (Create não tem Id ainda)
         public int? Id { get; set; }
 
-        [Required(ErrorMessage = "O título é obrigatório")]
-        [MaxLength(200, ErrorMessage = "O Título não pode ter mais que 200 caracteres.")]
-        [Display(Name = "Título do Projeto")]
-        public string Titulo { get; set; } = string.Empty;
+        [Required(ErrorMessage = "O nome do projeto é obrigatório")]
+        [MaxLength(200, ErrorMessage = "O nome do projeto não pode ter mais que 200 caracteres.")]
+        [Display(Name = "Nome do Projeto")]
+        public string NomeProjeto { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "A Descrição é obrigatória.")]
         [Display(Name = "Descrição")]

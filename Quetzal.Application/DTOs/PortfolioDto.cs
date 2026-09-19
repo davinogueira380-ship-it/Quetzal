@@ -29,7 +29,9 @@ namespace Quetzal.Application.DTOs
     {
         [Required(ErrorMessage = "O título é obrigatório")]
         [MaxLength(200, ErrorMessage = "O Título não pode ter mais que 200 caracteres.")]
-        public string Titulo { get; set; } = string.Empty;
+
+        //Alterado de Título para NomeProjeto para manter consistencia com PortfolioDto, by Fausto
+        public string NomeProjeto { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "A Descrição é obrigatória.")]
         public string Descricao { get; set; } = string.Empty;
