@@ -11,12 +11,12 @@ namespace Quetzal.UI.Areas.Admin.Controllers
     // Index -> Criar (GET/POST) -> Editar (GET/POST) -> Desativar/Reativar/ExcluirPermanente
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
-    public class PortfolioController : Controller
+    public class PortfoliosController : Controller
     {
         private readonly ApiCliente _api;
         private readonly IWebHostEnvironment _ambiente;
 
-        public PortfolioController(ApiCliente api, IWebHostEnvironment ambiente)
+        public PortfoliosController(ApiCliente api, IWebHostEnvironment ambiente)
         {
             _api = api;
             _ambiente = ambiente;

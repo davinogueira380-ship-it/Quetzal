@@ -21,7 +21,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var resposta = await _api.GetAsync<IEnumerable<AmbienteViewModel>>("/api/Ambientes/todos");
+            var resposta = await _api.GetAsync<IEnumerable<AmbienteViewModel>>("/api/Ambiente/todas");
             return View(resposta.Dados ?? new List<AmbienteViewModel>());
         }
 
@@ -64,7 +64,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Editar(int id)
         {
-            var resposta = await _api.GetAsync<AmbienteViewModel>($"/api/Ambientes/{id}");
+            var resposta = await _api.GetAsync<AmbienteViewModel>($"/api/Ambiente/{id}");
             if (!resposta.Sucesso || resposta.Dados == null)
             {
                 TempData["Erro"] = "Ambiente não encontrado.";
@@ -97,7 +97,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
                 model.ImagemAtualUrl
             };
 
-            var resposta = await _api.PutAsync<AmbienteViewModel, object>($"/api/Ambientes/{model.Id}", dto);
+            var resposta = await _api.PutAsync<AmbienteViewModel, object>($"/api/Ambiente/{model.Id}/atualizar", dto);
 
             if (resposta.Sucesso)
             {
@@ -114,7 +114,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Desativar(AmbienteEdicaoViewModel model)
         {
-            var resposta = await _api.DeleteAsync<object>($"/api/Ambientes/{model.Id}/desativar");
+            var resposta = await _api.DeleteAsync<object>($"/api/Ambiente/{model.Id}/desativar");
             if (resposta.Sucesso)
             {
                 TempData["Sucesso"] = "Ambiente inativado com sucesso.";
@@ -132,7 +132,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Reativar(int id)
         {
-            var resposta = await _api.PutAsync<object, object>($"/api/Ambientes/{id}/reativar", new { });
+            var resposta = await _api.PutAsync<object, object>($"/api/Ambiente/{id}/reativar", new { });
             if (resposta.Sucesso)
             {
                 TempData["Sucesso"] = "Ambiente reativado com sucesso.";
@@ -150,7 +150,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ExcluirPermanente(int id)
         {
-            var resposta = await _api.DeleteAsync<object>($"/api/Ambientes/{id}/permanente");
+            var resposta = await _api.DeleteAsync<object>($"/api/Ambiente/{id}/permanente");
             if (resposta.Sucesso)
             {
                 TempData["Sucesso"] = "Ambiente excluído permanentemente.";
