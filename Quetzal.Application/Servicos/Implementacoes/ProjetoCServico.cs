@@ -87,13 +87,37 @@ namespace Quetzal.Application.Servicos.Implementacoes
         {
             try
             {
-                var ambiente = await _ambienteRepositorio.ObterPorIdAsync(dto.AmbienteId);
-
-                if (ambiente == null)
-                    return ApiResposta<ProjetoCDto>.Falha("Ambiente não encontrado.");
-
+                //ADD POR FAUSTO
                 var projetoC = _mapper.Map<ProjetoC>(dto);
-                projetoC.Ambientes.Add(ambiente);
+
+                // Define o UsuarioId enviado pelo cliente (necessário para FK)
+                if (!string.IsNullOrWhiteSpace(dto.UsuarioId))
+                {
+                    projetoC.UsuarioId = dto.UsuarioId;
+                }
+
+                // Associa múltiplos ambientes quando fornecidos; caso contrário usa AmbienteId único
+                if (dto.AmbientesIds != null && dto.AmbientesIds.Any())
+                {
+                    foreach (var ambId in dto.AmbientesIds.Distinct())
+                    {
+                        var ambiente = await _ambienteRepositorio.ObterPorIdAsync(ambId);
+                        if (ambiente != null)
+                        {
+                            projetoC.Ambientes.Add(ambiente);
+                        }
+                    }
+                }
+                else
+                {
+                    //FIM DA PARTE ADICIONADA
+                    var ambiente = await _ambienteRepositorio.ObterPorIdAsync(dto.AmbienteId);
+                    if (ambiente == null)
+                        return ApiResposta<ProjetoCDto>.Falha("Ambiente não encontrado.");
+
+                    // REMOVIDO var projetoC = _mapper.Map<ProjetoC>(dto);
+                    projetoC.Ambientes.Add(ambiente);
+                } //FECHAMENTO DO ELSE
 
                 var projetoCAdicionado = await _repositorio.AdicionarAsync(projetoC);
 
@@ -117,7 +141,38 @@ namespace Quetzal.Application.Servicos.Implementacoes
                 var projetoCExistente = await _repositorio.ObterPorIdAsync(id);
                 if (projetoCExistente == null)
                     return ApiResposta<ProjetoCDto>.Falha("Projeto do cliente não encontrado.");
+                // Mapear campos simples
                 _mapper.Map(dto, projetoCExistente);
+                //ADICIONADO POR FAUSTO
+                // Atualizar relação N:N de Ambientes conforme enviado no DTO (AmbientesIds).
+                if (dto.AmbientesIds != null && dto.AmbientesIds.Any())
+                {
+                    projetoCExistente.Ambientes.Clear();
+                    foreach (var ambId in dto.AmbientesIds.Distinct())
+                    {
+                        var ambiente = await _ambienteRepositorio.ObterPorIdAsync(ambId);
+                        if (ambiente != null)
+                        {
+                            projetoCExistente.Ambientes.Add(ambiente);
+                        }
+                    }
+                }
+                else if (dto.AmbienteId > 0)
+                {
+                    var ambiente = await _ambienteRepositorio.ObterPorIdAsync(dto.AmbienteId);
+                    if (ambiente != null)
+                    {
+                        projetoCExistente.Ambientes.Clear();
+                        projetoCExistente.Ambientes.Add(ambiente);
+                    }
+                }
+
+                // Atualiza usuario dono do projeto se enviado
+                if (!string.IsNullOrWhiteSpace(dto.UsuarioId))
+                {
+                    projetoCExistente.UsuarioId = dto.UsuarioId;
+                }
+                //FIM DA PARTE ADICIONADA
                 await _repositorio.AtualizarAsync(projetoCExistente);
                 var projetoCDto = _mapper.Map<ProjetoCDto>(projetoCExistente);
                 return ApiResposta<ProjetoCDto>.Ok(projetoCDto, "Projeto do cliente atualizado com sucesso.");
@@ -165,16 +220,18 @@ namespace Quetzal.Application.Servicos.Implementacoes
             }
         }
 
+        
         public async Task<ApiResposta<bool>> ReativarAsync(int id)
         {
             try
             {
                 var projetoC = await _repositorio.ObterPorIdAsync(id);
-                if (projetoC == null && await _repositorio.ObterPorIdAsync(id) == null)
-                {
+                if (projetoC == null)
                     return ApiResposta<bool>.Falha("Projeto do cliente não encontrado.");
-                }
-                if (projetoC != null) return ApiResposta<bool>.Falha("Projeto do cliente já está ativo.");
+
+                //Alterado de ProjetoC para ProjetoC.Ativo para evitar possível bug de ativamento, by Fausto
+                if (projetoC.Ativo)
+                    return ApiResposta<bool>.Falha("Projeto do cliente já está ativo.");
 
                 await _repositorio.ReativarAsync(id);
                 return ApiResposta<bool>.Ok(true, "Projeto do cliente reativado com sucesso.");

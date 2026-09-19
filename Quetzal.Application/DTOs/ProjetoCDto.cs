@@ -14,12 +14,16 @@ namespace Quetzal.Application.DTOs
 
         //Para dados de cliente e usuário 
         public string UsuarioId { get; set; } = string.Empty;
+        public string? UsuarioNome { get; set; }   //Add por Fausto, para exibicao, na duvida ainda se mantem
         public string ClienteId { get; set; } = string.Empty;
 
 
         // Dados Ambiente
         public int AmbienteId { get; set; }
         public string AmbienteNome { get; set; } = string.Empty;
+        //Add por Fausto, para selecao dos ambientes
+        // Lista de ids de ambientes associados (multi-select)
+        public List<int> AmbientesIds { get; set; } = new List<int>();
 
         public bool Ativo { get; set; }
         public DateTime DataCadastro { get; set; }
@@ -41,7 +45,13 @@ namespace Quetzal.Application.DTOs
         [Required(ErrorMessage = "O ambiente é obrigatório.")]
         public int AmbienteId { get; set; }
 
-        
+        // Para suporte à checkbox múltipla do cliente desktop
+        public List<int> AmbientesIds { get; set; } = new List<int>();
+
+        // Usuario que é dono/cliente do projeto (enviado pelo cliente)
+        public string UsuarioId { get; set; } = string.Empty;
+        public string? UsuarioNome { get; set; }
+
         public ICollection<AmbienteDto> Ambientes { get; set; } = new List<AmbienteDto>(); 
 
         //Voltar aqui STHEFANNY ↑
