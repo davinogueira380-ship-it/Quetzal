@@ -2,22 +2,17 @@
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Quetzal.UI.Servicos;
 using Quetzal.UI.ViewModels;
-
-
-// STHEFANNY Aqui ↓
 
 
 
 namespace Quetzal.UI.Areas.Admin.Controllers
 {
+    [Area("Admin")]
+    [Authorize(Roles = "Admin,Operador")]
     public class AmbientesController : Controller
     {
-        //[Area("Admin")]
-        //[Authorize(Roles = "Admin,Operador")]
-
         private readonly ApiCliente _api;
         public AmbientesController(ApiCliente api)
         {
@@ -35,6 +30,9 @@ namespace Quetzal.UI.Areas.Admin.Controllers
         {
             return View(new AmbienteEdicaoViewModel());
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Criar(AmbienteEdicaoViewModel model)
         {
             if (!ModelState.IsValid)
@@ -57,11 +55,12 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             ModelState.AddModelError("", resposta.Mensagem ?? "Erro desconhecido.");
             return View(model);
         }
-        
+
 
         //Só admin e operador faz mudanças
-        [Area("Admin")]
-        [Authorize(Roles = "Admin,Operador")]
+
+        //[Area("Admin")]
+        //[Authorize(Roles = "Admin,Operador")]
         [HttpGet]
         public async Task<IActionResult> Editar(int id)
         {
@@ -84,6 +83,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Editar(AmbienteEdicaoViewModel model)
         {
             if (!ModelState.IsValid)
@@ -94,11 +94,11 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             {
                 model.Nome,
                 model.Descricao,
-                model.ImagemUrl
+                model.ImagemAtualUrl
             };
 
             var resposta = await _api.PutAsync<AmbienteViewModel, object>($"/api/Ambientes/{model.Id}", dto);
-            
+
             if (resposta.Sucesso)
             {
                 TempData["Sucesso"] = "Ambiente atualizado com sucesso!";
@@ -110,11 +110,58 @@ namespace Quetzal.UI.Areas.Admin.Controllers
 
         }
 
-     
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Desativar(AmbienteEdicaoViewModel model)
+        {
+            var resposta = await _api.DeleteAsync<object>($"/api/Ambientes/{model.Id}/desativar");
+            if (resposta.Sucesso)
+            {
+                TempData["Sucesso"] = "Ambiente inativado com sucesso.";
+            }
+            else
+            {
+                TempData["Erro"] = resposta.Mensagem ?? "Erro desconhecido.";
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
 
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reativar(int id)
+        {
+            var resposta = await _api.PutAsync<object, object>($"/api/Ambientes/{id}/reativar", new { });
+            if (resposta.Sucesso)
+            {
+                TempData["Sucesso"] = "Ambiente reativado com sucesso.";
+            }
+            else
+            {
+                TempData["Erro"] = resposta.Mensagem ?? "Erro desconhecido.";
+            }
 
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ExcluirPermanente(int id)
+        {
+            var resposta = await _api.DeleteAsync<object>($"/api/Ambientes/{id}/permanente");
+            if (resposta.Sucesso)
+            {
+                TempData["Sucesso"] = "Ambiente excluído permanentemente.";
+            }
+            else
+            {
+                TempData["Erro"] = resposta.Mensagem ?? "Erro desconhecido";
+            }
+            return RedirectToAction(nameof(Index));
+
+
+        }
     }
 }
-
-//Voltar aqui STHEFANNY ↑

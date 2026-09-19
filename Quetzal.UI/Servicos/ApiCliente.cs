@@ -9,6 +9,7 @@ public class ApiResposta<T>
     public string Mensagem { get; set; } = string.Empty;
     public T? Dados { get; set; }
     public string[]? Erros { get; set; }
+    public object? Mesagem { get; internal set; }
 }
 
 public class ApiCliente
