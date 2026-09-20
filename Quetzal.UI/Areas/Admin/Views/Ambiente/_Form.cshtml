@@ -1,0 +1,48 @@
+@model AmbienteEdicaoViewModel
+
+<div class="admin-form-wrapper">
+    <div asp-validation-summary="ModelOnly" class="admin-alerta admin-alerta-erro"></div>
+
+    <form asp-action="@(Model.EhEdicao ? "Editar" : "Criar")" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ImagemAtualUrl" />
+
+        <div class="mb-3">
+            <label asp-for="Nome"></label>
+            <input asp-for="Nome" class="form-control" placeholder="Ex: Sala de Estar" />
+            <span asp-validation-for="Nome" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Descricao"></label>
+            <textarea asp-for="Descricao" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Descricao" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ImagemArquivo"></label>
+            <input asp-for="ImagemArquivo" class="form-control" type="file" accept="image/*" />
+
+            @if (!string.IsNullOrWhiteSpace(Model.ImagemAtualUrl))
+            {
+                <p class="mt-2 mb-1"><small>Imagem atual (exibida na Home):</small></p>
+                <img src="@Model.ImagemAtualUrl" alt="Imagem atual" class="imagem-preview">
+            }
+        </div>
+
+        @if (Model.EhEdicao)
+        {
+            <div class="mb-3 form-check">
+                <input asp-for="Ativo" class="form-check-input" />
+                <label asp-for="Ativo" class="mb-0"></label>
+            </div>
+        }
+
+        <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn-admin-primario">
+                <i class="fa-solid fa-check"></i> Salvar
+            </button>
+            <a asp-action="Index" class="btn-admin-secundario">Cancelar</a>
+        </div>
+    </form>
+</div>

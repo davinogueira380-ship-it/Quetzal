@@ -2,26 +2,26 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Quetzal.UI.ViewModels
 {
-    // Tela: /Admin/Portfolio (listagem)
-    // Mapeia de: PortfolioDto (via PortfolioController.ApiModelo, ver PortfolioController.cs)
-    public class PortfolioViewModel
+    // Tela: /Admin/Ambientes (listagem) e exibição pública
+    // Mapeia de: AmbienteDto (Quetzal.Application)
+    public class AmbienteViewModel
     {
         public int Id { get; set; }
 
-        [Display(Name = "Nome do Projeto")]
-        public string NomeProjeto { get; set; } = string.Empty;
+        [Display(Name = "Nome")]
+        public string Nome { get; set; } = string.Empty;
 
         [Display(Name = "Descrição")]
-        public string Descricao { get; set; } = string.Empty;
+        public string? Descricao { get; set; }
 
         [Display(Name = "Imagem")]
         public string? ImagemUpload { get; set; }
 
-        [Display(Name = "Ambiente")]
-        public string AmbienteNome { get; set; } = string.Empty;
-
         [Display(Name = "Ativo")]
         public bool Ativo { get; set; }
+
+        [Display(Name = "Projetos vinculados")]
+        public int TotalProjetos { get; set; }
 
         [Display(Name = "Cadastrado em")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]

@@ -14,11 +14,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Areas\Admin\Views\Dashboard\" />
-		<Folder Include="Areas\Admin\Views\Shared\" />
+	  <Compile Remove="ViewModels\Ambiente2EdicaoViewModel.cs" />
+	  <Compile Remove="ViewModels\Ambiente2ViewModel.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Folder Include="Infraestrutura\" />
 		<Folder Include="Models\" />
-		<Folder Include="Views\" />
 		<Folder Include="ViewComponents\" />
 	</ItemGroup>
 

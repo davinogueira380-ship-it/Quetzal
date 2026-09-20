@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -64,7 +64,7 @@ namespace Quetzal.UI.Controllers
             await AutenticarUsuarioAsync(resposta.Dados, viewModel.LembrarMe);
 
             // Só redireciona para RetornoUrl se for uma
-            // URL local do próprio site.
+            // URL local do próprio site. 
             if (!string.IsNullOrEmpty(viewModel.RetornoUrl) && Url.IsLocalUrl(viewModel.RetornoUrl))
             {
                 return Redirect(viewModel.RetornoUrl);
@@ -147,7 +147,6 @@ namespace Quetzal.UI.Controllers
             return RedirectToAction(nameof(Login));
         }
 
-        // POST: /Conta/Sair
       
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -169,9 +168,7 @@ namespace Quetzal.UI.Controllers
             return View();
         }
 
-        // Monta os Claims a partir da resposta de login da API e realiza o
-        // SignIn no esquema de Cookie do MVC, além de guardar o JWT puro
-        // no cookie que o ApiCliente consome nas próximas requisições.
+       
         private async Task AutenticarUsuarioAsync(LoginResposta dadosLogin, bool lembrarMe)
         {
             var claims = new List<Claim>
@@ -208,7 +205,7 @@ namespace Quetzal.UI.Controllers
         }
 
         // ── Modelos auxiliares para mapear a comunicação com a API ──
-        
+      
         // -> corresponde a LoginDto na API
         public class LoginRequisicao
         {

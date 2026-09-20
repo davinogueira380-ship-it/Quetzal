@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Quetzal.UI.ViewModels
 {
     // Tela: /Admin/Usuarios (listagem e detalhe)
     // Mapeia de: UsuarioDto (Quetzal.Application)
-    //
-    // ATENCAO: nao inclui Senha de proposito. O UsuarioDto atual expoe
-    // uma propriedade Senha que nunca deve chegar ate a View.
+  
     public class UsuarioViewModel
     {
         public string Id { get; set; } = string.Empty;

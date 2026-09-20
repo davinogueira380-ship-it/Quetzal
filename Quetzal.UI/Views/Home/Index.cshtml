@@ -1,0 +1,149 @@
+@model List<AmbienteViewModel>
+@{
+    ViewData["Title"] = "Início";
+}
+
+<section id="inicio">
+    <div class="container">
+        <p>
+            Transformar espaços vai muito além da estética. Acreditamos que cada ambiente deve refletir
+            a essência, os hábitos e a personalidade de quem o utiliza. Por isso, desenvolvemos
+            projetos de interiores personalizados, pensados para unir funcionalidade,
+            conforto e identidade em cada detalhe.
+        </p>
+    </div>
+</section>
+
+<section id="ambientes">
+    <div class="container">
+        <h2>Ambientes</h2>
+
+        @if (!Model.Any())
+        {
+            <p class="text-center">Em breve, novos ambientes por aqui.</p>
+        }
+        else
+        {
+            <div class="row gy-4 Galeria">
+                @foreach (var ambiente in Model)
+                {
+                    <div class="col-12 col-lg-6">
+                        <a asp-controller="Portfolio" asp-action="Ambiente" asp-route-ambienteId="@ambiente.Id">
+                            @if (!string.IsNullOrWhiteSpace(ambiente.ImagemUpload))
+                            {
+                                <img class="img-fluid" src="@ambiente.ImagemUpload" alt="@ambiente.Nome">
+                            }
+                            <span>@ambiente.Nome</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+<section id="contato">
+    <div class="Contato">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="d-none d-lg-block col-lg-6">
+                    <div class="imagemContato">
+                        <img src="~/img/TÂNIA 2024/TÂNIA 2024/11.jpg" alt="Imagem_contato">
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-6">
+                    <div class="conteudoContato">
+                        <h2>Vamos falar sobre seu projeto</h2>
+                        <p>Conte-nos suas ideias. Será um prazer pensar o seu projeto junto com você.</p>
+
+                        <form name="frmContato" id="frmContato" method="get" action="#">
+                            <label for="Nome">Nome*</label>
+                            <input type="text" name="Nome" id="Nome">
+
+                            <label for="Email">E-mail*</label>
+                            <input type="email" name="Email" id="Email">
+
+                            <label for="Telefone">Telefone*</label>
+                            <input type="text" name="Telefone" id="Telefone">
+
+                            <label for="Ajuda">Como podemos ajudar</label>
+                            <input type="text" name="Ajuda" id="Ajuda">
+
+                            <p>De qual forma você prefere receber o contato?</p>
+
+                            <div class="checkbox">
+                                <input type="checkbox" name="FormaContato" id="email">
+                                <label for="email">E-mail</label>
+
+                                <input type="checkbox" name="FormaContato" id="telefone">
+                                <label for="telefone">Telefone</label>
+
+                                <input type="checkbox" name="FormaContato" id="whatsapp">
+                                <label for="whatsapp">Whatsapp</label>
+                            </div>
+                            <div class="Button">
+                                <li>
+                                    <input type="button" name="BtnEnviar" id="BtnEnviar" value="Enviar"
+                                        class="btnDefault" onclick="validarFormulario();">
+                                </li>
+                                <li>
+                                    <a href="https://wa.me/551199999999" target="_blank" class="btnWhatsapp">
+                                        <i class="fa-brands fa-whatsapp"></i>
+                                        <span>Entre em contato </span>
+                                    </a>
+                                </li>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="sobremim">
+    <div class="container">
+        <div class="sobre-container">
+            <div class="row gy-4">
+                <div class="col-12 col-lg-6 sobre-foto">
+                    <img src="~/img/Img_cliente.jpeg" alt="foto-arredondada">
+                </div>
+
+                <div class="col-12 col-lg-6 sobre-conteudo">
+                    <h2>Sobre Mim</h2>
+                    <p>Olá, sou Janderline Tomaz (Jade). Nascida e criada na Paraíba, sempre convivi de perto com a
+                        arte e a criação manual.</p>
+                    <p>Minha trajetória começou em 2005, ao me formar técnica em edificações pelo CEFET-PB. Atuei em
+                        obras de restauros de museus a construções de alto padrão, despertando meu olhar analítico
+                        para o design de produtos e ambientes.</p>
+                    <p>Em 2017, graduei-me em Design de Interiores pelo Unipê. Na faculdade, foquei no
+                        desenvolvimento de produtos e criei a "Cadeira Mangaba" como TCC, um projeto baseado na
+                        biomimética.</p>
+                    <p>Mudei-me para São Paulo em 2018 e, desde 2020, atuo no mercado de móveis planejados. Hoje
+                        lidero a Quetzal Design e Interiores, desenvolvendo projetos residenciais, comerciais e
+                        corporativos presenciais e online por todo o Brasil, unindo funcionalidade, beleza e
+                        bem-estar.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="instagram">
+    <h2>Conheça nosso Instagram</h2>
+    <div class="container">
+        <div class="carrossel-container">
+            <button class="seta esquerda" onclick="rolarEsquerdaIndex()"> ❮ </button>
+            <div class="instagram-galeria" id="galeria">
+                <img src="~/img/CARLOS - 2026/CARLOS - 2026/A.jpeg" alt="Escritorio">
+                <img src="~/img/JORDANA 2024/SOLT 1.jpg" alt="Quarto">
+                <img src="~/img/JÉSSICA 2025/JÉSSICA 2025/z.jpg" alt="Quarto_casal">
+                <img src="~/img/LAURA E GUSTAVO/LAURA E GUSTAVO/1...jpg" alt="Cozinha">
+                <img src="~/img/TÂNIA 2024/TÂNIA 2024/D.jpg" alt="Quarto">
+                <img src="~/img/CARLOS - 2026/CARLOS - 2026/F.jpeg" alt="Extra">
+            </div>
+            <button class="seta direita" onclick="rolarDireitaIndex()"> ❯ </button>
+        </div>
+    </div>
+</section>

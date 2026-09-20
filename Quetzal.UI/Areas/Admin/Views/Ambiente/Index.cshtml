@@ -1,0 +1,85 @@
+@model List<AmbienteViewModel>
+@{
+    ViewData["Title"] = "Ambientes";
+}
+
+<div class="admin-topbar">
+    <h1>Ambientes</h1>
+    <a asp-action="Criar" class="btn-admin-primario">
+        <i class="fa-solid fa-plus"></i> Novo ambiente
+    </a>
+</div>
+
+<div class="admin-tabela-wrapper">
+    @if (!Model.Any())
+    {
+        <p class="text-center py-4 mb-0">Nenhum ambiente cadastrado ainda.</p>
+    }
+    else
+    {
+        <table class="admin-tabela">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Nome</th>
+                    <th>Projetos vinculados</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(item.ImagemUpload))
+                            {
+                                <img src="@item.ImagemUpload" alt="@item.Nome" class="thumb">
+                            }
+                        </td>
+                        <td>@item.Nome</td>
+                        <td>@item.TotalProjetos</td>
+                        <td>
+                            <span class="@(item.Ativo ? "badge-admin-ativo" : "badge-admin-inativo")">
+                                @item.StatusTexto
+                            </span>
+                        </td>
+                        <td>
+                            <div class="acoes">
+                                <a asp-action="Editar" asp-route-id="@item.Id" class="btn-admin-secundario">
+                                    <i class="fa-solid fa-pen"></i> Editar
+                                </a>
+
+                                @if (item.Ativo)
+                                {
+                                    <form asp-action="Desativar" asp-route-id="@item.Id" method="post" class="d-inline">
+                                        <button type="submit" class="btn-admin-secundario"
+                                            onclick="return confirm('Desativar este ambiente? Ele deixará de aparecer na Home.');">
+                                            <i class="fa-solid fa-eye-slash"></i> Desativar
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form asp-action="Reativar" asp-route-id="@item.Id" method="post" class="d-inline">
+                                        <button type="submit" class="btn-admin-secundario"
+                                            onclick="return confirm('Reativar este ambiente?');">
+                                            <i class="fa-solid fa-eye"></i> Reativar
+                                        </button>
+                                    </form>
+                                }
+
+                                <form asp-action="ExcluirPermanente" asp-route-id="@item.Id" method="post" class="d-inline">
+                                    <button type="submit" class="btn-admin-perigo"
+                                        onclick="return confirm('Excluir PERMANENTEMENTE este ambiente? Essa ação não pode ser desfeita.');">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

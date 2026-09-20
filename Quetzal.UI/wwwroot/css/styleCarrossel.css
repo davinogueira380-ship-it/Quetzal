@@ -1,0 +1,319 @@
+/* #region global */
+/* usar asterisco na frente das chaves indica a edição na página inteira */
+* {
+  font-family: bahnschrift;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  /* overflow-x: hidden; */
+  /* background-color: var(--clr-tertiary); */
+
+  h2 {
+    color: #6b7556;
+    font-size: 4rem;
+    text-align: center;
+    font-weight: 800;
+  }
+
+  p {
+    color: black;
+    font-size: 2rem;
+  }
+
+  ul,
+  ol,
+  li {
+    list-style: none;
+  }
+
+}
+
+:root {
+  --clr-primary: #F0C4CB;
+  --clr-secondary: #C87D87;
+  --clr-tertiary: #FBEAD6;
+  --clr-quaternary: #6B7556;
+  --clr-quinary: #E5BCA9;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+#inicio,
+#projetos,
+#contato,
+#portfolio,
+#sobremim {
+  scroll-margin-top: 130px;
+}
+
+
+
+/* #endregion */
+
+
+.topo {
+  /* width: 100%;
+  height: 100vh;
+  background: url('../img/COZ\ 1.jpg');
+  background-color: var(--clr-quinary);
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column; */
+
+
+
+  .navbar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px 60px;
+    /* height: 12vh; */
+    /* margin: 20px; */
+    /* border-radius: 12px; */
+    background-color: var(--clr-quinary);
+    width: 100%;
+    backdrop-filter: blur(1px);
+    gap: 0.1px;
+    position: fixed;
+    z-index: 9999 !important;
+    /* background-color: #C87D87 !important; */
+    margin-top: -35px;
+  }
+
+
+  .LogoWhat {
+    a img {
+      width: 70px;
+      height: auto;
+      display: block;
+      order: 3;
+      transition: all 0.3s ease;
+    }
+
+    a:hover img {
+      transform: scale(1.20);
+    }
+  }
+
+  .LogoInsta {
+    a img {
+      width: 39px;
+      height: auto;
+      display: block;
+      gap: 20px;
+      margin-right: 70px;
+      transition: all 0.3s ease;
+    }
+
+    a:hover img {
+      transform: scale(1.20);
+    }
+  }
+
+  .LogoNav {
+    a img {
+      width: 120px;
+      height: auto;
+      display: block;
+      order: 1;
+      margin-left: 55px;
+      transition: all 0.3s ease;
+    }
+
+    a:hover img {
+      transform: scale(1.20);
+    }
+
+  }
+
+  .menu-links {
+
+    /* list-style: none; */
+    margin: 0;
+    padding: 0;
+    margin-left: auto;
+    margin-right: 100px;
+    display: flex;
+    gap: 20px;
+
+
+    li a {
+      color: #FFFFFF;
+      text-decoration: none;
+      font-family: sans-serif;
+      font-weight: 600;
+      font-size: 1.5rem;
+      transition: color 0.6s ease;
+      display: inline-block;
+      white-space: nowrap;
+
+      &:hover {
+        color: var(--clr-quaternary);
+        transform: scale(1.15);
+      }
+    }
+  }
+}
+
+/* #endregion */
+
+#sobremim {
+  background: #fbead6;
+  padding: 100px 10%;
+}
+
+.sobre-container {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
+}
+
+.sobre-foto {
+  flex: 0 0 300px;
+}
+
+.sobre-foto img {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  /* ou 420px */
+  object-fit: cover;
+  border-top-left-radius: 150px;
+  border-top-right-radius: 150px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.sobre-conteudo {
+  flex: 1;
+  max-width: 600px;
+}
+
+.sobre-conteudo h2 {
+  font-size: 2.8rem;
+  /* margin-top: 0; */
+  margin-bottom: 20px;
+
+}
+
+.sobre-conteudo p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 15px;
+  /* text-align: justify; */
+  color: #333;
+}
+
+/* #region instagram */
+#instagram {
+  background-color: #fbead6;
+  padding: 100px 10%;
+  text-align: center;
+}
+
+#instagram h2 {
+  text-align: center;
+  margin-bottom: 40px;
+  color: #C87D87;
+  font-size: 2.5rem;
+}
+
+.carrossel-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.instagram-galeria {
+  display: flex;
+  gap: 20px;
+  /* width: 100%; */
+  max-width: 1000px;
+  overflow-x: hidden;
+  /* overflow-y: hidden; */
+  scroll-behavior: smooth;
+  padding: 10px;
+  scroll-snap-align: center;
+
+
+}
+
+.instagram-galeria img {
+  width: 280px;
+  height: 380px;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.seta {
+  border: none;
+  background: #6b7556;
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  transition: .3s;
+}
+
+.seta:hover {
+  background: #c87d87;
+}
+
+
+/* #region Tania */
+#Projeto-Tania {
+
+  margin-top: 35px;
+  /* gap: 200px; */
+  padding-top: 100px;
+  background: #fbead6;
+
+
+
+}
+
+/* #endregion */
+
+/* #region Carlos */
+#Projeto-Carlos {
+
+  /* margin-bottom: 100px; */
+  gap: 200px;
+  padding: 100px;
+  background: #fbead6;
+
+
+
+}
+
+/* #endregion */
+
+/* #region footer */
+
+.footer {
+  background-color: var(--clr-quinary);
+  text-align: center;
+  overflow: hidden;
+
+}
+
+.footer p {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  color: #333;
+  font-weight: 200;
+}
+
+/* #endregion */

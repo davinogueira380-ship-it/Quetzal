@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Quetzal.UI.ViewModels
 {
@@ -29,18 +29,13 @@ namespace Quetzal.UI.ViewModels
         public DateTime DataCadastro { get; set; }
     }
 
-    public class DadosPessoaisViewModel
-    {
-        [Required(ErrorMessage = "O Nome é obrigatório.")]
-        public string Nome { get; set; } = string.Empty;
-        [Required(ErrorMessage = "O Sobrenome é obrigatório.")]
-        public string Sobrenome { get; set; } = string.Empty;
-        [Required(ErrorMessage = "O E-mail é obrigatório.")]
-        [EmailAddress(ErrorMessage = "E-mail em formato inválido.")]
-        public string Email { get; set; } = string.Empty;
-        public string? Telefone { get; set; }
-    }
-
+    // Tela: /Conta/AlterarSenha
+    // Mapeia para: AlterarSenhaDto (Quetzal.Application)
+    //
+    // Separado do PerfilViewModel de proposito: sao dois formularios
+    // independentes, com POSTs e validacoes distintas. Juntar os dois numa
+    // unica ViewModel faria o [Required] da senha bloquear a simples
+    // atualizacao de nome/telefone.
     public class AlterarSenhaViewModel
     {
         [Required(ErrorMessage = "A senha atual é obrigatória.")]

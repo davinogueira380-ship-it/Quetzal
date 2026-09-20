@@ -1,0 +1,46 @@
+@model RegistroViewModel
+@{
+    ViewData["Title"] = "Criar conta";
+}
+
+<div class="pagina-conta">
+    <div class="card-conta">
+        <h2>Criar conta</h2>
+        <p class="subtitulo">Preencha os dados abaixo para começar</p>
+
+        <div asp-validation-summary="ModelOnly" class="alerta-erro"></div>
+
+        <form asp-controller="Conta" asp-action="Registro" method="post">
+
+            <label asp-for="NomeCompleto"></label>
+            <input asp-for="NomeCompleto" class="form-control" placeholder="Seu nome completo" />
+            <span asp-validation-for="NomeCompleto" class="text-danger"></span>
+
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" placeholder="seuemail@exemplo.com" autocomplete="username" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+
+            <label asp-for="Telefone"></label>
+            <input asp-for="Telefone" class="form-control" placeholder="11987654321" />
+            <span asp-validation-for="Telefone" class="text-danger"></span>
+
+            <label asp-for="Senha"></label>
+            <input asp-for="Senha" class="form-control" placeholder="••••••••" autocomplete="new-password" />
+            <span asp-validation-for="Senha" class="text-danger"></span>
+
+            <label asp-for="ConfirmarSenha"></label>
+            <input asp-for="ConfirmarSenha" class="form-control" placeholder="••••••••" autocomplete="new-password" />
+            <span asp-validation-for="ConfirmarSenha" class="text-danger"></span>
+
+            <button type="submit" class="btn-conta">Criar conta</button>
+        </form>
+
+        <p class="rodape-link">
+            Já tem conta? <a asp-controller="Conta" asp-action="Login">Entrar</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

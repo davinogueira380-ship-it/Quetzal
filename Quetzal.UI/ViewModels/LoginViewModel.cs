@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Quetzal.UI.ViewModels
 {
@@ -18,7 +18,7 @@ namespace Quetzal.UI.ViewModels
 
         // Só existe na UI — não vai para a API.
         // Controla se o cookie/token é persistido além da sessão do navegador.
-        //[Display(Name = "Manter-me conectado")]
+        [Display(Name = "Manter-me conectado")]
         public bool LembrarMe { get; set; }
 
         // Só existe na UI — para onde redirecionar após o login.
@@ -27,4 +27,3 @@ namespace Quetzal.UI.ViewModels
         public string? RetornoUrl { get; set; }
     }
 }
-

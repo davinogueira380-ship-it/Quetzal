@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Security;
+using System.ComponentModel.DataAnnotations;
 
 namespace Quetzal.UI.ViewModels
 {
@@ -7,18 +6,18 @@ namespace Quetzal.UI.ViewModels
     // Mapeia para: CriarAmbienteDto (Quetzal.Application)
     public class AmbienteEdicaoViewModel
     {
+        // Nulo na criação, preenchido na edição
         public int? Id { get; set; }
 
-        [Required(ErrorMessage = "O nome do ambiente é obrigatório")]
-        [StringLength(100, ErrorMessage = "O nome deve ter no máximo 100 caracteres.")]
+        [Required(ErrorMessage = "O nome do ambiente é obrigatório.")]
+        [MaxLength(100, ErrorMessage = "O nome não pode exceder 100 caracteres.")]
         [Display(Name = "Nome do ambiente")]
         public string Nome { get; set; } = string.Empty;
 
-        [StringLength(500, ErrorMessage = "A descrição deve ter no máximo 500 caracteres")]
+        [MaxLength(500, ErrorMessage = "A descrição não pode exceder 500 caracteres.")]
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Descrição")]
         public string? Descricao { get; set; }
-
-        // STHEFANNY Aqui ↑
 
         // Upload — existe só na UI, nunca no DTO.
         // O Controller salva o arquivo e envia apenas o caminho para a API.
@@ -37,4 +36,3 @@ namespace Quetzal.UI.ViewModels
         public string TituloPagina => EhEdicao ? "Editar ambiente" : "Novo ambiente";
     }
 }
-

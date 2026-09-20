@@ -25,6 +25,15 @@ namespace Quetzal.UI.ViewModels
         [Display(Name = "Imagem")]
         public string? ImagemUpload { get; set; }
 
+        [Display(Name = "Projetos vinculados")]
+        public int TotalProjetos { get; set; }
+
+        [Display(Name = "Cadastrado em")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime DataCadastro { get; set; }
+
+        // Campos calculados só para exibição
+
         public string StatusTexto => Ativo ? "Ativo" : "Inativo";
 
         public string StatusCssClass => Ativo ? "badge bg-success" : "badge bg-secondary";

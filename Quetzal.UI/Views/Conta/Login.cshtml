@@ -1,0 +1,45 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Entrar";
+}
+
+<div class="pagina-conta">
+    <div class="card-conta">
+        <h2>Bem-vindo(a) de volta</h2>
+        <p class="subtitulo">Entre para acessar sua conta</p>
+
+        @if (TempData["MensagemSucesso"] != null)
+        {
+            <div class="alerta-sucesso">@TempData["MensagemSucesso"]</div>
+        }
+
+        <div asp-validation-summary="ModelOnly" class="alerta-erro"></div>
+
+        <form asp-controller="Conta" asp-action="Login" method="post">
+            <input type="hidden" asp-for="RetornoUrl" />
+
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" placeholder="seuemail@exemplo.com" autocomplete="username" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+
+            <label asp-for="Senha"></label>
+            <input asp-for="Senha" class="form-control" placeholder="••••••••" autocomplete="current-password" />
+            <span asp-validation-for="Senha" class="text-danger"></span>
+
+            <div class="form-check">
+                <input asp-for="LembrarMe" class="form-check-input" />
+                <label asp-for="LembrarMe" class="mb-0"></label>
+            </div>
+
+            <button type="submit" class="btn-conta">Entrar</button>
+        </form>
+
+        <p class="rodape-link">
+            Ainda não tem conta? <a asp-controller="Conta" asp-action="Registro">Cadastre-se</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

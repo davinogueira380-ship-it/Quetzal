@@ -1,0 +1,14 @@
+@model PortfolioEdicaoViewModel
+@{
+    ViewData["Title"] = "Novo projeto no Portfólio";
+}
+
+<div class="admin-topbar">
+    <h1>Novo projeto no Portfólio</h1>
+</div>
+
+<partial name="_Form" model="Model" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

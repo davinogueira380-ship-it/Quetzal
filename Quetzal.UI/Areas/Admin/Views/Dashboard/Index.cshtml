@@ -1,0 +1,33 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="admin-topbar">
+    <h1>Painel Administrativo</h1>
+</div>
+
+<div class="row g-4">
+    <div class="col-12 col-md-6 col-lg-4">
+        <a asp-area="Admin" asp-controller="Ambiente" asp-action="Index" class="admin-card">
+            <i class="fa-solid fa-house"></i>
+            <h3>Ambientes</h3>
+            <p>Cadastre os ambientes exibidos na Home e usados para categorizar o portfólio.</p>
+        </a>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4">
+        <a asp-area="Admin" asp-controller="Portfolio" asp-action="Index" class="admin-card">
+            <i class="fa-solid fa-images"></i>
+            <h3>Portfólio</h3>
+            <p>Gerencie os projetos exibidos na vitrine pública do site.</p>
+        </a>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4">
+        <a asp-area="Admin" asp-controller="ProjetoC" asp-action="Index" class="admin-card">
+            <i class="fa-solid fa-folder-open"></i>
+            <h3>Projetos de Clientes</h3>
+            <p>Acompanhe e edite os projetos individuais de cada cliente.</p>
+        </a>
+    </div>
+</div>

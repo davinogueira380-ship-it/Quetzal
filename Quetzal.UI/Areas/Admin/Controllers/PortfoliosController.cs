@@ -10,7 +10,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
     // CRUD completo de itens do Portfólio (vitrine pública do site).
     // Index -> Criar (GET/POST) -> Editar (GET/POST) -> Desativar/Reativar/ExcluirPermanente
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Operador")]
     public class PortfoliosController : Controller
     {
         private readonly ApiCliente _api;
@@ -21,7 +21,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             _api = api;
             _ambiente = ambiente;
         }
-
+        
         // GET: /Admin/Portfolio
         public async Task<IActionResult> Index()
         {
@@ -204,7 +204,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
 
             if (resposta.Sucesso && resposta.Dados != null)
             {
-                viewModel.Ambientes = resposta.Dados
+                viewModel.AmbientesDisponiveis = resposta.Dados
                     .Select(a => new SelectListItem
                     {
                         Value = a.Id.ToString(),
