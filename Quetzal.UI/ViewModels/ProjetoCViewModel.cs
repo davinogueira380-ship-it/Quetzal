@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Quetzal.UI.ViewModels
 {
+    // Tela: /Admin/Projetos (listagem) e /Admin/Projetos/Detalhes/{id}
+    // Mapeia de: ProjetoCDto (via ProjetoCController.ProjetoCApiModelo)
     public class ProjetoCViewModel
     {
         public int Id { get; set; }
@@ -20,8 +22,7 @@ namespace Quetzal.UI.ViewModels
         [Display(Name = "Cliente")]
         public string ClienteNome { get; set; } = string.Empty;
 
-        // Nomes dos ambientes vinculados (N:N) — só o texto, sem Id,
-        // porque hoje não há link/ação que precise do Id do ambiente aqui
+        // Nomes dos ambientes vinculados (N:N) — só o texto, sem Id
         public List<string> AmbientesNomes { get; set; } = new();
 
         [Display(Name = "Ativo")]
@@ -42,6 +43,4 @@ namespace Quetzal.UI.ViewModels
         public string AmbientesFormatados =>
             AmbientesNomes.Any() ? string.Join(", ", AmbientesNomes) : "Nenhum ambiente vinculado";
     }
-
 }
-

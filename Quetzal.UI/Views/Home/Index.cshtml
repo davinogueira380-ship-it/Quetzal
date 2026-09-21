@@ -1,0 +1,170 @@
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Início";
+}
+
+<section id="inicio">
+    <div class="container">
+        <p>
+            Transformar espaços vai muito além da estética. Acreditamos que cada ambiente deve refletir
+            a essência, os hábitos e a personalidade de quem o utiliza. Por isso, desenvolvemos
+            projetos de interiores personalizados, pensados para unir funcionalidade,
+            conforto e identidade em cada detalhe.
+        </p>
+    </div>
+</section>
+
+<section id="ambientes">
+    <div class="container">
+        <h2>Ambientes</h2>
+
+        @if (!Model.Ambientes.Any())
+        {
+            <p class="text-center">Em breve, novos ambientes por aqui.</p>
+        }
+        else
+        {
+            <div class="row gy-4 Galeria">
+                @foreach (var ambiente in Model.Ambientes)
+                {
+                    <div class="col-12 col-lg-6">
+                        <a asp-controller="Portfolio" asp-action="Ambiente" asp-route-ambienteId="@ambiente.Id">
+                            @if (!string.IsNullOrWhiteSpace(ambiente.ImagemUpload))
+                            {
+                                <img class="img-fluid" src="@ambiente.ImagemUpload" alt="@ambiente.Nome">
+                            }
+                            <span>@ambiente.Nome</span>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+<section id="contato">
+    <div class="Contato">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="d-none d-lg-block col-lg-6">
+                    <div class="imagemContato">
+                        <img src="~/img/TANIA-2024/11.jpg" alt="Imagem_contato">
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-6">
+                    <div class="conteudoContato">
+                        <h2>Vamos falar sobre seu projeto</h2>
+                        <p>Conte-nos suas ideias. Será um prazer pensar o seu projeto junto com você.</p>
+                        <!-- TODO: aguardando POST api/Contato e criacao do endpoint na API -->
+                        <form asp-controller="Home" asp-action="Contato" method="post">
+                            @* Sem este token, o POST é rejeitado com 400 pelo ValidateAntiForgeryToken.
+                               O Tag Helper de form já o injeta automaticamente, mas deixo explícito. *@
+
+                            @if (TempData["MensagemSucessoContato"] != null)
+                            {
+                                <div class="alerta-sucesso">@TempData["MensagemSucessoContato"]</div>
+                            }
+                            @if (TempData["MensagemErroContato"] != null)
+                            {
+                                <div class="alerta-erro">@TempData["MensagemErroContato"]</div>
+                            }
+
+                            <label for="Nome">Nome*</label>
+                            <input type="text" name="Nome" id="Nome" required maxlength="200">
+
+                            <label for="Email">E-mail*</label>
+                            <input type="email" name="Email" id="Email" required>
+
+                            <label for="Telefone">Telefone*</label>
+                            <input type="tel" name="Telefone" id="Telefone" required pattern="\d{10,11}"
+                                   title="Apenas números, com DDD">
+
+                            <label for="Mensagem">Como podemos ajudar*</label>
+                            <textarea name="Mensagem" id="Mensagem" rows="4" required maxlength="1000"></textarea>
+
+                            <p>De qual forma você prefere receber o contato?</p>
+
+                            <div class="checkbox">
+                                @* Mesmo name nos três: o binder monta a List<string> FormasContato *@
+                                <input type="checkbox" name="FormasContato" id="contatoEmail" value="Email">
+                                <label for="contatoEmail">E-mail</label>
+
+                                <input type="checkbox" name="FormasContato" id="contatoTelefone" value="Telefone">
+                                <label for="contatoTelefone">Telefone</label>
+
+                                <input type="checkbox" name="FormasContato" id="contatoWhatsapp" value="Whatsapp">
+                                <label for="contatoWhatsapp">Whatsapp</label>
+                            </div>
+
+                            <div class="Button">
+                                @* type="submit", não "button" — é isso que envia o formulário *@
+                                <button type="submit" class="btnDefault">Enviar</button>
+
+                                <a href="https://wa.me/5511999999999" target="_blank" rel="noopener" class="btnWhatsapp">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                    <span>Entre em contato</span>
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="sobremim">
+    <div class="container">
+        <div class="sobre-container">
+            <div class="row gy-4">
+                <div class="col-12 col-lg-6 sobre-foto">
+                    <img src="~/img/Img-cliente.jpeg" alt="foto-arredondada">
+                </div>
+
+                <div class="col-12 col-lg-6 sobre-conteudo">
+                    <h2>Sobre Mim</h2>
+                    <p>Olá, sou Janderline Tomaz (Jade). Nascida e criada na Paraíba, sempre convivi de perto com a
+                        arte e a criação manual.</p>
+                    <p>Minha trajetória começou em 2005, ao me formar técnica em edificações pelo CEFET-PB. Atuei em
+                        obras de restauros de museus a construções de alto padrão, despertando meu olhar analítico
+                        para o design de produtos e ambientes.</p>
+                    <p>Em 2017, graduei-me em Design de Interiores pelo Unipê. Na faculdade, foquei no
+                        desenvolvimento de produtos e criei a "Cadeira Mangaba" como TCC, um projeto baseado na
+                        biomimética.</p>
+                    <p>Mudei-me para São Paulo em 2018 e, desde 2020, atuo no mercado de móveis planejados. Hoje
+                        lidero a Quetzal Design e Interiores, desenvolvendo projetos residenciais, comerciais e
+                        corporativos presenciais e online por todo o Brasil, unindo funcionalidade, beleza e
+                        bem-estar.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="instagram">
+    <h2>Conheça nosso Instagram</h2>
+    <div class="container">
+        @if (!Model.ImagensCarrossel.Any())
+        {
+            <p class="text-center">Em breve, novas imagens por aqui.</p>
+        }
+        else
+        {
+            <div class="carrossel-container">
+                <button class="seta esquerda" type="button" onclick="rolarEsquerdaIndex()"
+                        aria-label="Imagem anterior">❮</button>
+
+                <div class="instagram-galeria" id="galeria">
+                    @foreach (var imagem in Model.ImagensCarrossel)
+                    {
+                        <img src="@imagem.Url" alt="@imagem.TextoAlternativo" loading="lazy">
+                    }
+                </div>
+
+                <button class="seta direita" type="button" onclick="rolarDireitaIndex()"
+                        aria-label="Próxima imagem">❯</button>
+            </div>
+        }
+    </div>
+</section>

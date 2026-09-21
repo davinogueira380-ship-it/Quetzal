@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Meu Projeto | Quetzal</title>
+    <link rel="shortcut icon" href="~/img/logo.png" type="image/x-icon">
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site-publico.css">
+ <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"> -->    @await RenderSectionAsync("Estilos", required: false)
+</head>
+
+<body>
+    <div class="cliente-topo">
+        <div class="container">
+            <a asp-area="" asp-controller="Home" asp-action="Index">
+                <img src="~/img/logo-sem-fundo.png" alt="Quetzal Logo">
+            </a>
+
+            <span class="saudacao">Olá, @User.Identity?.Name</span>
+
+            <form asp-area="" asp-controller="Conta" asp-action="Sair" method="post" class="d-inline">
+                <button type="submit"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+            </form>
+        </div>
+    </div>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <div class="footer">
+        <p>&copy; Todos os direitos reservados @DateTime.Now.Year - Quetzal Design</p>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

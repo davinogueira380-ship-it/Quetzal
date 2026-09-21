@@ -1,4 +1,8 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using Quetzal.UI.Servicos;         
+using Quetzal.UI.Infraestrutura;   
+
 
 namespace Quetzal.UI;
 
@@ -6,7 +10,7 @@ namespace Quetzal.UI;
 public class Program
 {
 
-        public static void Main(string[] args)
+    public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +29,10 @@ public class Program
                 options.LogoutPath = "/Conta/Sair";
                 options.AccessDeniedPath = "/Conta/AcessoNegado";
                 options.ExpireTimeSpan = TimeSpan.FromHours(8);
+
+                //Add posteriormente, nao usar se interferir na rede do senac
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                options.Cookie.HttpOnly = true;
             });
 
         builder.Services.AddAuthorization();
@@ -41,8 +49,8 @@ public class Program
             });
 
         // Registra os servicos customizados
-        //builder.Services.AddScoped<ApiCliente>();
-        //builder.Services.AddScoped<ServicoUpload>();
+        builder.Services.AddScoped<ApiCliente>();
+        builder.Services.AddScoped<ServicoUpload>();
 
         var app = builder.Build();
 
@@ -51,6 +59,10 @@ public class Program
             app.UseExceptionHandler("/Home/Error");
             app.UseHsts();
         }
+
+        // Transforma status codes "secos"(404, 403...) em páginas amigáveis.
+        // O {0} é substituído pelo código real. Add posteriormente!!
+       // app.UseStatusCodePagesWithReExecute("/Home/StatusCode", "?codigo={0}");
 
         app.UseHttpsRedirection();
 

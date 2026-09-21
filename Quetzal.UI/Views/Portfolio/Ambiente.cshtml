@@ -1,0 +1,43 @@
+@model PortfolioPorAmbienteViewModel
+@{
+    ViewData["Title"] = Model.AmbienteNome;
+}
+
+<div class="pagina-portfolio-ambiente">
+    <div class="container">
+
+        <a asp-controller="Home" asp-action="Index" class="voltar-link">
+            <i class="fa-solid fa-arrow-left"></i> Voltar para a Home
+        </a>
+
+        <div class="cabecalho-ambiente">
+            <h2>@Model.AmbienteNome</h2>
+            @if (!string.IsNullOrWhiteSpace(Model.AmbienteDescricao))
+            {
+                <p>@Model.AmbienteDescricao</p>
+            }
+        </div>
+
+        @if (!Model.Itens.Any())
+        {
+            <p class="vazio">Ainda não há projetos publicados para este ambiente.</p>
+        }
+        else
+        {
+            @foreach (var item in Model.Itens)
+            {
+                <div class="item-portfolio">
+                    @if (!string.IsNullOrWhiteSpace(item.ImagemUpload))
+                    {
+                        <img src="@item.ImagemUpload" alt="@item.NomeProjeto">
+                    }
+                    <div class="conteudo">
+                        <h3>@item.NomeProjeto</h3>
+                        <p>@item.Descricao</p>
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+</div>

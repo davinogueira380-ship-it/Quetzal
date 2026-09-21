@@ -1,0 +1,50 @@
+@model PortfolioEdicaoViewModel
+
+<div class="admin-form-wrapper">
+    <div asp-validation-summary="ModelOnly" class="admin-alerta admin-alerta-erro"></div>
+
+    <form asp-action="@(Model.EhEdicao ? "Editar" : "Criar")" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ImagemAtualUrl" />
+
+        <div class="mb-3">
+            <label asp-for="NomeProjeto"></label>
+            <input asp-for="NomeProjeto" class="form-control" placeholder="Ex: Projeto Tânia" />
+            <span asp-validation-for="NomeProjeto" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Descricao"></label>
+            <textarea asp-for="Descricao" class="form-control" rows="4"
+                placeholder="Descreva o projeto para exibição no portfólio público"></textarea>
+            <span asp-validation-for="Descricao" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="AmbienteId"></label>
+            <select asp-for="AmbienteId" asp-items="Model.AmbientesDisponiveis" class="form-select">
+                <option value="">-- Selecione um ambiente --</option>
+            </select>
+            <span asp-validation-for="AmbienteId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ImagemArquivo"></label>
+            <input asp-for="ImagemArquivo" class="form-control" type="file" accept="image/*" />
+            <span asp-validation-for="ImagemArquivo" class="text-danger"></span>
+
+            @if (!string.IsNullOrWhiteSpace(Model.ImagemAtualUrl))
+            {
+                <p class="mt-2 mb-1"><small>Imagem atual:</small></p>
+                <img src="@Model.ImagemAtualUrl" alt="Imagem atual" class="imagem-preview">
+            }
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn-admin-primario">
+                <i class="fa-solid fa-check"></i> Salvar
+            </button>
+            <a asp-action="Index" class="btn-admin-secundario">Cancelar</a>
+        </div>
+    </form>
+</div>

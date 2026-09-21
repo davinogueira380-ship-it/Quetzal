@@ -1,0 +1,14 @@
+@model AmbienteEdicaoViewModel
+@{
+    ViewData["Title"] = "Novo Ambiente";
+}
+
+<div class="admin-topbar">
+    <h1>Novo Ambiente</h1>
+</div>
+
+<partial name="_Form" model="Model" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,384 @@
+/* Painel Admin -- mesma identidade visual do site público (cores, fonte,
+   botões), mas em layout funcional: sidebar + conteúdo + tabelas/formulários.
+   Reaproveita as mesmas variáveis de cor definidas em site-publico.css. */
+
+:root {
+  --clr-primary: #F0C4CB;
+  --clr-secondary: #C87D87;
+  --clr-tertiary: #FBEAD6;
+  --clr-quaternary: #6B7556;
+  --clr-quinary: #E5BCA9;
+}
+
+* {
+  font-family: bahnschrift, sans-serif;
+  box-sizing: border-box;
+}
+
+body.admin-body {
+  background-color: var(--clr-tertiary);
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* ── Layout: sidebar fixa + conteúdo ── */
+
+.admin-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.admin-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background-color: var(--clr-quaternary);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.admin-sidebar .logo-area {
+  padding: 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.admin-sidebar .logo-area img {
+  max-width: 140px;
+  height: auto;
+}
+
+.admin-sidebar .nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 1rem 0;
+  flex-grow: 1;
+}
+
+.admin-sidebar .nav-links li a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.5rem;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.admin-sidebar .nav-links li a:hover,
+.admin-sidebar .nav-links li a.active {
+  background-color: var(--clr-secondary);
+  color: white;
+}
+
+.admin-sidebar .sair-area {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.admin-sidebar .sair-area button {
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  padding: 0.6rem;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.admin-sidebar .sair-area button:hover {
+  background-color: var(--clr-secondary);
+  border-color: var(--clr-secondary);
+}
+
+.admin-content {
+  flex-grow: 1;
+  padding: 2rem;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.admin-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.admin-topbar h1 {
+  color: var(--clr-quaternary);
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+/* ── Botões (mesmo estilo do .btnDefault público, adaptado) ── */
+
+.btn-admin-primario {
+  padding: 0.6rem 1.4rem;
+  border: 1px solid var(--clr-secondary);
+  background: var(--clr-quaternary);
+  color: white;
+  font-weight: 500;
+  border-radius: 10px;
+  transition: all .3s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-admin-primario:hover {
+  cursor: pointer;
+  border: 1px solid var(--clr-quaternary);
+  background-color: var(--clr-secondary);
+  color: white;
+}
+
+.btn-admin-secundario {
+  padding: 0.5rem 1.1rem;
+  border: 1px solid var(--clr-quaternary);
+  background: transparent;
+  color: var(--clr-quaternary);
+  font-weight: 500;
+  border-radius: 10px;
+  transition: all .3s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-admin-secundario:hover {
+  background-color: var(--clr-quaternary);
+  color: white;
+}
+
+.btn-admin-perigo {
+  padding: 0.5rem 1.1rem;
+  border: 1px solid #b23b3b;
+  background: transparent;
+  color: #b23b3b;
+  font-weight: 500;
+  border-radius: 10px;
+  transition: all .3s;
+}
+
+.btn-admin-perigo:hover {
+  background-color: #b23b3b;
+  color: white;
+}
+
+/* ── Cards (usados na Dashboard) ── */
+
+.admin-card {
+  background: white;
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 100%;
+}
+
+.admin-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  color: inherit;
+}
+
+.admin-card i {
+  font-size: 2rem;
+  color: var(--clr-quaternary);
+  margin-bottom: 0.75rem;
+}
+
+.admin-card h3 {
+  color: var(--clr-quaternary);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.admin-card p {
+  color: #555;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* ── Tabelas de listagem ── */
+
+.admin-tabela-wrapper {
+  background: white;
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  overflow-x: auto;
+}
+
+.admin-tabela {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-tabela th {
+  text-align: left;
+  padding: 0.9rem 1rem;
+  color: var(--clr-quaternary);
+  font-weight: 700;
+  border-bottom: 2px solid var(--clr-tertiary);
+  white-space: nowrap;
+}
+
+.admin-tabela td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.admin-tabela tbody tr:hover {
+  background-color: var(--clr-tertiary);
+}
+
+.admin-tabela .thumb {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.admin-tabela .acoes {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* ── Formulários de Criar/Editar ── */
+
+.admin-form-wrapper {
+  background: white;
+  border-radius: 14px;
+  padding: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  max-width: 720px;
+}
+
+.admin-form-wrapper label {
+  font-weight: 600;
+  color: var(--clr-quaternary);
+  margin-bottom: 0.3rem;
+  display: inline-block;
+}
+
+.admin-form-wrapper .form-control,
+.admin-form-wrapper .form-select {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+}
+
+.admin-form-wrapper .form-control:focus,
+.admin-form-wrapper .form-select:focus {
+  border-color: var(--clr-secondary);
+  box-shadow: 0 0 0 0.2rem rgba(200, 125, 135, 0.2);
+}
+
+.admin-form-wrapper .form-check-input:checked {
+  background-color: var(--clr-quaternary);
+  border-color: var(--clr-quaternary);
+}
+
+.admin-form-wrapper .imagem-preview {
+  max-width: 220px;
+  border-radius: 10px;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+.admin-form-wrapper .checkbox-ambientes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+/* ── Badges de status ── */
+
+.badge-admin-ativo {
+  background-color: #d4edda;
+  color: #2e7d32;
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.badge-admin-inativo {
+  background-color: #e0e0e0;
+  color: #616161;
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ── Alertas ── */
+
+.admin-alerta {
+  padding: 0.9rem 1.2rem;
+  border-radius: 10px;
+  margin-bottom: 1.2rem;
+  font-weight: 500;
+}
+
+.admin-alerta-sucesso {
+  background-color: #d4edda;
+  color: #2e7d32;
+}
+
+.admin-alerta-erro {
+  background-color: #fbe1e1;
+  color: #b23b3b;
+}
+
+/* ── Responsivo ── */
+
+@media (max-width: 900px) {
+  .admin-wrapper {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    flex-direction: row;
+    align-items: center;
+    overflow-x: auto;
+  }
+
+  .admin-sidebar .logo-area {
+    border-bottom: none;
+    padding: 0.8rem 1rem;
+  }
+
+  .admin-sidebar .nav-links {
+    display: flex;
+    padding: 0;
+  }
+
+  .admin-sidebar .sair-area {
+    border-top: none;
+    padding: 0.8rem;
+  }
+
+  .admin-content {
+    padding: 1.2rem;
+  }
+}

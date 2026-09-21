@@ -11,7 +11,7 @@ namespace Quetzal.Application.DTOs
     public string Nome { get; set; } = string.Empty;
     public string? Descricao { get; set; }
     public bool Ativo {  get; set; }
-    public DateTime DataCastro { get; set; }
+    public DateTime DataCadastro { get; set; }
     public int TotalProjetos { get; set; }
     public string? ImagemUpload { get; set; }
 

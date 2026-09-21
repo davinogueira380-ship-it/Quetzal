@@ -1,0 +1,87 @@
+@model List<PortfolioViewModel>
+@{
+    ViewData["Title"] = "Portfólio";
+}
+
+<div class="admin-topbar">
+    <h1>Portfólio</h1>
+    <a asp-area="Admin" asp-controller="Portfolio" asp-action="Criar" class="btn-admin-primario">
+        <i class="fa-solid fa-plus"></i> Novo projeto
+    </a>
+</div>
+
+<div class="admin-tabela-wrapper">
+    @if (!Model.Any())
+    {
+        <p class="text-center py-4 mb-0">Nenhum projeto cadastrado no portfólio ainda.</p>
+    }
+    else
+    {
+        <table class="admin-tabela">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Nome do Projeto</th>
+                    <th>Ambiente</th>
+                    <th>Status</th>
+                    <th>Cadastrado em</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(item.ImagemUpload))
+                            {
+                                <img src="@item.ImagemUpload" alt="@item.NomeProjeto" class="thumb">
+                            }
+                        </td>
+                        <td>@item.NomeProjeto</td>
+                        <td>@item.AmbienteNome</td>
+                        <td>
+                            <span class="@(item.Ativo ? "badge-admin-ativo" : "badge-admin-inativo")">
+                                @item.StatusTexto
+                            </span>
+                        </td>
+                        <td>@item.DataCadastro.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <div class="acoes">
+                                <a asp-action="Editar" asp-route-id="@item.Id" class="btn-admin-secundario">
+                                    <i class="fa-solid fa-pen"></i> Editar
+                                </a>
+
+                                @if (item.Ativo)
+                                {
+                                    <form asp-action="Desativar" asp-route-id="@item.Id" method="post" class="d-inline">
+                                        <button type="submit" class="btn-admin-secundario"
+                                            onclick="return confirm('Desativar este projeto do portfólio?');">
+                                            <i class="fa-solid fa-eye-slash"></i> Desativar
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form asp-action="Reativar" asp-route-id="@item.Id" method="post" class="d-inline">
+                                        <button type="submit" class="btn-admin-secundario"
+                                            onclick="return confirm('Reativar este projeto?');">
+                                            <i class="fa-solid fa-eye"></i> Reativar
+                                        </button>
+                                    </form>
+                                }
+
+                                <form asp-action="ExcluirPermanente" asp-route-id="@item.Id" method="post" class="d-inline">
+                                    <button type="submit" class="btn-admin-perigo"
+                                        onclick="return confirm('Excluir PERMANENTEMENTE este projeto? Essa ação não pode ser desfeita.');">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Painel Admin | Quetzal</title>
+    <link rel="shortcut icon" href="~/img/logo.png" type="image/x-icon">
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/admin.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"> -->
+    @await RenderSectionAsync("Estilos", required: false)
+</head>
+
+<body class="admin-body">
+    <div class="admin-wrapper">
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="logo-area">
+                <img src="~/img/logo-sem-fundo.png" alt="Quetzal Logo">
+            </div>
+
+            <ul class="nav-links">
+                <li>
+                    <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                        <i class="fa-solid fa-gauge"></i> Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="Admin" asp-controller="Ambiente" asp-action="Index">
+                        <i class="fa-solid fa-house"></i> Ambientes
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="Admin" asp-controller="Portfolio" asp-action="Index">
+                        <i class="fa-solid fa-images"></i> Portfólio
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="Admin" asp-controller="ProjetoC" asp-action="Index">
+                        <i class="fa-solid fa-folder-open"></i> Projetos de Clientes
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sair-area">
+                <form asp-area="" asp-controller="Conta" asp-action="Sair" method="post">
+                    <button type="submit"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- Conteúdo -->
+        <div class="admin-content">
+
+            @if (TempData["MensagemSucesso"] != null)
+            {
+                <div class="admin-alerta admin-alerta-sucesso">@TempData["MensagemSucesso"]</div>
+            }
+            @if (TempData["MensagemErro"] != null)
+            {
+                <div class="admin-alerta admin-alerta-erro">@TempData["MensagemErro"]</div>
+            }
+
+            @RenderBody()
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

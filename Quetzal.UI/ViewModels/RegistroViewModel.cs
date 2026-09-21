@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Quetzal.UI.ViewModels
 {
@@ -34,5 +34,6 @@ namespace Quetzal.UI.ViewModels
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar senha")]
         public string ConfirmarSenha { get; set; } = string.Empty;
+
     }
 }

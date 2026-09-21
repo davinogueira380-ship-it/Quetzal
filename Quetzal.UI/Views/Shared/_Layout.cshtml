@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Quetzal Design</title>
+    <link rel="shortcut icon" href="~/img/logo.png" type="image/x-icon">
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site-publico.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"> -->
+    @await RenderSectionAsync("Estilos", required: false)
+</head>
+
+<body>
+    <!-- Cabeçalho -->
+    <div class="topo topo-pagina">
+
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+
+                <!-- LOGO -->
+                <div class="LogoNav">
+                    <a asp-controller="Home" asp-action="Index">
+                        <img src="~/img/logo.png" alt="Quetzal Logo">
+                    </a>
+                </div>
+
+                <!-- BOTÃO HAMBÚRGUER -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavegacao"
+                    aria-controls="menuNavegacao" aria-expanded="false" aria-label="Abrir menu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- MENU -->
+                <div class="collapse navbar-collapse" id="menuNavegacao">
+
+                    <ul class="menu-links">
+                        <li><a asp-controller="Home" asp-action="Index">Início</a></li>
+                        <li><a asp-controller="Home" asp-action="Index">#ambientes</a></li>
+                        <li><a asp-controller="Home" asp-action="Index">#contato</a></li>
+                        <li><a asp-controller="Home" asp-action="Index">#sobremim</a></li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            @* IsInRole lê os Claims de Role que o ContaController gravou no cookie *@
+                            @if (User.IsInRole("Admin") || User.IsInRole("Operador"))
+                            {
+                                <li><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Painel Admin</a></li>
+                            }
+                            else if (User.IsInRole("Cliente"))
+                            {
+                                <li><a asp-area="Cliente" asp-controller="MeuProjeto" asp-action="Index">Meu Projeto</a></li>
+                            }
+
+                            <li>
+                                <form asp-area="" asp-controller="Conta" asp-action="Sair" method="post" class="d-inline">
+                                    <button type="submit" class="link-sair">Sair</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li><a asp-area="" asp-controller="Conta" asp-action="Login">Entrar</a></li>
+                        }
+                    </ul>
+
+                    <!-- WHATSAPP -->
+                    <div class="LogoWhat">
+                        <a href="https://wa.me/551199999999" target="_blank">
+                            <img src="~/img/WhatsAppLogo.png" alt="WhatsApp Logo">
+                        </a>
+                    </div>
+
+                    <!-- INSTAGRAM -->
+                    <div class="LogoInsta">
+                        <a href="#" target="_blank">
+                            <img src="~/img/InstagramLogo.png" alt="Instagram Logo">
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <div class="footer">
+        <p>&copy; Todos os direitos reservados @DateTime.Now.Year - Quetzal Design</p>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site-publico.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

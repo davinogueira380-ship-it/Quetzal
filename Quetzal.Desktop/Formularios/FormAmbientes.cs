@@ -102,13 +102,10 @@ namespace Quetzal.Desktop.Formularios
             {
                 btnSalvar.Enabled = false;
 
-                var dto = new AmbienteDto
+                var dto = new CriarAmbienteDto
                 {
-                    Id = _ambienteSelecionadoId ?? 0,
                     Nome = nome,
                     Descricao = txtDescricao.Text.Trim(),
-                    Ativo = swAtivo.Checked,
-                    DataCastro = DateTime.Now
                 };
 
                 if (_ambienteSelecionadoId == null || _ambienteSelecionadoId == 0)

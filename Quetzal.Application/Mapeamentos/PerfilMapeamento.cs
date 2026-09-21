@@ -78,6 +78,14 @@ public class PerfilMapeamento : Profile
             CreateMap<ProjetoC, ProjetoCDto>()
                 .ForMember(dest => dest.Nome,
                     opt => opt.MapFrom(src => src.NomeProjeto ?? string.Empty))
+                //ADD POR FAUSTO
+                .ForMember(dest => dest.UsuarioId,
+                    opt => opt.MapFrom(src => src.UsuarioId))
+                .ForMember(dest => dest.UsuarioNome,
+                    opt => opt.MapFrom(src => src.Usuario != null ? src.Usuario.NomeCompleto : string.Empty))
+                .ForMember(dest => dest.AmbientesIds,
+                    opt => opt.MapFrom(src => src.Ambientes != null ? src.Ambientes.Select(a => a.Id).ToList() : new List<int>()))
+                ///FIM DA PARTE ADICIONADA
                 .ForMember(dest => dest.AmbienteId,
                     opt => opt.MapFrom(src => src.Ambientes
                         .Select(a => a.Id)
@@ -95,7 +103,8 @@ public class PerfilMapeamento : Profile
                 .ForMember(dest => dest.Usuario,
                     opt => opt.Ignore())
                 .ForMember(dest => dest.UsuarioId,
-                    opt => opt.Ignore())
+                    //Anteriormente opt => opt.Ignore()), alterado por Fausto
+                    opt => opt.MapFrom(src => src.UsuarioId))
                 .ForMember(dest => dest.Id,
                     opt => opt.Ignore())
                 .ForMember(dest => dest.DataAtualizacao,

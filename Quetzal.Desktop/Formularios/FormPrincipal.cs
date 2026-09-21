@@ -1,15 +1,15 @@
+
 using System;
-using System.Drawing;
 using System.Windows.Forms;
 using Guna.UI2.WinForms;
-using Quetzal.Desktop.Formularios;
 using Quetzal.Desktop.Sessao;
+using Quetzal.Desktop.UserControls;
 
 namespace Quetzal.Desktop
 {
     public partial class FormPrincipal : Form
     {
-        private Form? _formularioAtivo = null;
+        private System.Windows.Forms.UserControl? _userControlAtivo = null;
 
         public FormPrincipal()
         {
@@ -18,60 +18,104 @@ namespace Quetzal.Desktop
 
         private void FormPrincipal_Load(object sender, EventArgs e)
         {
-            // Atualiza informacoes do usuario caso haja sessao ativa
+            // Atualiza informações do usuário logado
             var sessao = SessaoUsuario.Instancia;
+
             if (!string.IsNullOrWhiteSpace(sessao.NomeUsuario))
             {
-                lblUsuarioLogado.Text = $"👤 {sessao.NomeUsuario} | Designer Admin";
+                lblUsuarioLogado.Text =
+                    $"👤 {sessao.NomeUsuario} | Designer Admin";
             }
 
-            // Inicia exibindo a tela de Ambientes
+            // Abre Ambiente como tela inicial
             btnAmbientes.Checked = true;
             btnAmbientes_Click(btnAmbientes, EventArgs.Empty);
         }
 
-        public void AbrirFormularioFilho(Form formFilho, string titulo, Guna2Button botaoMenu)
+        /// <summary>
+        /// Exibe um UserControl dentro do painel principal.
+        /// </summary>
+        private void AbrirUserControl(
+            System.Windows.Forms.UserControl userControl,
+            string titulo,
+            Guna2Button botaoMenu)
         {
-            if (_formularioAtivo != null)
+            // Remove o UserControl atualmente aberto
+            if (_userControlAtivo != null)
             {
-                _formularioAtivo.Close();
-                _formularioAtivo.Dispose();
+                pnlConteudo.Controls.Remove(_userControlAtivo);
+                _userControlAtivo.Dispose();
+                _userControlAtivo = null;
             }
 
+            // Desmarca todos os botões
+            DesmarcarBotoesMenu();
+
+            // Marca o botão selecionado
             botaoMenu.Checked = true;
-            _formularioAtivo = formFilho;
+
+            // Atualiza o título do módulo
             lblTituloModulo.Text = titulo;
 
-            formFilho.TopLevel = false;
-            formFilho.FormBorderStyle = FormBorderStyle.None;
-            formFilho.Dock = DockStyle.Fill;
+            // Guarda o UserControl atual
+            _userControlAtivo = userControl;
 
+            // Faz o UserControl ocupar todo o painel
+            userControl.Dock = DockStyle.Fill;
+
+            // Adiciona o UserControl ao painel
             pnlConteudo.Controls.Clear();
-            pnlConteudo.Controls.Add(formFilho);
-            pnlConteudo.Tag = formFilho;
+            pnlConteudo.Controls.Add(userControl);
 
-            formFilho.BringToFront();
-            formFilho.Show();
+            // Coloca na frente
+            userControl.BringToFront();
+        }
+
+        /// <summary>
+        /// Desmarca os botões do menu.
+        /// </summary>
+        private void DesmarcarBotoesMenu()
+        {
+            btnAmbientes.Checked = false;
+            btnClientes.Checked = false;
+            btnProjetos.Checked = false;
+            btnPortfolio.Checked = false;
         }
 
         private void btnAmbientes_Click(object sender, EventArgs e)
         {
-            AbrirFormularioFilho(new FormAmbientes(), "🛋️ Gerenciamento de Ambientes", btnAmbientes);
+            AbrirUserControl(
+                new AmbientesControl(),
+                "🛋️ Gerenciamento de Ambientes",
+                btnAmbientes
+            );
         }
 
         private void btnClientes_Click(object sender, EventArgs e)
         {
-            AbrirFormularioFilho(new FormClientes(), "👥 Gestão de Clientes e Ativação de Acesso", btnClientes);
+            AbrirUserControl(
+                new ClientesControl(),
+                " Gestão de Clientes e Ativação de Acesso",
+                btnClientes
+            );
         }
 
         private void btnProjetos_Click(object sender, EventArgs e)
         {
-            AbrirFormularioFilho(new FormProjetoC(), "📁 Projetos de Clientes e Galeria por Ambiente", btnProjetos);
+            AbrirUserControl(
+                new ProjetoCControl(),
+                " Projetos de Clientes e Galeria por Ambiente",
+                btnProjetos
+            );
         }
 
         private void btnPortfolio_Click(object sender, EventArgs e)
         {
-            AbrirFormularioFilho(new FormPortfolio(), "🖼️ Portfólio Público para o Site", btnPortfolio);
+            AbrirUserControl(
+                new PortfolioControl(),
+                " Portfólio Público para o Site",
+                btnPortfolio
+            );
         }
 
         private void btnSair_Click(object sender, EventArgs e)
@@ -86,13 +130,12 @@ namespace Quetzal.Desktop
             if (confirmacao == DialogResult.Yes)
             {
                 SessaoUsuario.Instancia.Limpar();
-                this.Close();
+                Close();
             }
         }
 
         private void pnlConteudo_Paint(object sender, PaintEventArgs e)
         {
-
         }
     }
 }

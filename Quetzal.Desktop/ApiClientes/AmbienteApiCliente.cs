@@ -66,13 +66,13 @@ public class AmbienteDto
         return resposta?.Dados;
     }
 
-    public async Task<ApiRespostaSimples<AmbienteDto>> CadastrarAsync(AmbienteDto dados)
+    public async Task<ApiRespostaSimples<AmbienteDto>> CadastrarAsync(CriarAmbienteDto dados)
     {
         // Chama POST /api/ambiente enviando o DTO da novo ambiente no corpo
         return await PostAsync<ApiRespostaSimples<AmbienteDto>>(RotaBase, dados);
     }
 
-    public async Task<ApiRespostaSimples<AmbienteDto>> AtualizarAsync(int id, AmbienteDto dados)
+    public async Task<ApiRespostaSimples<AmbienteDto>> AtualizarAsync(int id, CriarAmbienteDto dados)
     {
         // Chama PUT /api/ambiente/{id} com os dados atualizados no corpo
         return await PutAsync<ApiRespostaSimples<AmbienteDto>>($"{RotaBase}/{id}", dados);

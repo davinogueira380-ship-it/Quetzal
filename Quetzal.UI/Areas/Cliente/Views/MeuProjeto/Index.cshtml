@@ -1,0 +1,24 @@
+@model MeuProjetoViewModel
+@{
+    ViewData["Title"] = "Meu Projeto";
+}
+
+<div class="pagina-meu-projeto">
+    <div class="container">
+
+        <div class="meu-projeto-capa">
+            @if (!string.IsNullOrWhiteSpace(Model.ImagemUpload))
+            {
+                <img src="@Model.ImagemUpload" alt="@Model.Nome">
+            }
+            <div class="conteudo">
+                <h1>@Model.Nome</h1>
+                <p>@Model.Descricao</p>
+                <span class="ambientes-tag">
+                    <i class="fa-solid fa-house"></i> @Model.AmbientesFormatados
+                </span>
+            </div>
+        </div>
+
+    </div>
+</div>

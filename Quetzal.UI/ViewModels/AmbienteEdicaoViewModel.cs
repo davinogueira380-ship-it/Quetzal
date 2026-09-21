@@ -30,5 +30,11 @@ namespace Quetzal.UI.ViewModels
 
         [Display(Name = "Ativo")]
         public bool Ativo { get; set; } = true;
+
+        // Só de exibição — o título da página muda conforme o modo
+        public bool EhEdicao => Id.HasValue && Id.Value > 0;
+
+        public string TituloPagina => EhEdicao ? "Editar ambiente" : "Novo ambiente";
     }
 }
+

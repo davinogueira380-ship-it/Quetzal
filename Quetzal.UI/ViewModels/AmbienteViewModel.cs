@@ -17,13 +17,22 @@ namespace Quetzal.UI.ViewModels
         [Display(Name = "Ativo")]
         public bool Ativo { get; set; }
 
-        public string? ImagemAtualUrl { get; set; }
-        public int TotalAmbientes { get; set; }
+       // public string? ImagemAtualUrl { get; set; }
+       // public int TotalAmbientes { get; set; }
 
         // STHEFANNY Aqui ↑
 
         [Display(Name = "Imagem")]
         public string? ImagemUpload { get; set; }
+
+        [Display(Name = "Projetos vinculados")]
+        public int TotalProjetos { get; set; }
+
+        [Display(Name = "Cadastrado em")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime DataCadastro { get; set; }
+
+        // Campos calculados só para exibição
 
         public string StatusTexto => Ativo ? "Ativo" : "Inativo";
 
