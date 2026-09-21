@@ -17,8 +17,8 @@ namespace Quetzal.UI.ViewModels
         [Display(Name = "Ativo")]
         public bool Ativo { get; set; }
 
-        public string? ImagemAtualUrl { get; set; }
-        public int TotalAmbientes { get; set; }
+       // public string? ImagemAtualUrl { get; set; }
+       // public int TotalAmbientes { get; set; }
 
         // STHEFANNY Aqui ↑
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quetzal.UI.Infraestrutura;
 using Quetzal.UI.Servicos;
 using Quetzal.UI.ViewModels;
 
@@ -8,15 +9,15 @@ namespace Quetzal.UI.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "Admin,Operador")]
-    public class ProjetosCController : Controller
+    public class ProjetoCController : Controller
     {
         private readonly ApiCliente _api;
-        private readonly IWebHostEnvironment _ambiente;
+        private readonly ServicoUpload _upload;
 
-        public ProjetosCController(ApiCliente api, IWebHostEnvironment ambiente)
+        public ProjetoCController(ApiCliente api, ServicoUpload upload)
         {
             _api = api;
-            _ambiente = ambiente;
+            _upload = upload;
         }
 
         // GET: /Admin/ProjetoC
@@ -86,9 +87,19 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             }
 
             var caminhoImagem = viewModel.ImagemAtualUrl ?? string.Empty;
+
             if (viewModel.ImagemArquivo != null)
             {
-                caminhoImagem = await SalvarImagemAsync(viewModel.ImagemArquivo, "projetos") ?? caminhoImagem;
+                var resultado = await _upload.SalvarImagemAsync(viewModel.ImagemArquivo, "projetos");
+
+                if (!resultado.Sucesso)
+                {
+                    ModelState.AddModelError(nameof(viewModel.ImagemArquivo), resultado.Erro!);
+                    await PreencherCheckboxesAmbientes(viewModel);
+                    return View(viewModel);
+                }
+
+                caminhoImagem = resultado.CaminhoRelativo ?? caminhoImagem;
             }
 
             var dto = new AtualizarProjetoCApiModelo
@@ -113,6 +124,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             TempData["MensagemSucesso"] = "Projeto atualizado com sucesso!";
             return RedirectToAction(nameof(Index));
         }
+
 
         // POST: /Admin/ProjetoC/Desativar/5
         [HttpPost]
@@ -171,33 +183,13 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             }
         }
 
-        // Salva o arquivo em wwwroot/uploads/projetos/ e devolve o caminho
-        // relativo -- a API espera ImagemUpload como string, não multipart
-        private async Task<string?> SalvarImagemAsync(IFormFile? arquivo, string pasta)
+   
+
+        // era: string[]? erros  →  .Length
+        // vira: List<string>? erros  →  .Count
+        private void AdicionarErrosDaApi(List<string>? erros, string mensagemGeral)
         {
-            if (arquivo == null || arquivo.Length == 0)
-            {
-                return null;
-            }
-
-            var extensao = Path.GetExtension(arquivo.FileName);
-            var nomeArquivo = $"{Guid.NewGuid()}{extensao}";
-            var pastaFisica = Path.Combine(_ambiente.WebRootPath, "uploads", pasta);
-
-            Directory.CreateDirectory(pastaFisica);
-
-            var caminhoFisico = Path.Combine(pastaFisica, nomeArquivo);
-            using (var stream = new FileStream(caminhoFisico, FileMode.Create))
-            {
-                await arquivo.CopyToAsync(stream);
-            }
-
-            return $"/uploads/{pasta}/{nomeArquivo}";
-        }
-
-        private void AdicionarErrosDaApi(string[]? erros, string mensagemGeral)
-        {
-            if (erros != null && erros.Length > 0)
+            if (erros != null && erros.Count > 0)
             {
                 foreach (var erro in erros)
                 {

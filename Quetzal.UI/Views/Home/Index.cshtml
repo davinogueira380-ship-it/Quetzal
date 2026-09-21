@@ -1,4 +1,4 @@
-@model List<AmbienteViewModel>
+@model HomeViewModel
 @{
     ViewData["Title"] = "Início";
 }
@@ -18,14 +18,14 @@
     <div class="container">
         <h2>Ambientes</h2>
 
-        @if (!Model.Any())
+        @if (!Model.Ambientes.Any())
         {
             <p class="text-center">Em breve, novos ambientes por aqui.</p>
         }
         else
         {
             <div class="row gy-4 Galeria">
-                @foreach (var ambiente in Model)
+                @foreach (var ambiente in Model.Ambientes)
                 {
                     <div class="col-12 col-lg-6">
                         <a asp-controller="Portfolio" asp-action="Ambiente" asp-route-ambienteId="@ambiente.Id">
@@ -48,7 +48,7 @@
             <div class="row gy-4">
                 <div class="d-none d-lg-block col-lg-6">
                     <div class="imagemContato">
-                        <img src="~/img/TÂNIA 2024/TÂNIA 2024/11.jpg" alt="Imagem_contato">
+                        <img src="~/img/TANIA-2024/11.jpg" alt="Imagem_contato">
                     </div>
                 </div>
 
@@ -56,43 +56,55 @@
                     <div class="conteudoContato">
                         <h2>Vamos falar sobre seu projeto</h2>
                         <p>Conte-nos suas ideias. Será um prazer pensar o seu projeto junto com você.</p>
+                        <!-- TODO: aguardando POST api/Contato e criacao do endpoint na API -->
+                        <form asp-controller="Home" asp-action="Contato" method="post">
+                            @* Sem este token, o POST é rejeitado com 400 pelo ValidateAntiForgeryToken.
+                               O Tag Helper de form já o injeta automaticamente, mas deixo explícito. *@
 
-                        <form name="frmContato" id="frmContato" method="get" action="#">
+                            @if (TempData["MensagemSucessoContato"] != null)
+                            {
+                                <div class="alerta-sucesso">@TempData["MensagemSucessoContato"]</div>
+                            }
+                            @if (TempData["MensagemErroContato"] != null)
+                            {
+                                <div class="alerta-erro">@TempData["MensagemErroContato"]</div>
+                            }
+
                             <label for="Nome">Nome*</label>
-                            <input type="text" name="Nome" id="Nome">
+                            <input type="text" name="Nome" id="Nome" required maxlength="200">
 
                             <label for="Email">E-mail*</label>
-                            <input type="email" name="Email" id="Email">
+                            <input type="email" name="Email" id="Email" required>
 
                             <label for="Telefone">Telefone*</label>
-                            <input type="text" name="Telefone" id="Telefone">
+                            <input type="tel" name="Telefone" id="Telefone" required pattern="\d{10,11}"
+                                   title="Apenas números, com DDD">
 
-                            <label for="Ajuda">Como podemos ajudar</label>
-                            <input type="text" name="Ajuda" id="Ajuda">
+                            <label for="Mensagem">Como podemos ajudar*</label>
+                            <textarea name="Mensagem" id="Mensagem" rows="4" required maxlength="1000"></textarea>
 
                             <p>De qual forma você prefere receber o contato?</p>
 
                             <div class="checkbox">
-                                <input type="checkbox" name="FormaContato" id="email">
-                                <label for="email">E-mail</label>
+                                @* Mesmo name nos três: o binder monta a List<string> FormasContato *@
+                                <input type="checkbox" name="FormasContato" id="contatoEmail" value="Email">
+                                <label for="contatoEmail">E-mail</label>
 
-                                <input type="checkbox" name="FormaContato" id="telefone">
-                                <label for="telefone">Telefone</label>
+                                <input type="checkbox" name="FormasContato" id="contatoTelefone" value="Telefone">
+                                <label for="contatoTelefone">Telefone</label>
 
-                                <input type="checkbox" name="FormaContato" id="whatsapp">
-                                <label for="whatsapp">Whatsapp</label>
+                                <input type="checkbox" name="FormasContato" id="contatoWhatsapp" value="Whatsapp">
+                                <label for="contatoWhatsapp">Whatsapp</label>
                             </div>
+
                             <div class="Button">
-                                <li>
-                                    <input type="button" name="BtnEnviar" id="BtnEnviar" value="Enviar"
-                                        class="btnDefault" onclick="validarFormulario();">
-                                </li>
-                                <li>
-                                    <a href="https://wa.me/551199999999" target="_blank" class="btnWhatsapp">
-                                        <i class="fa-brands fa-whatsapp"></i>
-                                        <span>Entre em contato </span>
-                                    </a>
-                                </li>
+                                @* type="submit", não "button" — é isso que envia o formulário *@
+                                <button type="submit" class="btnDefault">Enviar</button>
+
+                                <a href="https://wa.me/5511999999999" target="_blank" rel="noopener" class="btnWhatsapp">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                    <span>Entre em contato</span>
+                                </a>
                             </div>
                         </form>
                     </div>
@@ -107,7 +119,7 @@
         <div class="sobre-container">
             <div class="row gy-4">
                 <div class="col-12 col-lg-6 sobre-foto">
-                    <img src="~/img/Img_cliente.jpeg" alt="foto-arredondada">
+                    <img src="~/img/Img-cliente.jpeg" alt="foto-arredondada">
                 </div>
 
                 <div class="col-12 col-lg-6 sobre-conteudo">
@@ -133,17 +145,26 @@
 <section id="instagram">
     <h2>Conheça nosso Instagram</h2>
     <div class="container">
-        <div class="carrossel-container">
-            <button class="seta esquerda" onclick="rolarEsquerdaIndex()"> ❮ </button>
-            <div class="instagram-galeria" id="galeria">
-                <img src="~/img/CARLOS - 2026/CARLOS - 2026/A.jpeg" alt="Escritorio">
-                <img src="~/img/JORDANA 2024/SOLT 1.jpg" alt="Quarto">
-                <img src="~/img/JÉSSICA 2025/JÉSSICA 2025/z.jpg" alt="Quarto_casal">
-                <img src="~/img/LAURA E GUSTAVO/LAURA E GUSTAVO/1...jpg" alt="Cozinha">
-                <img src="~/img/TÂNIA 2024/TÂNIA 2024/D.jpg" alt="Quarto">
-                <img src="~/img/CARLOS - 2026/CARLOS - 2026/F.jpeg" alt="Extra">
+        @if (!Model.ImagensCarrossel.Any())
+        {
+            <p class="text-center">Em breve, novas imagens por aqui.</p>
+        }
+        else
+        {
+            <div class="carrossel-container">
+                <button class="seta esquerda" type="button" onclick="rolarEsquerdaIndex()"
+                        aria-label="Imagem anterior">❮</button>
+
+                <div class="instagram-galeria" id="galeria">
+                    @foreach (var imagem in Model.ImagensCarrossel)
+                    {
+                        <img src="@imagem.Url" alt="@imagem.TextoAlternativo" loading="lazy">
+                    }
+                </div>
+
+                <button class="seta direita" type="button" onclick="rolarDireitaIndex()"
+                        aria-label="Próxima imagem">❯</button>
             </div>
-            <button class="seta direita" onclick="rolarDireitaIndex()"> ❯ </button>
-        </div>
+        }
     </div>
 </section>

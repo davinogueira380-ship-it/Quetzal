@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Quetzal.UI.Servicos;
@@ -14,24 +15,39 @@ namespace Quetzal.UI.Controllers
     public class ContaController : Controller
     {
         private readonly ApiCliente _apiCliente;
+        private readonly IWebHostEnvironment _ambiente;
 
-        public ContaController(ApiCliente apiCliente)
+        public ContaController(ApiCliente apiCliente, IWebHostEnvironment ambiente)
         {
             _apiCliente = apiCliente;
+            _ambiente = ambiente;
         }
 
         // GET: /Conta/Login
+        //[HttpGet]
+        //public IActionResult Login(string? retornoUrl = null)
+        //{
+            // Se já está logado, não faz sentido mostrar a tela de login de novo
+            //if (User.Identity != null && User.Identity.IsAuthenticated)
+            //{
+              //  return RedirectToAction("Index", "Home");
+            //}
+            
+            //var viewModel = new LoginViewModel { RetornoUrl = retornoUrl };
+            //return View(viewModel);
+        //}
+        //ADD POSTERIORMENTE
         [HttpGet]
         public IActionResult Login(string? retornoUrl = null)
         {
-            // Se já está logado, não faz sentido mostrar a tela de login de novo
-            if (User.Identity != null && User.Identity.IsAuthenticated)
+            if (User.Identity?.IsAuthenticated == true)
             {
-                return RedirectToAction("Index", "Home");
+                // Reaproveita os perfis que já estão nas claims do cookie
+                var perfis = User.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList();
+                return RedirecionarPorPerfil(perfis);
             }
 
-            var viewModel = new LoginViewModel { RetornoUrl = retornoUrl };
-            return View(viewModel);
+            return View(new LoginViewModel { RetornoUrl = retornoUrl });
         }
 
         // POST: /Conta/Login
@@ -70,14 +86,35 @@ namespace Quetzal.UI.Controllers
                 return Redirect(viewModel.RetornoUrl);
             }
 
+            return RedirecionarPorPerfil(resposta.Dados.Perfis); //ADD POSTERIOMENTE
+
             // Redireciona por perfil: Admin cai direto no Dashboard.
-           
-            if (resposta.Dados.Perfis.Contains("Admin"))
+
+           // if (resposta.Dados.Perfis.Contains("Admin"))
+           // {
+                //return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+            //}
+
+            //return RedirectToAction("Index", "Home");
+
+        }
+        //ADD POSTERIORMENTE
+        // Um lugar só decide para onde cada perfil vai. Se amanhã surgir
+        // um perfil novo, mexe aqui e em nenhum outro lugar.
+        private IActionResult RedirecionarPorPerfil(List<string> perfis)
+        {
+            if (perfis.Contains("Admin") || perfis.Contains("Operador"))
             {
                 return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
             }
 
-            return RedirectToAction("Index", "Home");
+            if (perfis.Contains("Cliente"))
+            {
+                return RedirectToAction("Index", "MeuProjeto", new { area = "Cliente" });
+            }
+
+            // Usuário sem perfil definido ainda — cai na vitrine pública
+            return RedirectToAction("Index", "Home", new { area = "" });
         }
 
         // GET: /Conta/Registro
@@ -117,7 +154,7 @@ namespace Quetzal.UI.Controllers
             if (!resposta.Sucesso)
             {
                 // Erros de validação vindos da API (ex: "e-mail já cadastrado")
-                if (resposta.Erros != null && resposta.Erros.Length > 0)
+                if (resposta.Erros != null && resposta.Erros.Count > 0)
                 {
                     foreach (var erro in resposta.Erros)
                     {
@@ -168,7 +205,8 @@ namespace Quetzal.UI.Controllers
             return View();
         }
 
-       
+
+
         private async Task AutenticarUsuarioAsync(LoginResposta dadosLogin, bool lembrarMe)
         {
             var claims = new List<Claim>
@@ -198,7 +236,7 @@ namespace Quetzal.UI.Controllers
             Response.Cookies.Append("quetzal_token", dadosLogin.Token, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
+                Secure = !_ambiente.IsDevelopment(), //Alterado posteriormente, nao usar se interferir na rede do senac
                 SameSite = SameSiteMode.Strict,
                 Expires = dadosLogin.Expiracao
             });

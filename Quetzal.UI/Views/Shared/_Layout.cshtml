@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="~/img/logo.png" type="image/x-icon">
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site-publico.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"> -->
     @await RenderSectionAsync("Estilos", required: false)
 </head>
 
@@ -40,18 +40,27 @@
                         <li><a asp-controller="Home" asp-action="Index">#ambientes</a></li>
                         <li><a asp-controller="Home" asp-action="Index">#contato</a></li>
                         <li><a asp-controller="Home" asp-action="Index">#sobremim</a></li>
-                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        @if (User.Identity?.IsAuthenticated == true)
                         {
-                            <li><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Painel Admin</a></li>
+                            @* IsInRole lê os Claims de Role que o ContaController gravou no cookie *@
+                            @if (User.IsInRole("Admin") || User.IsInRole("Operador"))
+                            {
+                                <li><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Painel Admin</a></li>
+                            }
+                            else if (User.IsInRole("Cliente"))
+                            {
+                                <li><a asp-area="Cliente" asp-controller="MeuProjeto" asp-action="Index">Meu Projeto</a></li>
+                            }
+
                             <li>
-                                <form asp-controller="Conta" asp-action="Sair" method="post" class="d-inline">
+                                <form asp-area="" asp-controller="Conta" asp-action="Sair" method="post" class="d-inline">
                                     <button type="submit" class="link-sair">Sair</button>
                                 </form>
                             </li>
                         }
                         else
                         {
-                            <li><a asp-controller="Conta" asp-action="Login">Entrar</a></li>
+                            <li><a asp-area="" asp-controller="Conta" asp-action="Login">Entrar</a></li>
                         }
                     </ul>
 

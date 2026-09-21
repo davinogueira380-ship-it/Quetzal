@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quetzal.UI.Infraestrutura;
 using Quetzal.UI.Servicos;
 using Quetzal.UI.ViewModels;
 
@@ -11,17 +12,17 @@ namespace Quetzal.UI.Areas.Admin.Controllers
     // Index -> Criar (GET/POST) -> Editar (GET/POST) -> Desativar/Reativar/ExcluirPermanente
     [Area("Admin")]
     [Authorize(Roles = "Admin,Operador")]
-    public class PortfoliosController : Controller
+    public class PortfolioController : Controller
     {
         private readonly ApiCliente _api;
-        private readonly IWebHostEnvironment _ambiente;
+        private readonly ServicoUpload _upload;   // ← trocou de _ambiente para _upload
 
-        public PortfoliosController(ApiCliente api, IWebHostEnvironment ambiente)
+        public PortfolioController(ApiCliente api, ServicoUpload upload)
         {
             _api = api;
-            _ambiente = ambiente;
+            _upload = upload;
         }
-        
+
         // GET: /Admin/Portfolio
         public async Task<IActionResult> Index()
         {
@@ -66,13 +67,20 @@ namespace Quetzal.UI.Areas.Admin.Controllers
                 return View(viewModel);
             }
 
-            var caminhoImagem = await SalvarImagemAsync(viewModel.ImagemArquivo, "portfolio");
+            var resultado = await _upload.SalvarImagemAsync(viewModel.ImagemArquivo, "portfolio");
+
+            if (!resultado.Sucesso)
+            {
+                ModelState.AddModelError(nameof(viewModel.ImagemArquivo), resultado.Erro!);
+                await PreencherDropdownAmbientes(viewModel);
+                return View(viewModel);
+            }
 
             var dto = new CriarPortfolioApiModelo
             {
                 NomeProjeto = viewModel.NomeProjeto,
                 Descricao = viewModel.Descricao,
-                ImagemUpload = caminhoImagem ?? string.Empty,
+                ImagemUpload = resultado.CaminhoRelativo ?? string.Empty,
                 AmbienteId = viewModel.AmbienteId
             };
 
@@ -125,12 +133,20 @@ namespace Quetzal.UI.Areas.Admin.Controllers
                 return View(viewModel);
             }
 
-            // Se o admin não trocou a imagem, mantém a que já estava salva.
-            // Só sobrescreve se um novo arquivo foi enviado no formulário.
             var caminhoImagem = viewModel.ImagemAtualUrl ?? string.Empty;
+
             if (viewModel.ImagemArquivo != null)
             {
-                caminhoImagem = await SalvarImagemAsync(viewModel.ImagemArquivo, "portfolio") ?? caminhoImagem;
+                var resultado = await _upload.SalvarImagemAsync(viewModel.ImagemArquivo, "portfolio");
+
+                if (!resultado.Sucesso)
+                {
+                    ModelState.AddModelError(nameof(viewModel.ImagemArquivo), resultado.Erro!);
+                    await PreencherDropdownAmbientes(viewModel);
+                    return View(viewModel);
+                }
+
+                caminhoImagem = resultado.CaminhoRelativo ?? caminhoImagem;
             }
 
             var dto = new AtualizarPortfolioApiModelo
@@ -215,40 +231,15 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             }
         }
 
-        // Salva o arquivo enviado em wwwroot/uploads/{pasta}/ com um nome único,
-        // e devolve o caminho relativo para guardar no banco (via API).
-        //
-        // OBS: a API espera ImagemUpload como string simples (um caminho),
-        // não como upload multipart -- por isso o arquivo é salvo aqui na UI,
-        // não enviado para a API.
-        private async Task<string?> SalvarImagemAsync(IFormFile? arquivo, string pasta)
-        {
-            if (arquivo == null || arquivo.Length == 0)
-            {
-                return null;
-            }
-
-            var extensao = Path.GetExtension(arquivo.FileName);
-            var nomeArquivo = $"{Guid.NewGuid()}{extensao}";
-            var pastaFisica = Path.Combine(_ambiente.WebRootPath, "uploads", pasta);
-
-            Directory.CreateDirectory(pastaFisica);
-
-            var caminhoFisico = Path.Combine(pastaFisica, nomeArquivo);
-            using (var stream = new FileStream(caminhoFisico, FileMode.Create))
-            {
-                await arquivo.CopyToAsync(stream);
-            }
-
-            // Caminho relativo, o que fica salvo no banco via API
-            return $"/uploads/{pasta}/{nomeArquivo}";
-        }
+      
 
         // Traduz os erros vindos da API para o ModelState, para aparecerem
         // junto com os campos do formulário via asp-validation-summary
-        private void AdicionarErrosDaApi(string[]? erros, string mensagemGeral)
+        // era: string[]? erros  →  .Length
+        // vira: List<string>? erros  →  .Count
+        private void AdicionarErrosDaApi(List<string>? erros, string mensagemGeral)
         {
-            if (erros != null && erros.Length > 0)
+            if (erros != null && erros.Count > 0)
             {
                 foreach (var erro in erros)
                 {
