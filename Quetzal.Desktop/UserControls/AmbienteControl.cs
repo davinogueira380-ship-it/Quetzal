@@ -11,6 +11,7 @@ namespace Quetzal.Desktop.UserControls
         private string? _ambienteSelecionadoId;
 
         private readonly AmbienteApiUsuario _apiAmbiente;
+        private List<AmbienteDto> _listaAmbientes = new List<AmbienteDto>();
 
         public AmbientesControl()
         {
@@ -123,9 +124,32 @@ namespace Quetzal.Desktop.UserControls
             }
         }
 
-        private void btnAtualizar_Click(object sender, EventArgs e)
+        private async void btnAtualizar_Click(object sender, EventArgs e)
         {
-            CarregarAmbientes();
+            try
+            {
+                btnAtualizar.Enabled = false;
+
+                await CarregarAmbientes();
+
+                MessageBox.Show(
+                    "Lista de ambientes atualizada com sucesso.",
+                    "Atualizado",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Erro ao atualizar os ambientes.\n\n{ex.Message}",
+                    "Erro",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btnAtualizar.Enabled = true;
+            }
         }
 
         private void txtBusca_TextChanged(object sender, EventArgs e)
@@ -217,13 +241,45 @@ namespace Quetzal.Desktop.UserControls
             LimparFormulario();
         }
 
-        private void CarregarAmbientes()
+        private async Task CarregarAmbientes()
         {
-            // A integração com a API será colocada aqui.
-            //
-            // Depois vamos preencher o dgvAmbientes
-            // com os ambientes retornados pela API.
+            try
+            {
+                dgvAmbientes.Enabled = false;
+
+                _listaAmbientes = await _apiAmbiente.ObterTodasAsync();
+
+                AtualizarGrid(_listaAmbientes);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Não foi possível carregar os ambientes da API.\n\n{ex.Message}",
+                    "Aviso de Comunicação",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
+            finally
+            {
+                dgvAmbientes.Enabled = true;
+            }
         }
+        
+private void AtualizarGrid(List<AmbienteDto> dados)
+        {
+            dgvAmbientes.AutoGenerateColumns = false;
+
+            // Limpa os dados atuais
+            dgvAmbientes.DataSource = null;
+
+            // Coloca os novos dados no Grid
+            dgvAmbientes.DataSource = dados;
+
+            // Remove a seleção automática
+            dgvAmbientes.ClearSelection();
+        }
+
+
 
         private void FiltrarAmbientes()
         {
