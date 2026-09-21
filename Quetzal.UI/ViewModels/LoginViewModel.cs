@@ -27,4 +27,4 @@ namespace Quetzal.UI.ViewModels
         public string? RetornoUrl { get; set; }
     }
 }
-}
+

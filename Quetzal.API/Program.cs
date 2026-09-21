@@ -41,6 +41,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IAmbienteServico, AmbienteServico>();
 builder.Services.AddScoped<IPortfolioServico, PortfolioServico>();
+builder.Services.AddScoped<IProjetoCServico, ProjetoCServico>();
 
 
 // CONSTRUÇÃO DA APLICAÇÃO
@@ -77,7 +78,7 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider
         .GetRequiredService<QuetzalContexto>();
 
-    await context.Database.MigrateAsync();
+    //await context.Database.MigrateAsync();
 
 
     // Cria os perfis padrão

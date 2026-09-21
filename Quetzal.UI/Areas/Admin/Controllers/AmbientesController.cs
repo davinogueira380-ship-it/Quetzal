@@ -94,7 +94,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             {
                 model.Nome,
                 model.Descricao,
-                model.ImagemUrl
+                model.ImagemAtualUrl //Davi Alterou de ImagemUrl para ImagemAtualUrl
             };
 
             var resposta = await _api.PutAsync<AmbienteViewModel, object>($"/api/Ambientes/{model.Id}", dto);

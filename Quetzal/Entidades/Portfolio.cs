@@ -7,19 +7,38 @@ namespace Quetzal.Domain.Entidades;
 // O cliente vai ter acesso a vários projetos, e cada projeto vai ter um cliente associado a ele.
 // A relação entre Cliente e Projeto é de um para muitos, ou seja, um cliente pode ter vários projetos, mas cada projeto pertence a apenas um cliente.
 
+// Quetzal\Domain\Entidades\Portfolio.cs
 public class Portfolio
 {
     public int Id { get; set; }
-    public string? NomeProjeto { get; set; } //FK da tabela Usuario
-    public Ambiente Ambiente { get; set; } = null!; // FK da tabela Ambiente
-    public int AmbienteId { get; set; } // FK da tabela Ambiente
-    public string Descricao { get; set; } = string.Empty; // Descrição do projeto
-    public string? ImagemUpload { get; set; } // Imagem que vai ser exibida no site
-
+    public string? NomeProjeto { get; set; }
+    public Ambiente Ambiente { get; set; } = null!;
+    public int AmbienteId { get; set; }
+    public string Descricao { get; set; } = string.Empty;
+    public string? ImagemUpload { get; set; }
     public bool Ativo { get; set; }
-
-    public DateTime DataCriacao { get; set; } // Data de criação do projeto
-    public DateTime? DataAtualizacao { get; set; } // Data de atualização do projeto
-    public DateTime?  DataExclusao { get; set; }
-
+    public DateTime DataCriacao { get; set; }
+    public DateTime? DataAtualizacao { get; set; }
+    public DateTime? DataExclusao { get; set; }
 }
+
+/// <summary>
+/// Comentado para incluir o código sugerido pelo copilot.
+/// <summary/>
+
+//public class Portfolio
+//{
+//    public int Id { get; set; }
+//    public string? NomeProjeto { get; set; } //FK da tabela Usuario
+//    public Ambiente Ambiente { get; set; } = null!; // FK da tabela Ambiente
+//    public int AmbienteId { get; set; } // FK da tabela Ambiente
+//    public string Descricao { get; set; } = string.Empty; // Descrição do projeto
+//    public string? ImagemUpload { get; set; } // Imagem que vai ser exibida no site
+
+//    public bool Ativo { get; set; }
+
+//    public DateTime DataCriacao { get; set; } // Data de criação do projeto
+//    public DateTime? DataAtualizacao { get; set; } // Data de atualização do projeto
+//    public DateTime?  DataExclusao { get; set; }
+
+//}
