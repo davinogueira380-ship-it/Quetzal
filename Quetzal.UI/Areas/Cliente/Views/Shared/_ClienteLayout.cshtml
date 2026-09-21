@@ -8,20 +8,19 @@
     <link rel="shortcut icon" href="~/img/logo.png" type="image/x-icon">
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site-publico.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    @await RenderSectionAsync("Estilos", required: false)
+ <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"> -->    @await RenderSectionAsync("Estilos", required: false)
 </head>
 
 <body>
     <div class="cliente-topo">
         <div class="container">
-            <a asp-controller="Home" asp-action="Index">
+            <a asp-area="" asp-controller="Home" asp-action="Index">
                 <img src="~/img/logo-sem-fundo.png" alt="Quetzal Logo">
             </a>
 
-            <span class="saudacao">Olá, @User.Identity!.Name</span>
+            <span class="saudacao">Olá, @User.Identity?.Name</span>
 
-            <form asp-controller="Conta" asp-action="Sair" method="post" class="d-inline">
+            <form asp-area="" asp-controller="Conta" asp-action="Sair" method="post" class="d-inline">
                 <button type="submit"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
             </form>
         </div>

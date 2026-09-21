@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="~/img/logo.png" type="image/x-icon">
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/admin.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"> -->
     @await RenderSectionAsync("Estilos", required: false)
 </head>
 
@@ -45,7 +45,7 @@
             </ul>
 
             <div class="sair-area">
-                <form asp-controller="Conta" asp-action="Sair" method="post">
+                <form asp-area="" asp-controller="Conta" asp-action="Sair" method="post">
                     <button type="submit"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
                 </form>
             </div>

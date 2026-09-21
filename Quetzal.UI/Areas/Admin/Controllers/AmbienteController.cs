@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Quetzal.UI.Infraestrutura;
 using Quetzal.UI.Servicos;
 using Quetzal.UI.ViewModels;
 
@@ -9,15 +10,15 @@ namespace Quetzal.UI.Areas.Admin.Controllers
     // categorizar Portfólio/Projetos de Cliente).
     [Area("Admin")]
     [Authorize(Roles = "Admin,Operador")]
-    public class AmbientesController : Controller
+    public class AmbienteController : Controller
     {
         private readonly ApiCliente _api;
-        private readonly IWebHostEnvironment _ambiente;
+        private readonly ServicoUpload _upload;   // ← trocou de _ambiente para _upload
 
-        public AmbientesController(ApiCliente api, IWebHostEnvironment ambiente)
+        public AmbienteController(ApiCliente api, ServicoUpload upload)
         {
             _api = api;
-            _ambiente = ambiente;
+            _upload = upload;
         }
 
         // GET: /Admin/Ambiente
@@ -61,7 +62,20 @@ namespace Quetzal.UI.Areas.Admin.Controllers
                 return View(viewModel);
             }
 
-            var caminhoImagem = await SalvarImagemAsync(viewModel.ImagemArquivo);
+            string? caminhoImagem = null;
+
+            if (viewModel.ImagemArquivo != null)
+            {
+                var resultado = await _upload.SalvarImagemAsync(viewModel.ImagemArquivo, "ambientes");
+
+                if (!resultado.Sucesso)
+                {
+                    ModelState.AddModelError(nameof(viewModel.ImagemArquivo), resultado.Erro!);
+                    return View(viewModel);
+                }
+
+                caminhoImagem = resultado.CaminhoRelativo;
+            }
 
             var dto = new CriarAmbienteApiModelo
             {
@@ -106,7 +120,6 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             return View(viewModel);
         }
 
-        // POST: /Admin/Ambiente/Editar/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Editar(int id, AmbienteEdicaoViewModel viewModel)
@@ -117,9 +130,18 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             }
 
             var caminhoImagem = viewModel.ImagemAtualUrl;
+
             if (viewModel.ImagemArquivo != null)
             {
-                caminhoImagem = await SalvarImagemAsync(viewModel.ImagemArquivo) ?? caminhoImagem;
+                var resultado = await _upload.SalvarImagemAsync(viewModel.ImagemArquivo, "ambientes");
+
+                if (!resultado.Sucesso)
+                {
+                    ModelState.AddModelError(nameof(viewModel.ImagemArquivo), resultado.Erro!);
+                    return View(viewModel);
+                }
+
+                caminhoImagem = resultado.CaminhoRelativo;
             }
 
             var dto = new CriarAmbienteApiModelo
@@ -181,31 +203,13 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<string?> SalvarImagemAsync(IFormFile? arquivo)
+        
+
+        // era: string[]? erros  →  .Length
+        // vira: List<string>? erros  →  .Count
+        private void AdicionarErrosDaApi(List<string>? erros, string mensagemGeral)
         {
-            if (arquivo == null || arquivo.Length == 0)
-            {
-                return null;
-            }
-
-            var extensao = Path.GetExtension(arquivo.FileName);
-            var nomeArquivo = $"{Guid.NewGuid()}{extensao}";
-            var pastaFisica = Path.Combine(_ambiente.WebRootPath, "uploads", "ambientes");
-
-            Directory.CreateDirectory(pastaFisica);
-
-            var caminhoFisico = Path.Combine(pastaFisica, nomeArquivo);
-            using (var stream = new FileStream(caminhoFisico, FileMode.Create))
-            {
-                await arquivo.CopyToAsync(stream);
-            }
-
-            return $"/uploads/ambientes/{nomeArquivo}";
-        }
-
-        private void AdicionarErrosDaApi(string[]? erros, string mensagemGeral)
-        {
-            if (erros != null && erros.Length > 0)
+            if (erros != null && erros.Count > 0)
             {
                 foreach (var erro in erros)
                 {
