@@ -29,7 +29,6 @@ namespace Quetzal.Domain.Entidades
     //    public string Nome { get; set; } = string.Empty; // Nome do ambiente
     //    public int PortfolioId { get; set; } // FK da tabela Portfolio
     //    public Portfolio Portfolio { get; set; } = null!; // Referência ao portfolio
-    //    public string? Descricao { get; set; }
     //    public string? ImagemUpload { get; set; }
     //    public bool Ativo { get; set; } // Indica se o ambiente está ativo ou não
     //    public DateTime DataCadastro { get; set; } // Data de cadastro do ambiente
