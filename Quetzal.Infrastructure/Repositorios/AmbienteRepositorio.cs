@@ -16,7 +16,7 @@ namespace Quetzal.Infrastructure.Repositorios
         }
         public async Task<IEnumerable<Ambiente>> ObterTodasAsync(bool incluirInativas = false)
         {
-           IQueryable<Ambiente> query = _contexto.Ambientes.Include(a => a.Portfolio);
+           IQueryable<Ambiente> query = _contexto.Ambientes.Include(a => a.Portfolios);
             if (!incluirInativas)
             {
                 query = query.Where(a => a.Ativo);
@@ -26,12 +26,12 @@ namespace Quetzal.Infrastructure.Repositorios
 
         public async Task<Ambiente?> ObterPorIdAsync(int id)
         {
-            return await _contexto.Ambientes.Include(a => a.Portfolio).FirstOrDefaultAsync(a => a.Id == id);
+            return await _contexto.Ambientes.Include(a => a.Portfolios).FirstOrDefaultAsync(a => a.Id == id);
         }
         
         public async Task<IEnumerable<Ambiente>> FiltrarPorAmbienteAsync(string? termo, int? ambienteId = null)
         {
-            IQueryable<Ambiente> query = _contexto.Ambientes.Include(a => a.Portfolio);
+            IQueryable<Ambiente> query = _contexto.Ambientes.Include(a => a.Portfolios);
             if (!string.IsNullOrEmpty(termo))
             {
                 query = query.Where(a => a.Nome.Contains(termo));

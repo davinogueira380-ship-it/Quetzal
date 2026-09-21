@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Quetzal.Desktop.ApiClientes;
 
 namespace Quetzal.Desktop.UserControls
 {
@@ -9,9 +10,13 @@ namespace Quetzal.Desktop.UserControls
     {
         private string? _ambienteSelecionadoId;
 
+        private readonly AmbienteApiUsuario _apiAmbiente;
+
         public AmbientesControl()
         {
             InitializeComponent();
+
+            _apiAmbiente = new AmbienteApiUsuario();
 
             ConfigurarGrid();
             LimparFormulario();
@@ -47,7 +52,7 @@ namespace Quetzal.Desktop.UserControls
             LimparFormulario();
         }
 
-        private void btnSalvar_Click(object sender, EventArgs e)
+        private async void btnSalvar_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtNome.Text))
             {
@@ -65,7 +70,7 @@ namespace Quetzal.Desktop.UserControls
             {
                 if (string.IsNullOrEmpty(_ambienteSelecionadoId))
                 {
-                    CriarAmbiente();
+                    await CriarAmbiente();
                 }
                 else
                 {
@@ -154,20 +159,35 @@ namespace Quetzal.Desktop.UserControls
             }
         }
 
-        private void CriarAmbiente()
+        private async Task CriarAmbiente()
         {
-            // A integração com a API será colocada aqui.
-            //
-            // Neste momento estamos mantendo o UserControl
-            // independente da implementação da API.
+            var dto = new CriarAmbienteDto
+            {
+                Nome = txtNome.Text.Trim(),
+                Descricao = txtDescricao.Text.Trim()
+            };
 
-            MessageBox.Show(
-                "Ambiente pronto para ser cadastrado.",
-                "Sucesso",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            var resposta = await _apiAmbiente.CadastrarAsync(dto);
 
-            LimparFormulario();
+            if (resposta != null && resposta.Sucesso)
+            {
+                MessageBox.Show(
+                    resposta.Mensagem ?? "Ambiente cadastrado com sucesso!",
+                    "Sucesso",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                LimparFormulario();
+                CarregarAmbientes();
+            }
+            else
+            {
+                MessageBox.Show(
+                    resposta?.Mensagem ?? "Não foi possível cadastrar o ambiente.",
+                    "Atenção",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
         }
 
         private void AtualizarAmbiente()
