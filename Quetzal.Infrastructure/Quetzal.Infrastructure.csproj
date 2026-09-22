@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\QuetzalContextoModelSnapshot.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
 	  <FrameworkReference Include="Microsoft.AspNetCore.App" />
 	  <PackageReference Include="Microsoft.EntityFrameWorkCore" Version="10.0.11" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.11" />
@@ -25,6 +29,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Quetzal.Application\Quetzal.Application.csproj" />
     <ProjectReference Include="..\Quetzal\Quetzal.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

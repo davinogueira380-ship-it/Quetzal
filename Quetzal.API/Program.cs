@@ -6,101 +6,100 @@ using Quetzal.Application.Servicos.Implementacoes;
 using Quetzal.Application.Servicos.Interfaces;
 using Quetzal.Infrastructure;
 using Quetzal.Infrastructure.Dados;
-using Quetzal.Application.Servicos; // k16-09
+using Quetzal.Application.Servicos;
+
 var builder = WebApplication.CreateBuilder(args);
 
+// ================================================================
 // INFRASTRUCTURE
+// ================================================================
 
-builder.Services.AdicionarServicosDeInfraestrutura(builder.Configuration);
-builder.Services.AddDataProtection(); //Adicionado Kelly 16-09
+builder.Services.AdicionarServicosDeInfraestrutura(
+    builder.Configuration);
 
+builder.Services.AddDataProtection();
+
+// ================================================================
 // CONTROLLERS
+// ================================================================
 
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<IUsuarioServico, UsuarioServico>(); // k 16-09
+builder.Services.AddScoped<IUsuarioServico, UsuarioServico>();
+
+// ================================================================
 // SWAGGER
+// ================================================================
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
+// ================================================================
 // AUTOMAPPER
+// ================================================================
 
 builder.Services.AddAutoMapper(
     cfg => { },
     typeof(PerfilMapeamento));
 
-
+// ================================================================
 // AUTHORIZATION
+// ================================================================
 
 builder.Services.AddAuthorization();
 
-
+// ================================================================
 // SERVIÇOS DA APPLICATION
+// ================================================================
 
 builder.Services.AddScoped<IAmbienteServico, AmbienteServico>();
 builder.Services.AddScoped<IPortfolioServico, PortfolioServico>();
 builder.Services.AddScoped<IProjetoCServico, ProjetoCServico>();
 
-
+// ================================================================
 // CONSTRUÇÃO DA APLICAÇÃO
+// ================================================================
 
 var app = builder.Build();
 
-
+// ================================================================
 // SWAGGER
+// ================================================================
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
+// ================================================================
 // HTTPS
+// ================================================================
 
 app.UseHttpsRedirection();
 
-
+// ================================================================
 // AUTENTICAÇÃO E AUTORIZAÇÃO
+// ================================================================
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-
+// ================================================================
 // CONTROLLERS
+// ================================================================
 
 app.MapControllers();
 
-
-// BANCO DE DADOS E ROLES
+// ================================================================
+// BANCO DE DADOS E SEED
+// ================================================================
 
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider
-        .GetRequiredService<QuetzalContexto>();
-
-    //await context.Database.MigrateAsync();
-
-
-    // Cria os perfis padrão
-    var roleManager = scope.ServiceProvider
-        .GetRequiredService<RoleManager<IdentityRole>>();
-
-    var roles = new[]
-    {
-        "Cliente",
-        "Administrador"
-    };
-
-    foreach (var role in roles)
-    {
-        if (!await roleManager.RoleExistsAsync(role))
-        {
-            await roleManager.CreateAsync(
-                new IdentityRole(role));
-        }
-    }
+    await SeedDados.InicializarAsync(scope.ServiceProvider);
 }
 
+// ================================================================
+// EXECUÇÃO DA APLICAÇÃO
+// ================================================================
 
 app.Run();
 

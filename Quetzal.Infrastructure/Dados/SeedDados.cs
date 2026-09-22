@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Quetzal.Domain.Entidades;
-
 
 namespace Quetzal.Infrastructure.Dados
 {
@@ -10,59 +10,124 @@ namespace Quetzal.Infrastructure.Dados
     {
         public static async Task InicializarAsync(IServiceProvider serviceProvider)
         {
-            using var scope = serviceProvider.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<QuetzalContexto>();
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            // Recupera os serviços através do ServiceProvider recebido
+            var context = serviceProvider.GetRequiredService<QuetzalContexto>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            context.Database.Migrate();
+            // Garante que as migrations existentes sejam aplicadas
+            await context.Database.MigrateAsync();
+
+            // ================================================================
+            // SEED DE IDENTITY
+            // ================================================================
 
             await SeedIdentityAsync(userManager, roleManager);
 
+            // ================================================================
+            // SEED DE AMBIENTES
+            // ================================================================
+
             var todosAmbientes = new List<Ambiente>
             {
-                new Ambiente { Nome = "Sala" },
-                new Ambiente { Nome = "Cozinha" },
-                new Ambiente { Nome = "Quarto" },
-                new Ambiente { Nome = "Banheiro" },
-                new Ambiente { Nome = "Escritorio" },
-                new Ambiente { Nome = "Lavanderia" }
+                new Ambiente
+                {
+                    Nome = "Sala",
+                    Descricao = "Ambiente destinado à sala de estar.",
+                    Ativo = true,
+                    DataCadastro = DateTime.UtcNow
+                },
+
+                new Ambiente
+                {
+                    Nome = "Cozinha",
+                    Descricao = "Ambiente destinado à preparação e refeições.",
+                    Ativo = true,
+                    DataCadastro = DateTime.UtcNow
+                },
+
+                new Ambiente
+                {
+                    Nome = "Quarto",
+                    Descricao = "Ambiente destinado ao descanso.",
+                    Ativo = true,
+                    DataCadastro = DateTime.UtcNow
+                },
+
+                new Ambiente
+                {
+                    Nome = "Banheiro",
+                    Descricao = "Ambiente destinado à higiene pessoal.",
+                    Ativo = true,
+                    DataCadastro = DateTime.UtcNow
+                },
+
+                new Ambiente
+                {
+                    Nome = "Escritorio",
+                    Descricao = "Ambiente destinado ao trabalho e estudos.",
+                    Ativo = true,
+                    DataCadastro = DateTime.UtcNow
+                },
+
+                new Ambiente
+                {
+                    Nome = "Lavanderia",
+                    Descricao = "Ambiente destinado aos serviços de lavanderia.",
+                    Ativo = true,
+                    DataCadastro = DateTime.UtcNow
+                }
             };
-            var ambientesExistentes = context.Ambientes.Select(a => a.Nome).ToHashSet();
-            var novosAmbientes = todosAmbientes.Where(a => !ambientesExistentes.Contains(a.Nome)).ToList();
+
+            var ambientesExistentes = context.Ambientes
+                .Select(a => a.Nome)
+                .ToHashSet();
+
+            var novosAmbientes = todosAmbientes
+                .Where(a => !ambientesExistentes.Contains(a.Nome))
+                .ToList();
+
             if (novosAmbientes.Any())
             {
                 context.Ambientes.AddRange(novosAmbientes);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
 
             // ================================================================
-            // SEED DE PROJETOSC INDICATIVAS 
+            // SEED DE PORTFOLIOS
             // ================================================================
 
-
-            var todosProjetoC = new List<ProjetoC>
+            if (!await context.Portfolios.AnyAsync())
             {
-                new ProjetoC {NomeProjeto = "Projeto Sala", Descricao = "Projeto de Sala de Estar"},
-                new ProjetoC {NomeProjeto = "Projeto Cozinha", Descricao = "Projeto de Cozinha Moderna"},
-                new ProjetoC {NomeProjeto = "Projeto Quarto", Descricao = "Projeto de Quarto Aconchegante"},
-                new ProjetoC {NomeProjeto = "Projeto Banheiro", Descricao = "Projeto de Banheiro Moderno"},
-                new ProjetoC {NomeProjeto = "Projeto Escritorio", Descricao = "Projeto de Escritório Moderno"},
-                new ProjetoC {NomeProjeto = "Projeto Lavanderia", Descricao = "Projeto de Lavanderia"}
+                var proSala = await context.Ambientes
+                    .Where(a => a.Nome == "Sala")
+                    .Select(a => a.Id)
+                    .FirstAsync();
 
-            };
+                var proCozinha = await context.Ambientes
+                    .Where(a => a.Nome == "Cozinha")
+                    .Select(a => a.Id)
+                    .FirstAsync();
 
+                var proQuarto = await context.Ambientes
+                    .Where(a => a.Nome == "Quarto")
+                    .Select(a => a.Id)
+                    .FirstAsync();
 
-            if (!context.Portfolios.Any())
-            {
-                //recupera os Ids dos ambientes para associar aos projetos
-                var proSala = context.Ambientes.First(a => a.Nome == "Sala").Id;
-                var proCozinha = context.Ambientes.First(a => a.Nome == "Cozinha").Id;
-                var proQuarto = context.Ambientes.First(a => a.Nome == "Quarto").Id;
-                var proBanheiro = context.Ambientes.First(a => a.Nome == "Banheiro").Id;
-                var proEscritorio = context.Ambientes.First(a => a.Nome == "Escritorio").Id;
-                var proLavanderia = context.Ambientes.First(a => a.Nome == "Lavanderia").Id;
+                var proBanheiro = await context.Ambientes
+                    .Where(a => a.Nome == "Banheiro")
+                    .Select(a => a.Id)
+                    .FirstAsync();
 
+                var proEscritorio = await context.Ambientes
+                    .Where(a => a.Nome == "Escritorio")
+                    .Select(a => a.Id)
+                    .FirstAsync();
+
+                var proLavanderia = await context.Ambientes
+                    .Where(a => a.Nome == "Lavanderia")
+                    .Select(a => a.Id)
+                    .FirstAsync();
 
                 var portfolios = new List<Portfolio>
                 {
@@ -72,7 +137,8 @@ namespace Quetzal.Infrastructure.Dados
                         AmbienteId = proSala,
                         Descricao = "Projeto de Sala de Estar",
                         ImagemUpload = "https://images.unsplash.com/photo-1616628180680-1e3f5b8c9f1e",
-                        Ativo = true
+                        Ativo = true,
+                        DataCriacao = DateTime.UtcNow
                     },
 
                     new Portfolio
@@ -81,7 +147,8 @@ namespace Quetzal.Infrastructure.Dados
                         AmbienteId = proCozinha,
                         Descricao = "Projeto de Cozinha Moderna",
                         ImagemUpload = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
-                        Ativo = true
+                        Ativo = true,
+                        DataCriacao = DateTime.UtcNow
                     },
 
                     new Portfolio
@@ -90,7 +157,8 @@ namespace Quetzal.Infrastructure.Dados
                         AmbienteId = proQuarto,
                         Descricao = "Projeto de Quarto Aconchegante",
                         ImagemUpload = "https://images.unsplash.com/photo-1616628180680-1e3f5b8c9f1e",
-                        Ativo = true
+                        Ativo = true,
+                        DataCriacao = DateTime.UtcNow
                     },
 
                     new Portfolio
@@ -99,7 +167,8 @@ namespace Quetzal.Infrastructure.Dados
                         AmbienteId = proBanheiro,
                         Descricao = "Projeto de Banheiro Moderno",
                         ImagemUpload = "https://images.unsplash.com/photo-1616628180680-1e3f5b8c9f1e",
-                        Ativo = true
+                        Ativo = true,
+                        DataCriacao = DateTime.UtcNow
                     },
 
                     new Portfolio
@@ -108,7 +177,8 @@ namespace Quetzal.Infrastructure.Dados
                         AmbienteId = proEscritorio,
                         Descricao = "Projeto de Escritório Moderno",
                         ImagemUpload = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
-                        Ativo = true
+                        Ativo = true,
+                        DataCriacao = DateTime.UtcNow
                     },
 
                     new Portfolio
@@ -117,32 +187,62 @@ namespace Quetzal.Infrastructure.Dados
                         AmbienteId = proLavanderia,
                         Descricao = "Projeto de Lavanderia",
                         ImagemUpload = "https://images.unsplash.com/photo-1616628180680-1e3f5b8c9f1e",
-                        Ativo = true
-                    },
-
-
+                        Ativo = true,
+                        DataCriacao = DateTime.UtcNow
+                    }
                 };
 
                 context.Portfolios.AddRange(portfolios);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
         }
 
-        // METODO AUXILIAR: Cria Roles e Usuários padrão via Identity
-        // Este método e idempotente: não cria duplicatas se já existirem.
-        private static async Task SeedIdentityAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        // ================================================================
+        // SEED DE IDENTITY
+        // ================================================================
+
+        private static async Task SeedIdentityAsync(
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
-            // Criação de perfis
-            var perfis = new[] { "Admin", "Usuario" };
+            // ============================================================
+            // ROLES
+            // ============================================================
+
+            var perfis = new[]
+            {
+                "Admin",
+                "Usuario",
+                "Cliente",
+                "Administrador"
+            };
+
             foreach (var perfil in perfis)
             {
                 if (!await roleManager.RoleExistsAsync(perfil))
-                    await roleManager.CreateAsync(new IdentityRole(perfil));
+                {
+                    var resultadoRole = await roleManager.CreateAsync(
+                        new IdentityRole(perfil));
 
+                    if (!resultadoRole.Succeeded)
+                    {
+                        var erros = string.Join(
+                            ", ",
+                            resultadoRole.Errors.Select(e => e.Description));
+
+                        throw new Exception(
+                            $"Erro ao criar o perfil '{perfil}': {erros}");
+                    }
+                }
             }
 
-            //Admin padrão
-            var adminExistente = await userManager.FindByNameAsync("admin@Quetzal.com");
+            // ============================================================
+            // ADMIN
+            // ============================================================
+
+            var adminExistente = await userManager
+                .FindByNameAsync("admin@Quetzal.com");
+
             if (adminExistente == null)
             {
                 var admin = new ApplicationUser
@@ -151,46 +251,104 @@ namespace Quetzal.Infrastructure.Dados
                     Email = "admin@Quetzal.com",
                     NomeCompleto = "Administrador Quetzal",
                     EmailConfirmed = true,
-                    Ativo = true,
+                    Ativo = true
                 };
-                var resultado = await userManager.CreateAsync(admin, "Quetzal@123");
-                if (resultado.Succeeded) 
-                    await userManager.AddToRoleAsync(admin, "Admin");
+
+                var resultado = await userManager.CreateAsync(
+                    admin,
+                    "Quetzal@123");
+
+                if (resultado.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(
+                        admin,
+                        "Admin");
+                }
+                else
+                {
+                    var erros = string.Join(
+                        ", ",
+                        resultado.Errors.Select(e => e.Description));
+
+                    throw new Exception(
+                        $"Erro ao criar usuário administrador: {erros}");
+                }
             }
-            else if (!adminExistente.Ativo) // Se o admin já existe, mas está inativo, reativa e redefine a senha para um padão temporário
+            else if (!adminExistente.Ativo)
             {
                 adminExistente.Ativo = true;
+
                 await userManager.UpdateAsync(adminExistente);
-                var token = await userManager.GeneratePasswordResetTokenAsync(adminExistente);
-                await userManager.ResetPasswordAsync(adminExistente, token, "Quetzal@123");
+
+                var token = await userManager
+                    .GeneratePasswordResetTokenAsync(adminExistente);
+
+                await userManager.ResetPasswordAsync(
+                    adminExistente,
+                    token,
+                    "Quetzal@123");
             }
 
-            //Operador existente
-            var operadorExistente = await userManager.FindByNameAsync("operador@Quetzal.com");
+            // ============================================================
+            // OPERADOR
+            // ============================================================
+
+            var operadorExistente = await userManager
+                .FindByNameAsync("operador@Quetzal.com");
+
             if (operadorExistente == null)
             {
                 var operador = new ApplicationUser
                 {
                     UserName = "operador@Quetzal.com",
-                    Email = "usuario@Quetzal.com",
-                    NomeCompleto = "Usuário Padrão",
+                    Email = "operador@Quetzal.com",
+                    NomeCompleto = "Operador Quetzal",
                     EmailConfirmed = true,
-                    Ativo = true,
+                    Ativo = true
                 };
-                var resultado = await userManager.CreateAsync(operador, "Quetzal@123");
+
+                var resultado = await userManager.CreateAsync(
+                    operador,
+                    "Quetzal@123");
+
                 if (resultado.Succeeded)
-                    await userManager.AddToRoleAsync(operador, "Operador");
+                {
+                    await userManager.AddToRoleAsync(
+                        operador,
+                        "Usuario");
+                }
+                else
+                {
+                    var erros = string.Join(
+                        ", ",
+                        resultado.Errors.Select(e => e.Description));
+
+                    throw new Exception(
+                        $"Erro ao criar usuário operador: {erros}");
+                }
             }
-            else if (!operadorExistente.Ativo) // Se o operador já existe, mas está inativo, reativa e redefine a senha para um padão temporário
+            else if (!operadorExistente.Ativo)
             {
                 operadorExistente.Ativo = true;
+
                 await userManager.UpdateAsync(operadorExistente);
-                var token = await userManager.GeneratePasswordResetTokenAsync(operadorExistente);
-                await userManager.ResetPasswordAsync(operadorExistente, token, "Quetzal@123");
+
+                var token = await userManager
+                    .GeneratePasswordResetTokenAsync(operadorExistente);
+
+                await userManager.ResetPasswordAsync(
+                    operadorExistente,
+                    token,
+                    "Quetzal@123");
             }
 
-            //Usuário existente
-            var usuarioExistente = await userManager.FindByNameAsync("usuario@Quetzal.com");
+            // ============================================================
+            // USUÁRIO
+            // ============================================================
+
+            var usuarioExistente = await userManager
+                .FindByNameAsync("usuario@Quetzal.com");
+
             if (usuarioExistente == null)
             {
                 var usuario = new ApplicationUser
@@ -199,19 +357,44 @@ namespace Quetzal.Infrastructure.Dados
                     Email = "usuario@Quetzal.com",
                     NomeCompleto = "Usuário Padrão",
                     EmailConfirmed = true,
-                    Ativo = true,
+                    Ativo = true
                 };
-                var resultado = await userManager.CreateAsync(usuario, "Quetzal@123");
+
+                var resultado = await userManager.CreateAsync(
+                    usuario,
+                    "Quetzal@123");
+
                 if (resultado.Succeeded)
-                    await userManager.AddToRoleAsync(usuario, "Usuario");
+                {
+                    await userManager.AddToRoleAsync(
+                        usuario,
+                        "Usuario");
+                }
+                else
+                {
+                    var erros = string.Join(
+                        ", ",
+                        resultado.Errors.Select(e => e.Description));
+
+                    throw new Exception(
+                        $"Erro ao criar usuário padrão: {erros}");
+                }
             }
-            else if (!usuarioExistente.Ativo) // Se o usuário já existe, mas está inativo, reativa e redefine a senha para um padão temporário
+            else if (!usuarioExistente.Ativo)
             {
                 usuarioExistente.Ativo = true;
+
                 await userManager.UpdateAsync(usuarioExistente);
-                var token = await userManager.GeneratePasswordResetTokenAsync(usuarioExistente);
-                await userManager.ResetPasswordAsync(usuarioExistente, token, "Quetzal@123");
+
+                var token = await userManager
+                    .GeneratePasswordResetTokenAsync(usuarioExistente);
+
+                await userManager.ResetPasswordAsync(
+                    usuarioExistente,
+                    token,
+                    "Quetzal@123");
             }
         }
     }
 }
+
