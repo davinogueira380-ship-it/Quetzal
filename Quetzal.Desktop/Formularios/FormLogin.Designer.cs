@@ -222,7 +222,7 @@ namespace Quetzal.Desktop.Formularios
             txtSenha.BorderRadius = 8;
             txtSenha.Cursor = Cursors.IBeam;
             txtSenha.CustomizableEdges = customizableEdges9;
-            txtSenha.DefaultText = "";
+            txtSenha.DefaultText = "Admin@123";
             txtSenha.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
             txtSenha.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
             txtSenha.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
@@ -260,7 +260,7 @@ namespace Quetzal.Desktop.Formularios
             txtEmail.BorderRadius = 8;
             txtEmail.Cursor = Cursors.IBeam;
             txtEmail.CustomizableEdges = customizableEdges11;
-            txtEmail.DefaultText = "";
+            txtEmail.DefaultText = "admin@quetzal.local";
             txtEmail.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
             txtEmail.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
             txtEmail.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);

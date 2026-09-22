@@ -12,8 +12,8 @@ public class Portfolio
 {
     public int Id { get; set; }
     public string? NomeProjeto { get; set; }
-    public Ambiente Ambiente { get; set; } = null!;
     public int AmbienteId { get; set; }
+    public Ambiente Ambiente { get; set; } = null!;
     public string Descricao { get; set; } = string.Empty;
     public string? ImagemUpload { get; set; }
     public bool Ativo { get; set; }

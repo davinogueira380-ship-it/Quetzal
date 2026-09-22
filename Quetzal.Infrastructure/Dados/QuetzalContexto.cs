@@ -61,10 +61,7 @@ namespace Quetzal.Infrastructure.Dados
                     .IsRequired()
                     .HasMaxLength(100);
 
-                // Id do portfolio é opcional
-                entidade.Property(p => p.PortfolioId)
-                    .HasMaxLength(500);
-
+               
 
             });
 

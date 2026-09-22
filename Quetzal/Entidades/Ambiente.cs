@@ -17,6 +17,7 @@ namespace Quetzal.Domain.Entidades
         public DateTime? DataAtualizacao { get; set; }
         public DateTime? DataExclusao { get; set; }
         public ICollection<Portfolio> Portfolios { get; set; } = new List<Portfolio>();
+
     }
 
     /// <summary>
