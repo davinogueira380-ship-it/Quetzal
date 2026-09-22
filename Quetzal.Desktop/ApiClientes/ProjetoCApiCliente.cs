@@ -40,7 +40,7 @@ namespace Quetzal.Desktop.ApiClientes
 
         public async Task<List<ProjetoCDto>> ObterTodosAsync(bool incluirInativos = true)
         {
-            var rota = incluirInativos ? $"{RotaBase}/todos" : RotaBase;
+            var rota = incluirInativos ? $"{RotaBase}/todas" : RotaBase;
             var resposta = await GetAsync<ApiRespostaSimples<List<ProjetoCDto>>>(rota);
             return resposta?.Dados ?? new List<ProjetoCDto>();
         }

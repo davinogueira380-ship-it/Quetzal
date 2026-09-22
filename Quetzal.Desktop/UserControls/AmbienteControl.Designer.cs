@@ -10,20 +10,20 @@ using static Guna.UI2.WinForms.Suite.Descriptions;
 
         namespace Quetzal.Desktop.UserControls
     {
-        partial class AmbientesControl: System.Windows.Forms.UserControl
+    partial class AmbientesControl : System.Windows.Forms.UserControl
     {
-        
-            private System.ComponentModel.IContainer components = null;
 
-            protected override void Dispose(bool disposing)
+        private System.ComponentModel.IContainer components = null;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
             {
-                if (disposing && (components != null))
-                {
-                    components.Dispose();
-                }
-
-                base.Dispose(disposing);
+                components.Dispose();
             }
+
+            base.Dispose(disposing);
+        }
 
         #region Windows Form Designer generated code
 
@@ -76,6 +76,7 @@ using static Guna.UI2.WinForms.Suite.Descriptions;
             txtNome = new Guna.UI2.WinForms.Guna2TextBox();
             lblNome = new Label();
             lblTituloCard = new Label();
+            btnExcluir = new Guna.UI2.WinForms.Guna2Button();
             pnlPrincipal.SuspendLayout();
             pnlGrid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvAmbientes).BeginInit();
@@ -282,6 +283,7 @@ using static Guna.UI2.WinForms.Suite.Descriptions;
             pnlCardFormulario.Controls.Add(txtNome);
             pnlCardFormulario.Controls.Add(lblNome);
             pnlCardFormulario.Controls.Add(lblTituloCard);
+            pnlCardFormulario.Controls.Add(btnExcluir);
             pnlCardFormulario.CustomizableEdges = customizableEdges19;
             pnlCardFormulario.Dock = DockStyle.Left;
             pnlCardFormulario.FillColor = Color.White;
@@ -333,7 +335,7 @@ using static Guna.UI2.WinForms.Suite.Descriptions;
             btnDesativar.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
             btnDesativar.ForeColor = Color.FromArgb(185, 90, 100);
             btnDesativar.HoverState.FillColor = Color.FromArgb(240, 196, 203);
-            btnDesativar.Location = new Point(20, 380);
+            btnDesativar.Location = new Point(23, 355);
             btnDesativar.Name = "btnDesativar";
             btnDesativar.ShadowDecoration.CustomizableEdges = customizableEdges10;
             btnDesativar.Size = new Size(305, 40);
@@ -351,7 +353,7 @@ using static Guna.UI2.WinForms.Suite.Descriptions;
             btnSalvar.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             btnSalvar.ForeColor = Color.White;
             btnSalvar.HoverState.FillColor = Color.FromArgb(92, 101, 74);
-            btnSalvar.Location = new Point(20, 325);
+            btnSalvar.Location = new Point(23, 305);
             btnSalvar.Name = "btnSalvar";
             btnSalvar.ShadowDecoration.CustomizableEdges = customizableEdges12;
             btnSalvar.Size = new Size(305, 44);
@@ -462,6 +464,24 @@ using static Guna.UI2.WinForms.Suite.Descriptions;
             lblTituloCard.TabIndex = 0;
             lblTituloCard.Text = "Dados do Ambiente";
             // 
+            // btnExcluir
+            // 
+            btnExcluir.Animated = true;
+            btnExcluir.BorderRadius = 8;
+            btnExcluir.Cursor = Cursors.Hand;
+            btnExcluir.CustomizableEdges = customizableEdges15;
+            btnExcluir.FillColor = Color.FromArgb(235, 90, 95);
+            btnExcluir.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
+            btnExcluir.ForeColor = Color.White;
+            btnExcluir.HoverState.FillColor = Color.FromArgb(215, 70, 75);
+            btnExcluir.Location = new Point(20, 401);
+            btnExcluir.Name = "btnExcluir";
+            btnExcluir.ShadowDecoration.CustomizableEdges = customizableEdges16;
+            btnExcluir.Size = new Size(305, 40);
+            btnExcluir.TabIndex = 9;
+            btnExcluir.Text = "❌ Excluir Permanentemente";
+            btnExcluir.Click += btnExcluir_Click;
+            // 
             // AmbientesControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -484,27 +504,29 @@ using static Guna.UI2.WinForms.Suite.Descriptions;
         #endregion
 
         private Guna.UI2.WinForms.Guna2Panel pnlPrincipal;
-            private Guna.UI2.WinForms.Guna2Panel pnlCardFormulario;
-            private Guna.UI2.WinForms.Guna2Panel pnlGrid;
-            private System.Windows.Forms.Label lblTituloCard;
-            private System.Windows.Forms.Label lblNome;
-            private Guna.UI2.WinForms.Guna2TextBox txtNome;
-            private System.Windows.Forms.Label lblDescricao;
-            private Guna.UI2.WinForms.Guna2TextBox txtDescricao;
-            private Guna.UI2.WinForms.Guna2ToggleSwitch swAtivo;
-            private System.Windows.Forms.Label lblStatusAtivo;
-            private Guna.UI2.WinForms.Guna2Button btnSalvar;
-            private Guna.UI2.WinForms.Guna2Button btnNovo;
-            private Guna.UI2.WinForms.Guna2Button btnDesativar;
-            private System.Windows.Forms.Panel pnlBusca;
-            private System.Windows.Forms.Label lblBusca;
-            private Guna.UI2.WinForms.Guna2TextBox txtBusca;
-            private Guna.UI2.WinForms.Guna2Button btnAtualizar;
-            private Guna.UI2.WinForms.Guna2DataGridView dgvAmbientes;
-            private System.Windows.Forms.DataGridViewTextBoxColumn colId;
-            private System.Windows.Forms.DataGridViewTextBoxColumn colNome;
-            private System.Windows.Forms.DataGridViewTextBoxColumn colDescricao;
-            private System.Windows.Forms.DataGridViewCheckBoxColumn colAtivo;
-        }
+        private Guna.UI2.WinForms.Guna2Panel pnlCardFormulario;
+        private Guna.UI2.WinForms.Guna2Panel pnlGrid;
+        private System.Windows.Forms.Label lblTituloCard;
+        private System.Windows.Forms.Label lblNome;
+        private Guna.UI2.WinForms.Guna2TextBox txtNome;
+        private System.Windows.Forms.Label lblDescricao;
+        private Guna.UI2.WinForms.Guna2TextBox txtDescricao;
+        private Guna.UI2.WinForms.Guna2ToggleSwitch swAtivo;
+        private System.Windows.Forms.Label lblStatusAtivo;
+        private Guna.UI2.WinForms.Guna2Button btnSalvar;
+        private Guna.UI2.WinForms.Guna2Button btnNovo;
+        private Guna.UI2.WinForms.Guna2Button btnDesativar;
+        private System.Windows.Forms.Panel pnlBusca;
+        private System.Windows.Forms.Label lblBusca;
+        private Guna.UI2.WinForms.Guna2TextBox txtBusca;
+        private Guna.UI2.WinForms.Guna2Button btnAtualizar;
+        private Guna.UI2.WinForms.Guna2DataGridView dgvAmbientes;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colNome;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDescricao;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn colAtivo;
+        private Guna.UI2.WinForms.Guna2Button btnExcluir; // Adicionado para exclusão permanente
+        
+    }
     }
 

@@ -6,8 +6,8 @@ namespace Quetzal.Domain.Interfaces
     {
         Task<IEnumerable<ProjetoC>> ObterTodosAsync(bool incluirInativos = false);
         Task<ProjetoC?> ObterPorIdAsync(int id);
-        Task<IEnumerable<ProjetoC>> FiltrarPorAmbienteAsync(string? termo, int? ambienteId = null);
-        Task<IEnumerable<ProjetoC>> ObterPorAmbienteAsync(int ambienteId);
+        //Task<IEnumerable<ProjetoC>> FiltrarPorAmbienteAsync(string? termo, int? ambienteId = null);
+        //Task<IEnumerable<ProjetoC>> ObterPorAmbienteAsync(int ambienteId);
         Task<ProjetoC> AdicionarAsync(ProjetoC projetoC);
         Task AtualizarAsync(ProjetoC projetoC);
         Task DesativarAsync(int id);

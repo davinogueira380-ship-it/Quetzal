@@ -12,8 +12,8 @@ using Quetzal.Infrastructure.Dados;
 namespace Quetzal.Infrastructure.Migrations
 {
     [DbContext(typeof(QuetzalContexto))]
-    [Migration("20260919013218_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260922175042_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -189,21 +189,7 @@ namespace Quetzal.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("PortfolioId")
-                        .HasMaxLength(500)
-                        .HasColumnType("int");
-
-                    b.Property<int>("PortfolioId1")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProjetoCId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("PortfolioId1");
-
-                    b.HasIndex("ProjetoCId");
 
                     b.ToTable("Ambientes", (string)null);
                 });
@@ -342,7 +328,7 @@ namespace Quetzal.Infrastructure.Migrations
 
                     b.HasIndex("AmbienteId");
 
-                    b.ToTable("Projetos", (string)null);
+                    b.ToTable("Portfolio", (string)null);
                 });
 
             modelBuilder.Entity("Quetzal.Domain.Entidades.ProjetoC", b =>
@@ -436,21 +422,6 @@ namespace Quetzal.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Quetzal.Domain.Entidades.Ambiente", b =>
-                {
-                    b.HasOne("Quetzal.Domain.Entidades.Portfolio", "Portfolio")
-                        .WithMany()
-                        .HasForeignKey("PortfolioId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Quetzal.Domain.Entidades.ProjetoC", null)
-                        .WithMany("Ambientes")
-                        .HasForeignKey("ProjetoCId");
-
-                    b.Navigation("Portfolio");
-                });
-
             modelBuilder.Entity("Quetzal.Domain.Entidades.Portfolio", b =>
                 {
                     b.HasOne("Quetzal.Domain.Entidades.Ambiente", "Ambiente")
@@ -481,11 +452,6 @@ namespace Quetzal.Infrastructure.Migrations
             modelBuilder.Entity("Quetzal.Domain.Entidades.ApplicationUser", b =>
                 {
                     b.Navigation("ProjetosC");
-                });
-
-            modelBuilder.Entity("Quetzal.Domain.Entidades.ProjetoC", b =>
-                {
-                    b.Navigation("Ambientes");
                 });
 #pragma warning restore 612, 618
         }

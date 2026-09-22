@@ -6,11 +6,30 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Quetzal.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Inicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Ambientes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImagemUpload = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Ativo = table.Column<bool>(type: "bit", nullable: false),
+                    DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DataExclusao = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ambientes", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Identidade_Perfis",
                 columns: table => new
@@ -55,6 +74,32 @@ namespace Quetzal.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Identidade_Usuarios", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Portfolio",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NomeProjeto = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    AmbienteId = table.Column<int>(type: "int", nullable: false),
+                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImagemUpload = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Ativo = table.Column<bool>(type: "bit", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DataExclusao = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Portfolio", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Portfolio_Ambientes_AmbienteId",
+                        column: x => x.AmbienteId,
+                        principalTable: "Ambientes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -188,69 +233,6 @@ namespace Quetzal.Infrastructure.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Ambientes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    PortfolioId = table.Column<int>(type: "int", maxLength: 500, nullable: false),
-                    PortfolioId1 = table.Column<int>(type: "int", nullable: false),
-                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImagemUpload = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Ativo = table.Column<bool>(type: "bit", nullable: false),
-                    DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DataExclusao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ProjetoCId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Ambientes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Ambientes_ProjetosC_ProjetoCId",
-                        column: x => x.ProjetoCId,
-                        principalTable: "ProjetosC",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Projetos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NomeProjeto = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    AmbienteId = table.Column<int>(type: "int", nullable: false),
-                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ImagemUpload = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Ativo = table.Column<bool>(type: "bit", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DataExclusao = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Projetos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Projetos_Ambientes_AmbienteId",
-                        column: x => x.AmbienteId,
-                        principalTable: "Ambientes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Ambientes_PortfolioId1",
-                table: "Ambientes",
-                column: "PortfolioId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Ambientes_ProjetoCId",
-                table: "Ambientes",
-                column: "ProjetoCId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Identidade_PerfilClaims_RoleId",
                 table: "Identidade_PerfilClaims",
@@ -291,35 +273,19 @@ namespace Quetzal.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projetos_AmbienteId",
-                table: "Projetos",
+                name: "IX_Portfolio_AmbienteId",
+                table: "Portfolio",
                 column: "AmbienteId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjetosC_UsuarioId",
                 table: "ProjetosC",
                 column: "UsuarioId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Ambientes_Projetos_PortfolioId1",
-                table: "Ambientes",
-                column: "PortfolioId1",
-                principalTable: "Projetos",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Ambientes_ProjetosC_ProjetoCId",
-                table: "Ambientes");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Ambientes_Projetos_PortfolioId1",
-                table: "Ambientes");
-
             migrationBuilder.DropTable(
                 name: "Identidade_PerfilClaims");
 
@@ -336,19 +302,19 @@ namespace Quetzal.Infrastructure.Migrations
                 name: "Identidade_UsuarioTokens");
 
             migrationBuilder.DropTable(
-                name: "Identidade_Perfis");
+                name: "Portfolio");
 
             migrationBuilder.DropTable(
                 name: "ProjetosC");
 
             migrationBuilder.DropTable(
-                name: "Identidade_Usuarios");
-
-            migrationBuilder.DropTable(
-                name: "Projetos");
+                name: "Identidade_Perfis");
 
             migrationBuilder.DropTable(
                 name: "Ambientes");
+
+            migrationBuilder.DropTable(
+                name: "Identidade_Usuarios");
         }
     }
 }

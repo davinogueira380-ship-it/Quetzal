@@ -101,5 +101,10 @@ public class AmbienteDto
         return await PutAsync<ApiRespostaSimples<object>>($"{RotaBase}/{id}/reativar", null);
     }
 
+    public async Task<ApiRespostaSimples<object>> ExcluirPermanentementeAsync(int id)
+    {
+        // Chama DELETE /api/filmes/{id}/permanente para exclusao fisca do banco
+        return await DeleteAsync<ApiRespostaSimples<object>>($"{RotaBase}/{id}/permanente");
+    }
 
 }

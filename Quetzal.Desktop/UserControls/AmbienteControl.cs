@@ -8,7 +8,7 @@ namespace Quetzal.Desktop.UserControls
 {
     public partial class AmbientesControl : System.Windows.Forms.UserControl
     {
-        private string? _ambienteSelecionadoId;
+        private int? _ambienteSelecionadoId;
 
         private readonly AmbienteApiUsuario _apiAmbiente;
         private List<AmbienteDto> _listaAmbientes = new List<AmbienteDto>();
@@ -34,6 +34,7 @@ namespace Quetzal.Desktop.UserControls
             dgvAmbientes.AllowUserToResizeRows = false;
             dgvAmbientes.RowHeadersVisible = false;
         }
+// campo: usar inteiro anulável para representar "nenhum selecionado"
 
         private void LimparFormulario()
         {
@@ -69,7 +70,7 @@ namespace Quetzal.Desktop.UserControls
 
             try
             {
-                if (string.IsNullOrEmpty(_ambienteSelecionadoId))
+                if (_ambienteSelecionadoId == null)
                 {
                     await CriarAmbiente();
                 }
@@ -90,7 +91,7 @@ namespace Quetzal.Desktop.UserControls
 
         private void btnDesativar_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(_ambienteSelecionadoId))
+            if (_ambienteSelecionadoId == null)
             {
                 MessageBox.Show(
                     "Selecione um ambiente para desativar.",
@@ -168,7 +169,7 @@ namespace Quetzal.Desktop.UserControls
                 return;
 
             _ambienteSelecionadoId =
-                linha.Cells["colId"].Value.ToString();
+                Convert.ToInt32(linha.Cells["colId"].Value);
 
             txtNome.Text =
                 linha.Cells["colNome"].Value?.ToString() ?? string.Empty;
@@ -294,5 +295,68 @@ private void AtualizarGrid(List<AmbienteDto> dados)
             // O filtro definitivo será feito sobre os dados
             // retornados pela API.
         }
+
+        private async void btnExcluir_Click(object sender, EventArgs e)
+        {
+            if (_ambienteSelecionadoId == null)
+            {
+                MessageBox.Show(
+                    "Selecione um ambiente para excluir.",
+                    "Atenção",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
+            DialogResult confirma = MessageBox.Show(
+                "Deseja realmente excluir este ambiente permanentemente? Esta ação não pode ser desfeita.",
+                "Confirmar exclusão",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (confirma != DialogResult.Yes)
+                return;
+
+            try
+            {
+                btnExcluir.Enabled = false;
+
+                // Chamada à API (adapte o nome do método se diferente)
+                var resposta = await _apiAmbiente.ExcluirPermanentementeAsync(_ambienteSelecionadoId.Value);
+
+                if (resposta != null && resposta.Sucesso)
+                {
+                    MessageBox.Show(
+                        resposta.Mensagem ?? "Ambiente excluído permanentemente.",
+                        "Sucesso",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+
+                    await CarregarAmbientes();
+                    LimparFormulario();
+                }
+                else
+                {
+                    MessageBox.Show(
+                        resposta?.Mensagem ?? "Não foi possível excluir o ambiente.",
+                        "Erro",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Ocorreu um erro ao excluir o ambiente.\n\n{ex.Message}",
+                    "Erro",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btnExcluir.Enabled = true;
+            }
+        }
     }
+
 }
