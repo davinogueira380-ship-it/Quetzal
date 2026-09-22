@@ -29,25 +29,25 @@ namespace Quetzal.Infrastructure.Repositorios
             return await _context.ProjetoC.Include(ProjetoC => ProjetoC.Usuario).FirstOrDefaultAsync(ProjetoC => ProjetoC.Id == id);
         }
 
-        public async Task<IEnumerable<ProjetoC>> FiltrarPorAmbienteAsync(string? termo, string? usuarioId = null)
-        {
-            var query = _context.ProjetoC.Include(ProjetoC => ProjetoC.Usuario).Where(ProjetoC => ProjetoC.Ativo);
-            if (!string.IsNullOrWhiteSpace(usuarioId))
-            {
-                query = query.Where(ProjetoC => ProjetoC.UsuarioId == usuarioId);
-            }
-            if (!string.IsNullOrWhiteSpace(termo))
-            {
-                var t = $"%{termo}";
-                query = query.Where(ProjetoC => EF.Functions.Like(ProjetoC.NomeProjeto, t) || EF.Functions.Like(ProjetoC.Descricao, t));
-            }
-            return await query.ToListAsync();
-        }
+        //public async Task<IEnumerable<ProjetoC>> FiltrarPorAmbienteAsync(string? termo, string? usuarioId = null)
+        //{
+        //    var query = _context.ProjetoC.Include(ProjetoC => ProjetoC.Usuario).Where(ProjetoC => ProjetoC.Ativo);
+        //    if (!string.IsNullOrWhiteSpace(usuarioId))
+        //    {
+        //        query = query.Where(ProjetoC => ProjetoC.UsuarioId == usuarioId);
+        //    }
+        //    if (!string.IsNullOrWhiteSpace(termo))
+        //    {
+        //        var t = $"%{termo}";
+        //        query = query.Where(ProjetoC => EF.Functions.Like(ProjetoC.NomeProjeto, t) || EF.Functions.Like(ProjetoC.Descricao, t));
+        //    }
+        //    return await query.ToListAsync();
+        //}
 
-        public async Task<IEnumerable<ProjetoC>> ObterPorAmbienteAsync(string usuarioId)
-        {
-            return await _context.ProjetoC.Include(ProjetoC => ProjetoC.Usuario).Where(ProjetoC => ProjetoC.UsuarioId == usuarioId).ToListAsync();
-        }
+        //public async Task<IEnumerable<ProjetoC>> ObterPorAmbienteAsync(string usuarioId)
+        //{
+        //    return await _context.ProjetoC.Include(ProjetoC => ProjetoC.Usuario).Where(ProjetoC => ProjetoC.UsuarioId == usuarioId).ToListAsync();
+        //}
 
         public async Task<ProjetoC> AdicionarAsync(ProjetoC projetoC)
         {
@@ -96,14 +96,14 @@ namespace Quetzal.Infrastructure.Repositorios
             }
         }
 
-        public Task<IEnumerable<ProjetoC>> FiltrarPorAmbienteAsync(string? termo, int? ambienteId = null)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<IEnumerable<ProjetoC>> FiltrarPorAmbienteAsync(string? termo, int? ambienteId = null)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public Task<IEnumerable<ProjetoC>> ObterPorAmbienteAsync(int ambienteId)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<IEnumerable<ProjetoC>> ObterPorAmbienteAsync(int ambienteId)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

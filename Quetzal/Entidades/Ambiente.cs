@@ -18,6 +18,6 @@ namespace Quetzal.Domain.Entidades
         public ICollection<Portfolio> Portfolios { get; set; } = new List<Portfolio>();
 
         // Relação N:N com ProjetoC (cada Ambiente pode ter vários ProjetosC e vice-versa)
-        public ICollection<ProjetoC> ProjetosC { get; set; } = new List<ProjetoC>();
+        //public ICollection<ProjetoC> ProjetosC { get; set; } = new List<ProjetoC>();
     }
 }

@@ -6,8 +6,8 @@ namespace Quetzal.Application.Servicos.Interfaces
     {
         Task<ApiResposta<IEnumerable<ProjetoCDto>>> ObterTodosAsync(bool incluirInativos = false);
         Task<ApiResposta<ProjetoCDto>> ObterPorIdAsync(int id);
-        Task<ApiResposta<IEnumerable<ProjetoCDto>>> FiltrarPorAmbienteAsync(string? termo, int? ambienteId = null);
-        Task<ApiResposta<IEnumerable<ProjetoCDto>>> ObterPorAsync(int projetoId);
+        //Task<ApiResposta<IEnumerable<ProjetoCDto>>> FiltrarPorAmbienteAsync(string? termo, int? ambienteId = null);
+        //Task<ApiResposta<IEnumerable<ProjetoCDto>>> ObterPorAsync(int projetoId);
         Task<ApiResposta<ProjetoCDto>> CadastrarAsync(CriarProjetoCDto dto);
         Task<ApiResposta<ProjetoCDto>> AtualizarAsync(int id, AtualizarProjetoCDto dto);    
         Task<ApiResposta<bool>> DesativarAsync(int id);

@@ -22,7 +22,7 @@ namespace Quetzal.Infrastructure.Dados
 
             builder.Entity<Portfolio>(entidade =>
             {
-                entidade.ToTable("Projetos");
+                entidade.ToTable("Portfolio");
 
                 entidade.Property(p => p.NomeProjeto)
                     .IsRequired()
@@ -70,15 +70,14 @@ namespace Quetzal.Infrastructure.Dados
             });
 
             // Configura many-to-many entre Ambiente e ProjetoC
-            builder.Entity<Ambiente>()
-                .HasMany(a => a.ProjetosC)
-                .WithMany(p => p.Ambientes)
-                .UsingEntity(join => join.ToTable("AmbienteProjetoC"));
+            //builder.Entity<Ambiente>()
+            //    .HasMany(a => a.ProjetosC)
+            //    .WithMany(p => p.Ambientes)
+            //    .UsingEntity(join => join.ToTable("AmbienteProjetoC"));
 
             builder.Entity<ApplicationUser>(entidade =>
             {
-                entidade.ToTable("Indentidade_Usuarios");
-
+               
                 entidade.Property(u => u.NomeCompleto)
                     .IsRequired()
                     .HasMaxLength(200);

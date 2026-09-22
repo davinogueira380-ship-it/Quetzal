@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Quetzal.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Davi : Migration
+    public partial class Inicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -77,7 +77,7 @@ namespace Quetzal.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Projetos",
+                name: "Portfolio",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -93,9 +93,9 @@ namespace Quetzal.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Projetos", x => x.Id);
+                    table.PrimaryKey("PK_Portfolio", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Projetos_Ambientes_AmbienteId",
+                        name: "FK_Portfolio_Ambientes_AmbienteId",
                         column: x => x.AmbienteId,
                         principalTable: "Ambientes",
                         principalColumn: "Id",
@@ -233,35 +233,6 @@ namespace Quetzal.Infrastructure.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "AmbienteProjetoC",
-                columns: table => new
-                {
-                    AmbientesId = table.Column<int>(type: "int", nullable: false),
-                    ProjetosCId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AmbienteProjetoC", x => new { x.AmbientesId, x.ProjetosCId });
-                    table.ForeignKey(
-                        name: "FK_AmbienteProjetoC_Ambientes_AmbientesId",
-                        column: x => x.AmbientesId,
-                        principalTable: "Ambientes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AmbienteProjetoC_ProjetosC_ProjetosCId",
-                        column: x => x.ProjetosCId,
-                        principalTable: "ProjetosC",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AmbienteProjetoC_ProjetosCId",
-                table: "AmbienteProjetoC",
-                column: "ProjetosCId");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Identidade_PerfilClaims_RoleId",
                 table: "Identidade_PerfilClaims",
@@ -302,8 +273,8 @@ namespace Quetzal.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projetos_AmbienteId",
-                table: "Projetos",
+                name: "IX_Portfolio_AmbienteId",
+                table: "Portfolio",
                 column: "AmbienteId");
 
             migrationBuilder.CreateIndex(
@@ -315,9 +286,6 @@ namespace Quetzal.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "AmbienteProjetoC");
-
             migrationBuilder.DropTable(
                 name: "Identidade_PerfilClaims");
 
@@ -334,7 +302,7 @@ namespace Quetzal.Infrastructure.Migrations
                 name: "Identidade_UsuarioTokens");
 
             migrationBuilder.DropTable(
-                name: "Projetos");
+                name: "Portfolio");
 
             migrationBuilder.DropTable(
                 name: "ProjetosC");

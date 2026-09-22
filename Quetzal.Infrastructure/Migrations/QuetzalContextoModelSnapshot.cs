@@ -22,21 +22,6 @@ namespace Quetzal.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AmbienteProjetoC", b =>
-                {
-                    b.Property<int>("AmbientesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProjetosCId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AmbientesId", "ProjetosCId");
-
-                    b.HasIndex("ProjetosCId");
-
-                    b.ToTable("AmbienteProjetoC", (string)null);
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -340,7 +325,7 @@ namespace Quetzal.Infrastructure.Migrations
 
                     b.HasIndex("AmbienteId");
 
-                    b.ToTable("Projetos", (string)null);
+                    b.ToTable("Portfolio", (string)null);
                 });
 
             modelBuilder.Entity("Quetzal.Domain.Entidades.ProjetoC", b =>
@@ -381,21 +366,6 @@ namespace Quetzal.Infrastructure.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("ProjetosC", (string)null);
-                });
-
-            modelBuilder.Entity("AmbienteProjetoC", b =>
-                {
-                    b.HasOne("Quetzal.Domain.Entidades.Ambiente", null)
-                        .WithMany()
-                        .HasForeignKey("AmbientesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Quetzal.Domain.Entidades.ProjetoC", null)
-                        .WithMany()
-                        .HasForeignKey("ProjetosCId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

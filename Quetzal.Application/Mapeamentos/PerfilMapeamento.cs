@@ -14,7 +14,7 @@ public class PerfilMapeamento : Profile
         // Criação de mapeamentos para o Portfolio e DTOs relacionados a projetos
         //=======================================================================================
 
-        CreateMap<Ambiente, AmbienteDto>().ReverseMap();
+       // CreateMap<Ambiente, AmbienteDto>().ReverseMap();
         CreateMap<Portfolio, PortfolioDto>()
                 // Mapeia o nome da categoria vindo do relacionamento
                 .ForMember(dest => dest.NomeProjeto, opt => opt.MapFrom(src => src.Ambiente != null ? src.Ambiente.Nome : string.Empty))
@@ -82,24 +82,24 @@ public class PerfilMapeamento : Profile
                 .ForMember(dest => dest.UsuarioId,
                     opt => opt.MapFrom(src => src.UsuarioId))
                 .ForMember(dest => dest.UsuarioNome,
-                    opt => opt.MapFrom(src => src.Usuario != null ? src.Usuario.NomeCompleto : string.Empty))
-                .ForMember(dest => dest.AmbientesIds,
-                    opt => opt.MapFrom(src => src.Ambientes != null ? src.Ambientes.Select(a => a.Id).ToList() : new List<int>()))
-                ///FIM DA PARTE ADICIONADA
-                .ForMember(dest => dest.AmbienteId,
-                    opt => opt.MapFrom(src => src.Ambientes
-                        .Select(a => a.Id)
-                        .FirstOrDefault()))
-                .ForMember(dest => dest.AmbienteNome,
-                    opt => opt.MapFrom(src => src.Ambientes
-                        .Select(a => a.Nome)
-                        .FirstOrDefault() ?? string.Empty));
+                    opt => opt.MapFrom(src => src.Usuario != null ? src.Usuario.NomeCompleto : string.Empty));
+                //.ForMember(dest => dest.AmbientesIds,
+                //    opt => opt.MapFrom(src => src.Ambientes != null ? src.Ambientes.Select(a => a.Id).ToList() : new List<int>()))
+                /////FIM DA PARTE ADICIONADA
+                //.ForMember(dest => dest.AmbienteId,
+                //    opt => opt.MapFrom(src => src.Ambientes
+                //        .Select(a => a.Id)
+                //        .FirstOrDefault()))
+                //.ForMember(dest => dest.AmbienteNome,
+                //    opt => opt.MapFrom(src => src.Ambientes
+                //        .Select(a => a.Nome)
+                //        .FirstOrDefault() ?? string.Empty));
 
             CreateMap<CriarProjetoCDto, ProjetoC>()
                 .ForMember(dest => dest.NomeProjeto,
                     opt => opt.MapFrom(src => src.Nome))
-                .ForMember(dest => dest.Ambientes,
-                    opt => opt.Ignore())
+                //.ForMember(dest => dest.Ambientes,
+                //    opt => opt.Ignore())
                 .ForMember(dest => dest.Usuario,
                     opt => opt.Ignore())
                 .ForMember(dest => dest.UsuarioId,
@@ -115,8 +115,8 @@ public class PerfilMapeamento : Profile
             CreateMap<AtualizarProjetoCDto, ProjetoC>()
                 .ForMember(dest => dest.NomeProjeto,
                     opt => opt.MapFrom(src => src.Nome))
-                .ForMember(dest => dest.Ambientes,
-                    opt => opt.Ignore())
+                //.ForMember(dest => dest.Ambientes,
+                //    opt => opt.Ignore())
                 .ForMember(dest => dest.Usuario,
                     opt => opt.Ignore())
                 .ForMember(dest => dest.UsuarioId,

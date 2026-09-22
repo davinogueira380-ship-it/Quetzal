@@ -19,17 +19,17 @@ namespace Quetzal.Application.DTOs
 
 
         // Dados Ambiente
-        public int AmbienteId { get; set; }
-        public string AmbienteNome { get; set; } = string.Empty;
+        //public int AmbienteId { get; set; }
+        //public string AmbienteNome { get; set; } = string.Empty;
         //Add por Fausto, para selecao dos ambientes
         // Lista de ids de ambientes associados (multi-select)
-        public List<int> AmbientesIds { get; set; } = new List<int>();
+        //public List<int> AmbientesIds { get; set; } = new List<int>();
 
         public bool Ativo { get; set; }
         public DateTime DataCadastro { get; set; }
         public DateTime? DataAtualizacao { get; set; }
         public DateTime? DataExclusao { get; set; }
-        public ICollection<AmbienteDto> Ambientes { get; set; } = new List<AmbienteDto>();
+        //public ICollection<AmbienteDto> Ambientes { get; set; } = new List<AmbienteDto>();
     }
 
     public class CriarProjetoCDto
@@ -43,16 +43,16 @@ namespace Quetzal.Application.DTOs
         public string ImagemUpload { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "O ambiente é obrigatório.")]
-        public int AmbienteId { get; set; }
+        //public int AmbienteId { get; set; }
 
         // Para suporte à checkbox múltipla do cliente desktop
-        public List<int> AmbientesIds { get; set; } = new List<int>();
+        //public List<int> AmbientesIds { get; set; } = new List<int>();
 
         // Usuario que é dono/cliente do projeto (enviado pelo cliente)
         public string UsuarioId { get; set; } = string.Empty;
         public string? UsuarioNome { get; set; }
 
-        public ICollection<AmbienteDto> Ambientes { get; set; } = new List<AmbienteDto>(); 
+        //public ICollection<AmbienteDto> Ambientes { get; set; } = new List<AmbienteDto>(); 
 
         //Voltar aqui STHEFANNY ↑
        

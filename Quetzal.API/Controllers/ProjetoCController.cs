@@ -37,19 +37,19 @@ public class ProjetoCController : ControllerBase
         return Ok(resposta);
     }
 
-    [HttpGet("filtrar")]
-    public async Task<IActionResult> Filtrar([FromQuery] string? termo, [FromQuery] int? ambienteId)
-    {
-        var resposta = await _projetoCServico.FiltrarPorAmbienteAsync(termo, ambienteId);
-        return Ok(resposta);
-    }
+    //[HttpGet("filtrar")]
+    //public async Task<IActionResult> Filtrar([FromQuery] string? termo, [FromQuery] int? ambienteId)
+    //{
+    //    var resposta = await _projetoCServico.FiltrarPorAmbienteAsync(termo, ambienteId);
+    //    return Ok(resposta);
+    //}
 
-    [HttpGet("ambiente/{ambienteId}")]
-    public async Task<IActionResult> ObterPorAmbiente(int ambienteId)
-    {
-        var resposta = await _projetoCServico.ObterPorAsync(ambienteId);
-        return Ok(resposta);
-    }
+    //[HttpGet("ambiente/{ambienteId}")]
+    //public async Task<IActionResult> ObterPorAmbiente(int ambienteId)
+    //{
+    //    var resposta = await _projetoCServico.ObterPorAsync(ambienteId);
+    //    return Ok(resposta);
+    //}
 
     [HttpPost]
     public async Task<IActionResult> Cadastrar([FromBody] CriarProjetoCDto dto)
