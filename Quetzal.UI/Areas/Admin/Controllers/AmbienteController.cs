@@ -9,7 +9,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
     // CRUD de Ambientes (nome + imagem exibidos na Home e usados para
     // categorizar Portfólio/Projetos de Cliente).
     [Area("Admin")]
-    [Authorize(Roles = "Admin,Operador")]
+    //[Authorize(Roles = "Admin,Operador")]
     public class AmbienteController : Controller
     {
         private readonly ApiCliente _api;

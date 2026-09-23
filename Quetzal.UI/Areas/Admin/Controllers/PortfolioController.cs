@@ -11,7 +11,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
     // CRUD completo de itens do Portfólio (vitrine pública do site).
     // Index -> Criar (GET/POST) -> Editar (GET/POST) -> Desativar/Reativar/ExcluirPermanente
     [Area("Admin")]
-    [Authorize(Roles = "Admin,Operador")]
+    //[Authorize(Roles = "Admin,Operador")]
     public class PortfolioController : Controller
     {
         private readonly ApiCliente _api;
