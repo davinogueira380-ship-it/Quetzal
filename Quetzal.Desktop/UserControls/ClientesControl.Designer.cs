@@ -341,9 +341,9 @@
             btnAlternarAtivacao.BorderRadius = 8;
             btnAlternarAtivacao.Cursor = Cursors.Hand;
             btnAlternarAtivacao.CustomizableEdges = customizableEdges9;
-            btnAlternarAtivacao.FillColor = Color.FromArgb(240, 196, 203);
+            btnAlternarAtivacao.FillColor = Color.FromArgb(250, 230, 233);
             btnAlternarAtivacao.Font = new Font("Segoe UI Semibold", 9.5F, FontStyle.Bold);
-            btnAlternarAtivacao.ForeColor = Color.FromArgb(80, 50, 55);
+            btnAlternarAtivacao.ForeColor = Color.FromArgb(185, 90, 100);
             btnAlternarAtivacao.HoverState.FillColor = Color.FromArgb(229, 188, 169);
             btnAlternarAtivacao.Location = new Point(20, 455);
             btnAlternarAtivacao.Name = "btnAlternarAtivacao";

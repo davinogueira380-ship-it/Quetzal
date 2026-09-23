@@ -162,7 +162,11 @@ namespace Quetzal.Desktop.UserControls
                 // Carrega preview da imagem se existir
                 CarregarPreviewImagem(item.ImagemUpload);
 
+                
                 btnDesativar.Enabled = true;
+                btnExcluir.Enabled = true;
+
+
 
                 btnDesativar.Text = item.Ativo
                     ? "🗑️ Desativar do Site"
@@ -221,8 +225,12 @@ namespace Quetzal.Desktop.UserControls
 
             dgvPortfolio.ClearSelection();
 
-            btnDesativar.Enabled = false;
-            btnDesativar.Text = "🗑️ Desativar do Site";
+           
+           // btnDesativar.Enabled = false;
+            //btnDesativar.Text = "🗑️ Desativar do Site";
+
+            btnExcluir.Enabled = false;
+
 
             txtNomeProjeto.Focus();
         }
@@ -365,45 +373,142 @@ namespace Quetzal.Desktop.UserControls
                 btnSalvar.Enabled = true;
             }
         }
-
         private async void btnDesativar_Click(object sender, EventArgs e)
         {
             if (_portfolioSelecionadoId == null)
+            {
+                MessageBox.Show(
+                    "Selecione um projeto do portfólio.",
+                    "Atenção",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
                 return;
+            }
+
+            // Recupera o projeto selecionado na grade
+            var itemSelecionado = dgvPortfolio.SelectedRows.Count > 0
+                ? dgvPortfolio.SelectedRows[0].DataBoundItem as PortifolioDto
+                : null;
+
+            if (itemSelecionado == null)
+            {
+                MessageBox.Show(
+                    "Não foi possível identificar o projeto selecionado.",
+                    "Atenção",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+
+            bool estaAtivo = itemSelecionado.Ativo;
+
+            // Define a mensagem de acordo com a situação atual
+            string mensagem = estaAtivo
+                ? "Deseja realmente desativar este projeto?\n\nEle deixará de aparecer no site."
+                : "Deseja realmente reativar este projeto?\n\nEle voltará a aparecer no site.";
+
+            string titulo = estaAtivo
+                ? "Desativar Projeto"
+                : "Reativar Projeto";
 
             var confirmacao = MessageBox.Show(
-                "Deseja alternar a exibição deste projeto no site?",
-                "Confirmação",
+                mensagem,
+                titulo,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
-            if (confirmacao == DialogResult.Yes)
+            if (confirmacao != DialogResult.Yes)
+                return;
+
+            try
             {
-                try
+                btnDesativar.Enabled = false;
+
+                if (estaAtivo)
                 {
+                    // DESATIVA
                     await _apiPortfolio.DesativarAsync(
                         _portfolioSelecionadoId.Value);
 
                     MessageBox.Show(
-                        "Visibilidade do item no site atualizada com sucesso!",
+                        "Projeto desativado com sucesso!\n\nEle não será mais exibido no site.",
                         "Sucesso",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
-
-                    await CarregarPortfolioAsync();
-
-                    LimparCampos();
                 }
-                catch (Exception ex)
+                else
                 {
+                    // REATIVA
+                    await _apiPortfolio.ReativarAsync(
+                        _portfolioSelecionadoId.Value);
+
                     MessageBox.Show(
-                        $"Erro ao alterar visibilidade: {ex.Message}",
-                        "Erro",
+                        "Projeto reativado com sucesso!\n\nEle voltará a ser exibido no site.",
+                        "Sucesso",
                         MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                        MessageBoxIcon.Information);
                 }
+
+                // Recarrega a grade
+                await CarregarPortfolioAsync();
+
+                // Limpa os campos
+                LimparCampos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Erro ao alterar a situação do projeto: {ex.Message}",
+                    "Erro",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btnDesativar.Enabled = _portfolioSelecionadoId != null;
             }
         }
+
+        //private async void btnDesativar_Click(object sender, EventArgs e)
+        //{
+        //    if (_portfolioSelecionadoId == null)
+        //        return;
+
+        //    var confirmacao = MessageBox.Show(
+        //        "Deseja alternar a exibição deste projeto no site?",
+        //        "Confirmação",
+        //        MessageBoxButtons.YesNo,
+        //        MessageBoxIcon.Question);
+
+        //    if (confirmacao == DialogResult.Yes)
+        //    {
+        //        try
+        //        {
+        //            await _apiPortfolio.DesativarAsync(
+        //                _portfolioSelecionadoId.Value);
+
+        //            MessageBox.Show(
+        //                "Visibilidade do item no site atualizada com sucesso!",
+        //                "Sucesso",
+        //                MessageBoxButtons.OK,
+        //                MessageBoxIcon.Information);
+
+        //            await CarregarPortfolioAsync();
+
+        //            LimparCampos();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            MessageBox.Show(
+        //                $"Erro ao alterar visibilidade: {ex.Message}",
+        //                "Erro",
+        //                MessageBoxButtons.OK,
+        //                MessageBoxIcon.Error);
+        //        }
+        //    }
+        //}
 
         private void txtBusca_TextChanged(object sender, EventArgs e)
         {
@@ -441,6 +546,99 @@ namespace Quetzal.Desktop.UserControls
 
         private void picImagem_Click(object sender, EventArgs e)
         {
+        }
+        private async void btnExcluir_Click(object sender, EventArgs e)
+        {
+            // Verifica se existe um projeto selecionado
+            if (_portfolioSelecionadoId == null)
+            {
+                MessageBox.Show(
+                    "Selecione um projeto do portfólio para excluir.",
+                    "Atenção",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+
+            // Recupera o projeto selecionado na grade
+            var itemSelecionado = dgvPortfolio.SelectedRows.Count > 0
+                ? dgvPortfolio.SelectedRows[0].DataBoundItem as PortifolioDto
+                : null;
+
+            if (itemSelecionado == null)
+            {
+                MessageBox.Show(
+                    "Não foi possível identificar o projeto selecionado.",
+                    "Atenção",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+
+            // Primeira confirmação
+            var confirmacao = MessageBox.Show(
+                $"Deseja realmente excluir permanentemente o projeto:\n\n" +
+                $"\"{itemSelecionado.NomeProjeto}\"?\n\n" +
+                "Esta operação não poderá ser desfeita.",
+                "Excluir Permanentemente",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (confirmacao != DialogResult.Yes)
+                return;
+
+            // Segunda confirmação para evitar exclusão acidental
+            var confirmacaoFinal = MessageBox.Show(
+                "ATENÇÃO!\n\n" +
+                "O projeto será removido definitivamente do banco de dados.\n\n" +
+                "Depois da exclusão não será possível reativá-lo.\n\n" +
+                "Confirma a exclusão permanente?",
+                "Confirmar Exclusão Definitiva",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (confirmacaoFinal != DialogResult.Yes)
+                return;
+
+            try
+            {
+                // Desabilita o botão enquanto a operação é executada
+                btnExcluir.Enabled = false;
+
+                // Chama a API para excluir definitivamente
+                await _apiPortfolio.ExcluirPermanentementeAsync(
+                    _portfolioSelecionadoId.Value);
+
+                MessageBox.Show(
+                    $"O projeto \"{itemSelecionado.NomeProjeto}\" foi excluído permanentemente com sucesso!",
+                    "Projeto Excluído",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                // Limpa a seleção antes de recarregar
+                _portfolioSelecionadoId = null;
+
+                // Recarrega a grade
+                await CarregarPortfolioAsync();
+
+                // Limpa os campos do formulário
+                LimparCampos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Erro ao excluir permanentemente o projeto:\n\n{ex.Message}",
+                    "Erro",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            finally
+            {
+                // Só habilita novamente se houver um projeto selecionado
+                btnExcluir.Enabled = _portfolioSelecionadoId != null;
+            }
         }
     }
 }

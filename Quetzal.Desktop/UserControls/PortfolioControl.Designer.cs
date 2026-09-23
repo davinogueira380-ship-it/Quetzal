@@ -18,8 +18,8 @@
 
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges27 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges28 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges29 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges30 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
@@ -29,8 +29,8 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges25 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges26 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges27 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges28 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
@@ -49,6 +49,8 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges22 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges23 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges24 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges25 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges26 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlPrincipal = new Guna.UI2.WinForms.Guna2Panel();
             pnlGrid = new Guna.UI2.WinForms.Guna2Panel();
             dgvPortfolio = new Guna.UI2.WinForms.Guna2DataGridView();
@@ -62,6 +64,7 @@
             txtBusca = new Guna.UI2.WinForms.Guna2TextBox();
             lblBusca = new Label();
             pnlCardFormulario = new Guna.UI2.WinForms.Guna2Panel();
+            btnExcluir = new Guna.UI2.WinForms.Guna2Button();
             btnDesativar = new Guna.UI2.WinForms.Guna2Button();
             btnSalvar = new Guna.UI2.WinForms.Guna2Button();
             btnNovo = new Guna.UI2.WinForms.Guna2Button();
@@ -90,12 +93,12 @@
             pnlPrincipal.BackColor = Color.Transparent;
             pnlPrincipal.Controls.Add(pnlGrid);
             pnlPrincipal.Controls.Add(pnlCardFormulario);
-            pnlPrincipal.CustomizableEdges = customizableEdges27;
+            pnlPrincipal.CustomizableEdges = customizableEdges29;
             pnlPrincipal.Dock = DockStyle.Fill;
             pnlPrincipal.Location = new Point(15, 15);
             pnlPrincipal.Name = "pnlPrincipal";
-            pnlPrincipal.ShadowDecoration.CustomizableEdges = customizableEdges28;
-            pnlPrincipal.Size = new Size(961, 523);
+            pnlPrincipal.ShadowDecoration.CustomizableEdges = customizableEdges30;
+            pnlPrincipal.Size = new Size(961, 573);
             pnlPrincipal.TabIndex = 0;
             // 
             // pnlGrid
@@ -111,7 +114,7 @@
             pnlGrid.Name = "pnlGrid";
             pnlGrid.Padding = new Padding(18);
             pnlGrid.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            pnlGrid.Size = new Size(561, 523);
+            pnlGrid.Size = new Size(561, 573);
             pnlGrid.TabIndex = 1;
             // 
             // dgvPortfolio
@@ -149,7 +152,7 @@
             dgvPortfolio.ReadOnly = true;
             dgvPortfolio.RowHeadersVisible = false;
             dgvPortfolio.RowTemplate.Height = 35;
-            dgvPortfolio.Size = new Size(525, 432);
+            dgvPortfolio.Size = new Size(525, 482);
             dgvPortfolio.TabIndex = 1;
             dgvPortfolio.ThemeStyle.AlternatingRowsStyle.BackColor = Color.FromArgb(248, 250, 252);
             dgvPortfolio.ThemeStyle.GridColor = Color.FromArgb(235, 238, 242);
@@ -279,6 +282,7 @@
             pnlCardFormulario.AutoScroll = true;
             pnlCardFormulario.BackColor = Color.Transparent;
             pnlCardFormulario.BorderRadius = 12;
+            pnlCardFormulario.Controls.Add(btnExcluir);
             pnlCardFormulario.Controls.Add(btnDesativar);
             pnlCardFormulario.Controls.Add(btnSalvar);
             pnlCardFormulario.Controls.Add(btnNovo);
@@ -294,29 +298,48 @@
             pnlCardFormulario.Controls.Add(txtNomeProjeto);
             pnlCardFormulario.Controls.Add(lblNomeProjeto);
             pnlCardFormulario.Controls.Add(lblTituloCard);
-            pnlCardFormulario.CustomizableEdges = customizableEdges25;
+            pnlCardFormulario.CustomizableEdges = customizableEdges27;
             pnlCardFormulario.Dock = DockStyle.Left;
             pnlCardFormulario.FillColor = Color.White;
             pnlCardFormulario.Location = new Point(0, 0);
             pnlCardFormulario.Name = "pnlCardFormulario";
             pnlCardFormulario.Padding = new Padding(18);
-            pnlCardFormulario.ShadowDecoration.CustomizableEdges = customizableEdges26;
-            pnlCardFormulario.Size = new Size(400, 523);
+            pnlCardFormulario.ShadowDecoration.CustomizableEdges = customizableEdges28;
+            pnlCardFormulario.Size = new Size(400, 573);
             pnlCardFormulario.TabIndex = 0;
+            // 
+            // btnExcluir
+            // 
+            btnExcluir.Animated = true;
+            btnExcluir.BorderRadius = 8;
+            btnExcluir.Cursor = Cursors.Hand;
+            btnExcluir.CustomizableEdges = customizableEdges7;
+            btnExcluir.Enabled = false;
+            btnExcluir.FillColor = Color.FromArgb(235, 90, 95);
+            btnExcluir.Font = new Font("Segoe UI Semibold", 9.5F, FontStyle.Bold);
+            btnExcluir.ForeColor = Color.White;
+            btnExcluir.HoverState.FillColor = Color.FromArgb(190, 40, 50);
+            btnExcluir.Location = new Point(21, 513);
+            btnExcluir.Name = "btnExcluir";
+            btnExcluir.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            btnExcluir.Size = new Size(355, 35);
+            btnExcluir.TabIndex = 14;
+            btnExcluir.Text = "❌ Excluir Permanentemente";
+            btnExcluir.Click += btnExcluir_Click;
             // 
             // btnDesativar
             // 
             btnDesativar.Animated = true;
             btnDesativar.BorderRadius = 8;
             btnDesativar.Cursor = Cursors.Hand;
-            btnDesativar.CustomizableEdges = customizableEdges7;
+            btnDesativar.CustomizableEdges = customizableEdges9;
             btnDesativar.FillColor = Color.FromArgb(254, 235, 237);
             btnDesativar.Font = new Font("Segoe UI Semibold", 9.5F, FontStyle.Bold);
             btnDesativar.ForeColor = Color.FromArgb(190, 40, 50);
             btnDesativar.HoverState.FillColor = Color.FromArgb(250, 220, 223);
             btnDesativar.Location = new Point(21, 469);
             btnDesativar.Name = "btnDesativar";
-            btnDesativar.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            btnDesativar.ShadowDecoration.CustomizableEdges = customizableEdges10;
             btnDesativar.Size = new Size(355, 35);
             btnDesativar.TabIndex = 13;
             btnDesativar.Text = "🗑️ Desativar do Site";
@@ -327,14 +350,14 @@
             btnSalvar.Animated = true;
             btnSalvar.BorderRadius = 8;
             btnSalvar.Cursor = Cursors.Hand;
-            btnSalvar.CustomizableEdges = customizableEdges9;
-            btnSalvar.FillColor = Color.FromArgb(13, 110, 253);
+            btnSalvar.CustomizableEdges = customizableEdges11;
+            btnSalvar.FillColor = Color.FromArgb(107, 117, 86);
             btnSalvar.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             btnSalvar.ForeColor = Color.White;
             btnSalvar.HoverState.FillColor = Color.FromArgb(11, 94, 215);
             btnSalvar.Location = new Point(18, 425);
             btnSalvar.Name = "btnSalvar";
-            btnSalvar.ShadowDecoration.CustomizableEdges = customizableEdges10;
+            btnSalvar.ShadowDecoration.CustomizableEdges = customizableEdges12;
             btnSalvar.Size = new Size(355, 38);
             btnSalvar.TabIndex = 12;
             btnSalvar.Text = "💾 Salvar no Portfólio do Site";
@@ -345,14 +368,14 @@
             btnNovo.Animated = true;
             btnNovo.BorderRadius = 8;
             btnNovo.Cursor = Cursors.Hand;
-            btnNovo.CustomizableEdges = customizableEdges11;
+            btnNovo.CustomizableEdges = customizableEdges13;
             btnNovo.FillColor = Color.FromArgb(251, 234, 214);
             btnNovo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             btnNovo.ForeColor = Color.FromArgb(50, 60, 75);
             btnNovo.HoverState.FillColor = Color.FromArgb(230, 235, 240);
             btnNovo.Location = new Point(283, 15);
             btnNovo.Name = "btnNovo";
-            btnNovo.ShadowDecoration.CustomizableEdges = customizableEdges12;
+            btnNovo.ShadowDecoration.CustomizableEdges = customizableEdges14;
             btnNovo.Size = new Size(90, 30);
             btnNovo.TabIndex = 1;
             btnNovo.Text = "➕ Novo";
@@ -373,15 +396,15 @@
             // 
             swAtivo.Animated = true;
             swAtivo.Checked = true;
-            swAtivo.CheckedState.BorderColor = Color.FromArgb(13, 110, 253);
-            swAtivo.CheckedState.FillColor = Color.FromArgb(13, 110, 253);
+            swAtivo.CheckedState.BorderColor = Color.FromArgb(107, 117, 86);
+            swAtivo.CheckedState.FillColor = Color.FromArgb(107, 117, 86);
             swAtivo.CheckedState.InnerBorderColor = Color.White;
             swAtivo.CheckedState.InnerColor = Color.White;
             swAtivo.Cursor = Cursors.Hand;
-            swAtivo.CustomizableEdges = customizableEdges13;
+            swAtivo.CustomizableEdges = customizableEdges15;
             swAtivo.Location = new Point(18, 397);
             swAtivo.Name = "swAtivo";
-            swAtivo.ShadowDecoration.CustomizableEdges = customizableEdges14;
+            swAtivo.ShadowDecoration.CustomizableEdges = customizableEdges16;
             swAtivo.Size = new Size(45, 22);
             swAtivo.TabIndex = 10;
             swAtivo.UncheckedState.BorderColor = Color.FromArgb(180, 190, 200);
@@ -394,14 +417,14 @@
             btnSelecionarImagem.Animated = true;
             btnSelecionarImagem.BorderRadius = 8;
             btnSelecionarImagem.Cursor = Cursors.Hand;
-            btnSelecionarImagem.CustomizableEdges = customizableEdges15;
+            btnSelecionarImagem.CustomizableEdges = customizableEdges17;
             btnSelecionarImagem.FillColor = Color.FromArgb(240, 243, 246);
             btnSelecionarImagem.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             btnSelecionarImagem.ForeColor = Color.FromArgb(40, 50, 65);
             btnSelecionarImagem.HoverState.FillColor = Color.FromArgb(230, 235, 240);
             btnSelecionarImagem.Location = new Point(291, 298);
             btnSelecionarImagem.Name = "btnSelecionarImagem";
-            btnSelecionarImagem.ShadowDecoration.CustomizableEdges = customizableEdges16;
+            btnSelecionarImagem.ShadowDecoration.CustomizableEdges = customizableEdges18;
             btnSelecionarImagem.Size = new Size(80, 53);
             btnSelecionarImagem.TabIndex = 9;
             btnSelecionarImagem.Text = "📁 Escolher Imagem de Destaque...";
@@ -411,12 +434,12 @@
             // 
             picImagem.BackColor = Color.Transparent;
             picImagem.BorderRadius = 8;
-            picImagem.CustomizableEdges = customizableEdges17;
+            picImagem.CustomizableEdges = customizableEdges19;
             picImagem.FillColor = Color.FromArgb(251, 234, 214);
             picImagem.ImageRotate = 0F;
             picImagem.Location = new Point(16, 260);
             picImagem.Name = "picImagem";
-            picImagem.ShadowDecoration.CustomizableEdges = customizableEdges18;
+            picImagem.ShadowDecoration.CustomizableEdges = customizableEdges20;
             picImagem.Size = new Size(254, 115);
             picImagem.SizeMode = PictureBoxSizeMode.Zoom;
             picImagem.TabIndex = 8;
@@ -439,7 +462,7 @@
             txtDescricao.Animated = true;
             txtDescricao.BorderRadius = 8;
             txtDescricao.Cursor = Cursors.IBeam;
-            txtDescricao.CustomizableEdges = customizableEdges19;
+            txtDescricao.CustomizableEdges = customizableEdges21;
             txtDescricao.DefaultText = "";
             txtDescricao.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
             txtDescricao.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
@@ -455,7 +478,7 @@
             txtDescricao.PlaceholderText = "Ex: Projeto contemporâneo integrado com móveis planejados...";
             txtDescricao.ScrollBars = ScrollBars.Vertical;
             txtDescricao.SelectedText = "";
-            txtDescricao.ShadowDecoration.CustomizableEdges = customizableEdges20;
+            txtDescricao.ShadowDecoration.CustomizableEdges = customizableEdges22;
             txtDescricao.Size = new Size(355, 61);
             txtDescricao.TabIndex = 6;
             txtDescricao.TextChanged += txtDescricao_TextChanged_1;
@@ -476,7 +499,7 @@
             cmbAmbiente.Animated = true;
             cmbAmbiente.BackColor = Color.Transparent;
             cmbAmbiente.BorderRadius = 8;
-            cmbAmbiente.CustomizableEdges = customizableEdges21;
+            cmbAmbiente.CustomizableEdges = customizableEdges23;
             cmbAmbiente.DrawMode = DrawMode.OwnerDrawFixed;
             cmbAmbiente.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbAmbiente.FillColor = Color.FromArgb(251, 234, 214);
@@ -487,7 +510,7 @@
             cmbAmbiente.ItemHeight = 24;
             cmbAmbiente.Location = new Point(16, 117);
             cmbAmbiente.Name = "cmbAmbiente";
-            cmbAmbiente.ShadowDecoration.CustomizableEdges = customizableEdges22;
+            cmbAmbiente.ShadowDecoration.CustomizableEdges = customizableEdges24;
             cmbAmbiente.Size = new Size(355, 30);
             cmbAmbiente.TabIndex = 4;
             // 
@@ -507,7 +530,7 @@
             txtNomeProjeto.Animated = true;
             txtNomeProjeto.BorderRadius = 8;
             txtNomeProjeto.Cursor = Cursors.IBeam;
-            txtNomeProjeto.CustomizableEdges = customizableEdges23;
+            txtNomeProjeto.CustomizableEdges = customizableEdges25;
             txtNomeProjeto.DefaultText = "";
             txtNomeProjeto.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
             txtNomeProjeto.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
@@ -521,7 +544,7 @@
             txtNomeProjeto.Name = "txtNomeProjeto";
             txtNomeProjeto.PlaceholderText = "Ex: Living Moderno Integrado";
             txtNomeProjeto.SelectedText = "";
-            txtNomeProjeto.ShadowDecoration.CustomizableEdges = customizableEdges24;
+            txtNomeProjeto.ShadowDecoration.CustomizableEdges = customizableEdges26;
             txtNomeProjeto.Size = new Size(355, 24);
             txtNomeProjeto.TabIndex = 2;
             // 
@@ -555,7 +578,7 @@
             Controls.Add(pnlPrincipal);
             Name = "PortfolioControl";
             Padding = new Padding(15);
-            Size = new Size(991, 553);
+            Size = new Size(991, 603);
             pnlPrincipal.ResumeLayout(false);
             pnlGrid.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvPortfolio).EndInit();
@@ -586,6 +609,10 @@
         private Guna.UI2.WinForms.Guna2Button btnSalvar;
         private Guna.UI2.WinForms.Guna2Button btnNovo;
         private Guna.UI2.WinForms.Guna2Button btnDesativar;
+
+        // NOVO BOTÃO
+        private Guna.UI2.WinForms.Guna2Button btnExcluir;
+
         private System.Windows.Forms.Panel pnlBusca;
         private System.Windows.Forms.Label lblBusca;
         private Guna.UI2.WinForms.Guna2TextBox txtBusca;
@@ -596,6 +623,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colAmbiente;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDescricao;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colAtivo;
+
         internal Guna.UI2.WinForms.Guna2Panel pnlCardFormulario;
     }
 }

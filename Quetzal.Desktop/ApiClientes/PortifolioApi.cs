@@ -38,12 +38,12 @@ namespace Quetzal.Desktop.ApiClientes
             return resposta?.Dados;
         }
 
-        public async Task<List<PortifolioDto>> BuscarAsync(string termo, int? categoriaId = null)
+        public async Task<List<PortifolioDto>> BuscarAsync(string termo, int? ambienteId = null)
         {
             var url = $"{RotaBase}/buscar?termo={termo}";
-            if (categoriaId.HasValue && categoriaId.Value > 0)
+            if (ambienteId.HasValue && ambienteId.Value > 0)
             {
-                url += $"&categoriaId={categoriaId.Value}";
+                url += $"&ambienteId={ambienteId.Value}";
             }
             var resposta = await GetAsync<ApiRespostaSimples<List<PortifolioDto>>>(url);
             return resposta?.Dados ?? new List<PortifolioDto>();
@@ -59,8 +59,8 @@ namespace Quetzal.Desktop.ApiClientes
 
         public async Task<ApiRespostaSimples<PortifolioDto>> AtualizarAsync(int id, PortifolioDto dados)
         {
-            // Chama PUT /api/filmes/{id} com os dados atualizados no corpo
-            return await PutAsync<ApiRespostaSimples<PortifolioDto>>($"{RotaBase}/{id}", dados);
+            // Chama PUT /api/portfolio/{id} com os dados atualizados no corpo
+            return await PutAsync<ApiRespostaSimples<PortifolioDto>>($"{RotaBase}/{id}/Atualizar", dados);
         }
 
         // --------------------------------------------------------
@@ -69,8 +69,16 @@ namespace Quetzal.Desktop.ApiClientes
 
         public async Task<ApiRespostaSimples<object>> DesativarAsync(int id)
         {
-            // Chama DELETE /api/filmes/{id}/desativar para desativacao logica
+            // Chama DELETE /api/portfolio/{id}/desativar para desativacao logica
             return await DeleteAsync<ApiRespostaSimples<object>>($"{RotaBase}/{id}/desativar");
+        }
+
+        public async Task<ApiRespostaSimples<object>> ReativarAsync(int id)
+        {
+            // Chama PUT /api/portfolio/{id}/reativar
+            return await PutAsync<ApiRespostaSimples<object>>(
+                $"{RotaBase}/{id}/reativar",
+                null);
         }
 
         /// <summary>
