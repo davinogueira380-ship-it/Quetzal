@@ -30,7 +30,15 @@ namespace Quetzal.Desktop.ApiClientes
 
         public async Task<ApiRespostaSimples<object>> DesativarAsync(string id)
         {
-            return await DeleteAsync<ApiRespostaSimples<object>>($"{RotaBase}/{id}");
+            return await PutAsync<ApiRespostaSimples<object>>(
+                $"{RotaBase}/{id}/desativar",
+                new { });
+        }
+
+        public async Task<ApiRespostaSimples<object>> ExcluirAsync(string id)
+        {
+            return await DeleteAsync<ApiRespostaSimples<object>>(
+                $"{RotaBase}/{id}");
         }
 
         public async Task<ApiRespostaSimples<object>> AtivarAsync(string id)

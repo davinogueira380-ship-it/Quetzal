@@ -11,38 +11,71 @@ namespace Quetzal.Desktop.UserControls
 {
     public partial class ProjetoCControl : System.Windows.Forms.UserControl
     {
+        // ============================================================
+        // API
+        // ============================================================
+
         private readonly ProjetoCApiCliente _apiProjeto;
         private readonly UsuarioApiCliente _apiUsuario;
-        private readonly AmbienteApiUsuario _apiAmbiente;
 
-        private List<ProjetoCDto> _listaProjetos = new List<ProjetoCDto>();
-        private List<UsuarioDto> _listaClientes = new List<UsuarioDto>();
-        private List<AmbienteDto> _listaAmbientes = new List<AmbienteDto>();
-        private List<FotoItemModel> _fotosDoProjeto = new List<FotoItemModel>();
+
+        // ============================================================
+        // DADOS DA TELA
+        // ============================================================
+
+        private List<ProjetoCDto> _listaProjetos =
+            new List<ProjetoCDto>();
+
+        private List<UsuarioDto> _listaClientes =
+            new List<UsuarioDto>();
+
+        private List<FotoItemModel> _fotosDoProjeto =
+            new List<FotoItemModel>();
 
         private int? _projetoSelecionadoId = null;
 
         private bool _dadosCarregados = false;
 
+
+        // ============================================================
+        // CLASSE PARA COMBOBOX
+        // ============================================================
+
         public class ItemCombo
         {
             public string Id { get; set; } = string.Empty;
+
             public string Texto { get; set; } = string.Empty;
 
             public override string ToString() => Texto;
         }
 
+
+        // ============================================================
+        // MODELO INTERNO DAS FOTOS
+        // ============================================================
+
         public class FotoItemModel
         {
-            public int AmbienteId { get; set; }
-            public string AmbienteNome { get; set; } = string.Empty;
             public string CaminhoArquivo { get; set; } = string.Empty;
+
             public string Base64 { get; set; } = string.Empty;
+
             public Image? Imagem { get; set; }
 
             public override string ToString()
-                => $"[{AmbienteNome}] {Path.GetFileName(CaminhoArquivo)}";
+            {
+                if (!string.IsNullOrWhiteSpace(CaminhoArquivo))
+                    return Path.GetFileName(CaminhoArquivo);
+
+                return "Foto do Projeto";
+            }
         }
+
+
+        // ============================================================
+        // CONSTRUTOR
+        // ============================================================
 
         public ProjetoCControl()
         {
@@ -50,12 +83,18 @@ namespace Quetzal.Desktop.UserControls
 
             _apiProjeto = new ProjetoCApiCliente();
             _apiUsuario = new UsuarioApiCliente();
-            _apiAmbiente = new AmbienteApiUsuario();
 
             this.Load += ProjetoCControl_Load;
         }
 
-        private async void ProjetoCControl_Load(object sender, EventArgs e)
+
+        // ============================================================
+        // LOAD
+        // ============================================================
+
+        private async void ProjetoCControl_Load(
+            object sender,
+            EventArgs e)
         {
             if (_dadosCarregados)
                 return;
@@ -65,78 +104,55 @@ namespace Quetzal.Desktop.UserControls
             await CarregarDadosIniciaisAsync();
         }
 
+
+        // ============================================================
+        // CARREGAMENTO INICIAL
+        // ============================================================
+
         private async Task CarregarDadosIniciaisAsync()
         {
             try
             {
-                // 1. Carrega Clientes
-                try
-                {
-                    _listaClientes = await _apiUsuario.ObterTodosAsync();
+                // ----------------------------------------------------
+                // CLIENTES
+                // ----------------------------------------------------
 
-                    cmbCliente.Items.Clear();
+                _listaClientes =
+                    await _apiUsuario.ObterTodosAsync();
+
+                cmbCliente.Items.Clear();
+
+                cmbCliente.Items.Add(
+                    new ItemCombo
+                    {
+                        Id = "",
+                        Texto = "-- Selecione o Cliente --"
+                    });
+
+                foreach (var cliente in _listaClientes)
+                {
+                    var status =
+                        cliente.Ativo
+                            ? ""
+                            : " (Inativo)";
 
                     cmbCliente.Items.Add(
                         new ItemCombo
                         {
-                            Id = "",
-                            Texto = "-- Selecione o Cliente --"
+                            Id = cliente.Id,
+                            Texto =
+                                $"{cliente.NomeCompleto}{status}"
                         });
-
-                    foreach (var c in _listaClientes)
-                    {
-                        var status = c.Ativo ? "" : " (Inativo)";
-
-                        cmbCliente.Items.Add(
-                            new ItemCombo
-                            {
-                                Id = c.Id,
-                                Texto = $"{c.NomeCompleto}{status}"
-                            });
-                    }
-
-                    if (cmbCliente.Items.Count > 0)
-                        cmbCliente.SelectedIndex = 0;
-                }
-                catch
-                {
-                    // Mantém o comportamento original.
                 }
 
-                // 2. Carrega Ambientes
-                try
-                {
-                    _listaAmbientes = await _apiAmbiente.ObterTodasAsync();
+                if (cmbCliente.Items.Count > 0)
+                    cmbCliente.SelectedIndex = 0;
 
-                    clbAmbientes.Items.Clear();
-                    cmbAmbienteFoto.Items.Clear();
 
-                    foreach (var amb in _listaAmbientes)
-                    {
-                        clbAmbientes.Items.Add(
-                            new ItemCombo
-                            {
-                                Id = amb.Id.ToString(),
-                                Texto = amb.Nome
-                            });
+                // ----------------------------------------------------
+                // PROJETOS
+                // ----------------------------------------------------
 
-                        cmbAmbienteFoto.Items.Add(
-                            new ItemCombo
-                            {
-                                Id = amb.Id.ToString(),
-                                Texto = amb.Nome
-                            });
-                    }
-
-                    if (cmbAmbienteFoto.Items.Count > 0)
-                        cmbAmbienteFoto.SelectedIndex = 0;
-                }
-                catch
-                {
-                    // Mantém o comportamento original.
-                }
-
-                // 3. Carrega Projetos
                 await CarregarProjetosAsync();
             }
             catch (Exception ex)
@@ -149,6 +165,11 @@ namespace Quetzal.Desktop.UserControls
             }
         }
 
+
+        // ============================================================
+        // CARREGAR PROJETOS
+        // ============================================================
+
         private async Task CarregarProjetosAsync()
         {
             try
@@ -156,7 +177,8 @@ namespace Quetzal.Desktop.UserControls
                 dgvProjetos.Enabled = false;
 
                 _listaProjetos =
-                    await _apiProjeto.ObterTodosAsync(incluirInativos: true);
+                    await _apiProjeto.ObterTodosAsync(
+                        incluirInativos: true);
 
                 AtualizarGrid(_listaProjetos);
             }
@@ -174,105 +196,154 @@ namespace Quetzal.Desktop.UserControls
             }
         }
 
-        private void AtualizarGrid(List<ProjetoCDto> dados)
+
+        // ============================================================
+        // ATUALIZAR GRID
+        // ============================================================
+
+        private void AtualizarGrid(
+            List<ProjetoCDto> dados)
         {
             dgvProjetos.AutoGenerateColumns = false;
+
             dgvProjetos.DataSource = null;
+
             dgvProjetos.DataSource = dados;
+
             dgvProjetos.ClearSelection();
         }
 
-        private void dgvProjetos_SelectionChanged(object sender, EventArgs e)
+
+        // ============================================================
+        // SELEÇÃO DO PROJETO
+        // ============================================================
+
+        private void dgvProjetos_SelectionChanged(
+            object sender,
+            EventArgs e)
         {
             if (dgvProjetos.SelectedRows.Count == 0)
                 return;
 
-            var linha = dgvProjetos.SelectedRows[0];
+            var linha =
+                dgvProjetos.SelectedRows[0];
 
-            if (linha.DataBoundItem is ProjetoCDto item)
+            if (linha.DataBoundItem is not ProjetoCDto item)
+                return;
+
+            _projetoSelecionadoId = item.Id;
+
+            txtNomeProjeto.Text = item.Nome;
+
+            txtDescricao.Text = item.Descricao;
+
+            swAtivo.Checked = item.Ativo;
+
+
+            // --------------------------------------------------------
+            // CLIENTE
+            // --------------------------------------------------------
+
+            for (int i = 0; i < cmbCliente.Items.Count; i++)
             {
-                _projetoSelecionadoId = item.Id;
-
-                txtNomeProjeto.Text = item.Nome;
-                txtDescricao.Text = item.Descricao;
-                swAtivo.Checked = item.Ativo;
-
-                // Seleciona Cliente
-                for (int i = 0; i < cmbCliente.Items.Count; i++)
+                if (cmbCliente.Items[i] is ItemCombo combo &&
+                    combo.Id == item.UsuarioId)
                 {
-                    if (cmbCliente.Items[i] is ItemCombo combo &&
-                        combo.Id == item.UsuarioId)
-                    {
-                        cmbCliente.SelectedIndex = i;
-                        break;
-                    }
+                    cmbCliente.SelectedIndex = i;
+
+                    break;
                 }
-
-                // Marca Ambientes associados
-                for (int i = 0; i < clbAmbientes.Items.Count; i++)
-                {
-                    if (clbAmbientes.Items[i] is ItemCombo combo)
-                    {
-                        var marcado =
-                            (item.AmbientesIds != null &&
-                             item.AmbientesIds.Contains(int.Parse(combo.Id)))
-                            ||
-                            item.AmbienteId.ToString() == combo.Id;
-
-                        clbAmbientes.SetItemChecked(i, marcado);
-                    }
-                }
-
-                // Carrega Fotos existentes
-                _fotosDoProjeto.Clear();
-
-                if (item.Fotos != null)
-                {
-                    foreach (var f in item.Fotos)
-                    {
-                        _fotosDoProjeto.Add(
-                            new FotoItemModel
-                            {
-                                AmbienteId = f.AmbienteId,
-                                AmbienteNome = f.AmbienteNome,
-                                CaminhoArquivo = f.CaminhoOuBase64,
-                                Base64 = f.CaminhoOuBase64
-                            });
-                    }
-                }
-
-                AtualizarListaFotos();
-
-                btnDesativar.Enabled = true;
-
-                btnDesativar.Text =
-                    item.Ativo
-                        ? "🗑️ Desativar Projeto"
-                        : "🔄 Reativar Projeto";
             }
+
+
+            // --------------------------------------------------------
+            // FOTOS
+            // --------------------------------------------------------
+
+            _fotosDoProjeto.Clear();
+
+            if (item.Fotos != null)
+            {
+                foreach (var fotoBase64 in item.Fotos)
+                {
+                    if (string.IsNullOrWhiteSpace(fotoBase64))
+                        continue;
+
+                    var foto = new FotoItemModel
+                    {
+                        Base64 = fotoBase64,
+                        CaminhoArquivo = string.Empty
+                    };
+
+                    try
+                    {
+                        var bytes =
+                            Convert.FromBase64String(fotoBase64);
+
+                        using var ms =
+                            new MemoryStream(bytes);
+
+                        using var imagemTemporaria =
+                            Image.FromStream(ms);
+
+                        foto.Imagem =
+                            new Bitmap(imagemTemporaria);
+                    }
+                    catch
+                    {
+                        foto.Imagem = null;
+                    }
+
+                    _fotosDoProjeto.Add(foto);
+                }
+            }
+
+            AtualizarListaFotos();
+
+            picPreviewFoto.Image = null;
+
+
+            // --------------------------------------------------------
+            // ATIVAR / DESATIVAR
+            // --------------------------------------------------------
+
+            btnDesativar.Enabled = true;
+            btnExcluir.Enabled = true;
+
+            btnDesativar.Text =
+                item.Ativo
+                    ? "🗑️ Desativar Projeto"
+                    : "♻️ Reativar Projeto";
         }
 
-        private void btnNovo_Click(object sender, EventArgs e)
+        // ============================================================
+        // NOVO
+        // ============================================================
+
+        private void btnNovo_Click(
+            object sender,
+            EventArgs e)
         {
             LimparCampos();
         }
+
+
+        // ============================================================
+        // LIMPAR CAMPOS
+        // ============================================================
 
         private void LimparCampos()
         {
             _projetoSelecionadoId = null;
 
             txtNomeProjeto.Clear();
+
             txtDescricao.Clear();
 
             if (cmbCliente.Items.Count > 0)
                 cmbCliente.SelectedIndex = 0;
 
             swAtivo.Checked = true;
-
-            for (int i = 0; i < clbAmbientes.Items.Count; i++)
-            {
-                clbAmbientes.SetItemChecked(i, false);
-            }
 
             _fotosDoProjeto.Clear();
 
@@ -282,19 +353,189 @@ namespace Quetzal.Desktop.UserControls
 
             dgvProjetos.ClearSelection();
 
-            btnDesativar.Enabled = false;
-            btnDesativar.Text = "🗑️ Desativar Projeto";
+            //btnDesativar.Enabled = false;
+            //btnExcluir.Enabled = false;
+            btnDesativar.Text =
+                "Desativar Projeto";
 
             txtNomeProjeto.Focus();
         }
 
-        private void btnAdicionarFoto_Click(object sender, EventArgs e)
+
+        // ============================================================
+        // ADICIONAR FOTO
+        // ============================================================
+
+        private void btnAdicionarFoto_Click(
+            object sender,
+            EventArgs e)
         {
-            if (cmbAmbienteFoto.SelectedItem is not ItemCombo ambienteSelecionado ||
-                string.IsNullOrEmpty(ambienteSelecionado.Id))
+            using var ofd =
+                new OpenFileDialog
+                {
+                    Title =
+                        "Selecionar Foto do Projeto",
+
+                    Filter =
+                        "Arquivos de Imagem|" +
+                        "*.jpg;*.jpeg;*.png;*.webp;*.bmp|" +
+                        "Todos os Arquivos|*.*",
+
+                    Multiselect = true
+                };
+
+            if (ofd.ShowDialog() != DialogResult.OK)
+                return;
+
+            try
+            {
+                foreach (var arquivo in ofd.FileNames)
+                {
+                    var bytes =
+                        File.ReadAllBytes(arquivo);
+
+                    var base64 =
+                        Convert.ToBase64String(bytes);
+
+                    using var ms =
+                        new MemoryStream(bytes);
+
+                    using var imagemTemporaria =
+                        Image.FromStream(ms);
+
+                    var foto =
+                        new FotoItemModel
+                        {
+                            CaminhoArquivo = arquivo,
+
+                            Base64 = base64,
+
+                            Imagem =
+                                new Bitmap(imagemTemporaria)
+                        };
+
+                    _fotosDoProjeto.Add(foto);
+                }
+
+                AtualizarListaFotos();
+
+                if (_fotosDoProjeto.Count > 0)
+                {
+                    lstFotos.SelectedIndex =
+                        _fotosDoProjeto.Count - 1;
+                }
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show(
-                    "Selecione qual ambiente esta foto representa antes de anexar.",
+                    $"Erro ao carregar imagem: {ex.Message}",
+                    "Erro",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+
+
+        // ============================================================
+        // ATUALIZAR LISTA DE FOTOS
+        // ============================================================
+
+        private void AtualizarListaFotos()
+        {
+            lstFotos.Items.Clear();
+
+            for (int i = 0; i < _fotosDoProjeto.Count; i++)
+            {
+                var foto = _fotosDoProjeto[i];
+
+                if (string.IsNullOrWhiteSpace(
+                    foto.CaminhoArquivo))
+                {
+                    lstFotos.Items.Add(
+                        $"Foto {i + 1}");
+                }
+                else
+                {
+                    lstFotos.Items.Add(foto);
+                }
+            }
+        }
+
+
+        // ============================================================
+        // PREVIEW DA FOTO
+        // ============================================================
+
+        private void lstFotos_SelectedIndexChanged(
+            object sender,
+            EventArgs e)
+        {
+            var indice =
+                lstFotos.SelectedIndex;
+
+            if (indice < 0 ||
+                indice >= _fotosDoProjeto.Count)
+            {
+                picPreviewFoto.Image = null;
+
+                return;
+            }
+
+            var foto =
+                _fotosDoProjeto[indice];
+
+            if (foto.Imagem != null)
+            {
+                picPreviewFoto.Image =
+                    foto.Imagem;
+
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(foto.Base64))
+            {
+                try
+                {
+                    var bytes =
+                        Convert.FromBase64String(
+                            foto.Base64);
+
+                    using var ms =
+                        new MemoryStream(bytes);
+
+                    using var imagemTemporaria =
+                        Image.FromStream(ms);
+
+                    foto.Imagem =
+                        new Bitmap(imagemTemporaria);
+
+                    picPreviewFoto.Image =
+                        foto.Imagem;
+                }
+                catch
+                {
+                    picPreviewFoto.Image = null;
+                }
+            }
+        }
+
+
+        // ============================================================
+        // REMOVER FOTO
+        // ============================================================
+
+        private void btnRemoverFoto_Click(
+            object sender,
+            EventArgs e)
+        {
+            var indice =
+                lstFotos.SelectedIndex;
+
+            if (indice < 0 ||
+                indice >= _fotosDoProjeto.Count)
+            {
+                MessageBox.Show(
+                    "Selecione uma foto para remover.",
                     "Atenção",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -302,105 +543,42 @@ namespace Quetzal.Desktop.UserControls
                 return;
             }
 
-            using var ofd = new OpenFileDialog
-            {
-                Title = "Selecionar Foto do Ambiente",
-                Filter =
-                    "Arquivos de Imagem|*.jpg;*.jpeg;*.png;*.webp;*.bmp|" +
-                    "Todos os Arquivos|*.*"
-            };
+            var confirmacao =
+                MessageBox.Show(
+                    "Deseja remover esta foto do projeto?",
+                    "Remover Foto",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
 
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    var bytes = File.ReadAllBytes(ofd.FileName);
-                    var base64 = Convert.ToBase64String(bytes);
+            if (confirmacao != DialogResult.Yes)
+                return;
 
-                    using var ms = new MemoryStream(bytes);
+            _fotosDoProjeto.RemoveAt(indice);
 
-                    var img = Image.FromStream(ms);
+            picPreviewFoto.Image = null;
 
-                    var foto = new FotoItemModel
-                    {
-                        AmbienteId = int.Parse(ambienteSelecionado.Id),
-                        AmbienteNome = ambienteSelecionado.Texto,
-                        CaminhoArquivo = ofd.FileName,
-                        Base64 = base64,
-                        Imagem = (Image)img.Clone()
-                    };
-
-                    _fotosDoProjeto.Add(foto);
-
-                    AtualizarListaFotos();
-
-                    lstFotos.SelectedIndex =
-                        _fotosDoProjeto.Count - 1;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(
-                        $"Erro ao carregar imagem: {ex.Message}",
-                        "Erro",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
-                }
-            }
+            AtualizarListaFotos();
         }
 
-        private void AtualizarListaFotos()
+
+        // ============================================================
+        // SALVAR
+        // ============================================================
+
+        private async void btnSalvar_Click(
+            object sender,
+            EventArgs e)
         {
-            lstFotos.Items.Clear();
+            var nome =
+                txtNomeProjeto.Text.Trim();
 
-            foreach (var foto in _fotosDoProjeto)
-            {
-                lstFotos.Items.Add(foto);
-            }
-        }
+            var descricao =
+                txtDescricao.Text.Trim();
 
-        private void lstFotos_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (lstFotos.SelectedItem is FotoItemModel foto)
-            {
-                if (foto.Imagem != null)
-                {
-                    picPreviewFoto.Image = foto.Imagem;
-                }
-                else if (!string.IsNullOrEmpty(foto.CaminhoArquivo) &&
-                         File.Exists(foto.CaminhoArquivo))
-                {
-                    try
-                    {
-                        picPreviewFoto.Image =
-                            Image.FromFile(foto.CaminhoArquivo);
-                    }
-                    catch
-                    {
-                    }
-                }
-                else
-                {
-                    picPreviewFoto.Image = null;
-                }
-            }
-        }
 
-        private void btnRemoverFoto_Click(object sender, EventArgs e)
-        {
-            if (lstFotos.SelectedIndex >= 0 &&
-                lstFotos.SelectedIndex < _fotosDoProjeto.Count)
-            {
-                _fotosDoProjeto.RemoveAt(lstFotos.SelectedIndex);
-
-                picPreviewFoto.Image = null;
-
-                AtualizarListaFotos();
-            }
-        }
-
-        private async void btnSalvar_Click(object sender, EventArgs e)
-        {
-            var nome = txtNomeProjeto.Text.Trim();
+            // --------------------------------------------------------
+            // NOME
+            // --------------------------------------------------------
 
             if (string.IsNullOrWhiteSpace(nome))
             {
@@ -415,11 +593,34 @@ namespace Quetzal.Desktop.UserControls
                 return;
             }
 
+
+            // --------------------------------------------------------
+            // DESCRIÇÃO
+            // --------------------------------------------------------
+
+            if (string.IsNullOrWhiteSpace(descricao))
+            {
+                MessageBox.Show(
+                    "Informe a descrição do projeto.",
+                    "Campo Obrigatório",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                txtDescricao.Focus();
+
+                return;
+            }
+
+
+            // --------------------------------------------------------
+            // CLIENTE
+            // --------------------------------------------------------
+
             var clienteCombo =
                 cmbCliente.SelectedItem as ItemCombo;
 
             var clienteId =
-                clienteCombo?.Id ?? "";
+                clienteCombo?.Id ?? string.Empty;
 
             if (string.IsNullOrWhiteSpace(clienteId))
             {
@@ -434,84 +635,93 @@ namespace Quetzal.Desktop.UserControls
                 return;
             }
 
-            // Ambientes selecionados
-            var ambientesIds = new List<int>();
 
-            int primeiroAmbienteId = 0;
-            string primeiroAmbienteNome = "";
+            // --------------------------------------------------------
+            // FOTOS
+            // --------------------------------------------------------
 
-            for (int i = 0; i < clbAmbientes.Items.Count; i++)
-            {
-                if (clbAmbientes.GetItemChecked(i) &&
-                    clbAmbientes.Items[i] is ItemCombo combo)
-                {
-                    if (int.TryParse(combo.Id, out int ambId))
-                    {
-                        ambientesIds.Add(ambId);
+            var fotos =
+                _fotosDoProjeto
+                    .Where(f =>
+                        !string.IsNullOrWhiteSpace(
+                            f.Base64))
+                    .Select(f => f.Base64)
+                    .ToList();
 
-                        if (primeiroAmbienteId == 0)
-                        {
-                            primeiroAmbienteId = ambId;
-                            primeiroAmbienteNome = combo.Texto;
-                        }
-                    }
-                }
-            }
 
             try
             {
                 btnSalvar.Enabled = false;
 
-                var fotosDto =
-                    _fotosDoProjeto
-                        .Select(f => new FotoAmbienteDto
-                        {
-                            AmbienteId = f.AmbienteId,
-                            AmbienteNome = f.AmbienteNome,
-                            CaminhoOuBase64 = f.Base64,
-                            Descricao =
-                                $"Foto do ambiente {f.AmbienteNome}"
-                        })
-                        .ToList();
 
-                var dto = new ProjetoCDto
-                {
-                    Id = _projetoSelecionadoId ?? 0,
-                    Nome = nome,
-                    Descricao = txtDescricao.Text.Trim(),
-                    UsuarioId = clienteId,
-                    UsuarioNome = clienteCombo?.Texto ?? "",
-                    AmbienteId = primeiroAmbienteId,
-                    AmbienteNome = primeiroAmbienteNome,
-                    AmbientesIds = ambientesIds,
-                    Fotos = fotosDto,
-                    Ativo = swAtivo.Checked,
-                    DataCadastro = DateTime.Now
-                };
+                // ----------------------------------------------------
+                // DTO
+                // ----------------------------------------------------
+
+                var dto =
+                    new ProjetoCDto
+                    {
+                        Id =
+                            _projetoSelecionadoId ?? 0,
+
+                        Nome =
+                            nome,
+
+                        Descricao =
+                            descricao,
+
+                        UsuarioId =
+                            clienteId,
+
+                        UsuarioNome =
+                            clienteCombo?.Texto ?? "",
+
+                        Fotos =
+                            fotos,
+
+                        Ativo =
+                            swAtivo.Checked,
+
+                        DataCadastro =
+                            DateTime.Now
+                    };
+
+
+                // ----------------------------------------------------
+                // NOVO PROJETO
+                // ----------------------------------------------------
 
                 if (_projetoSelecionadoId == null ||
                     _projetoSelecionadoId == 0)
                 {
-                    await _apiProjeto.CadastrarAsync(dto);
+                    await _apiProjeto
+                        .CadastrarAsync(dto);
 
                     MessageBox.Show(
-                        "Projeto do cliente cadastrado com sucesso com seus ambientes e galeria de fotos!",
+                        "Projeto cadastrado com sucesso!",
                         "Sucesso",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
                 }
+
+                // ----------------------------------------------------
+                // ATUALIZAÇÃO
+                // ----------------------------------------------------
+
                 else
                 {
-                    await _apiProjeto.AtualizarAsync(
-                        _projetoSelecionadoId.Value,
-                        dto);
+                    await _apiProjeto
+                        .AtualizarAsync(
+                            _projetoSelecionadoId.Value,
+                            dto);
 
                     MessageBox.Show(
-                        "Projeto do cliente atualizado com sucesso!",
+                        "Projeto atualizado com sucesso!",
                         "Sucesso",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
                 }
+
 
                 await CarregarProjetosAsync();
 
@@ -531,71 +741,295 @@ namespace Quetzal.Desktop.UserControls
             }
         }
 
-        private async void btnDesativar_Click(object sender, EventArgs e)
+
+        // ============================================================
+        // DESATIVAR / REATIVAR
+        // ============================================================
+
+        private async void btnDesativar_Click(
+            object sender,
+            EventArgs e)
         {
             if (_projetoSelecionadoId == null)
+            {
+                MessageBox.Show(
+                    "Selecione um projeto.",
+                    "Atenção",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                return;
+            }
+
+            var projetoAtual =
+                _listaProjetos
+                    .FirstOrDefault(
+                        p =>
+                            p.Id ==
+                            _projetoSelecionadoId.Value);
+
+            if (projetoAtual == null)
                 return;
 
-            var confirmacao = MessageBox.Show(
-                "Deseja alternar a ativação deste projeto?",
-                "Confirmação",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
 
-            if (confirmacao == DialogResult.Yes)
+            var acao =
+                projetoAtual.Ativo
+                    ? "desativar"
+                    : "reativar";
+
+
+            var confirmacao =
+                MessageBox.Show(
+                    $"Deseja realmente {acao} o projeto " +
+                    $"'{projetoAtual.Nome}'?",
+                    "Confirmação",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+
+            if (confirmacao != DialogResult.Yes)
+                return;
+
+
+            try
             {
-                try
+                btnDesativar.Enabled = false;
+
+
+                // ----------------------------------------------------
+                // DESATIVAR
+                // ----------------------------------------------------
+
+                if (projetoAtual.Ativo)
                 {
-                    await _apiProjeto.DesativarAsync(
-                        _projetoSelecionadoId.Value);
+                    await _apiProjeto
+                        .DesativarAsync(
+                            _projetoSelecionadoId.Value);
 
                     MessageBox.Show(
-                        "Situação do projeto alterada com sucesso!",
+                        "Projeto desativado com sucesso!",
                         "Sucesso",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
-
-                    await CarregarProjetosAsync();
-
-                    LimparCampos();
                 }
-                catch (Exception ex)
+
+                // ----------------------------------------------------
+                // REATIVAR
+                // ----------------------------------------------------
+
+                else
                 {
+                    await _apiProjeto
+                        .ReativarAsync(
+                            _projetoSelecionadoId.Value);
+
                     MessageBox.Show(
-                        $"Erro ao alterar situação: {ex.Message}",
-                        "Erro",
+                        "Projeto reativado com sucesso!",
+                        "Sucesso",
                         MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                        MessageBoxIcon.Information);
                 }
+
+
+                await CarregarProjetosAsync();
+
+                LimparCampos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Erro ao alterar situação do projeto: {ex.Message}",
+                    "Erro",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btnDesativar.Enabled =
+                    _projetoSelecionadoId != null;
             }
         }
 
-        private void txtBusca_TextChanged(object sender, EventArgs e)
+
+        // ============================================================
+        // PESQUISA
+        // ============================================================
+
+        private void txtBusca_TextChanged(
+            object sender,
+            EventArgs e)
         {
             var termo =
-                txtBusca.Text.Trim().ToLower();
+                txtBusca.Text.Trim();
 
-            if (string.IsNullOrEmpty(termo))
+            if (string.IsNullOrWhiteSpace(termo))
             {
                 AtualizarGrid(_listaProjetos);
-            }
-            else
-            {
-                var filtrados =
-                    _listaProjetos
-                        .Where(p =>
-                            (p.Nome?.ToLower().Contains(termo) ?? false) ||
-                            (p.UsuarioNome?.ToLower().Contains(termo) ?? false) ||
-                            (p.AmbienteNome?.ToLower().Contains(termo) ?? false))
-                        .ToList();
 
-                AtualizarGrid(filtrados);
+                return;
             }
+
+            var filtrados =
+                _listaProjetos
+                    .Where(p =>
+                        (p.Nome?.Contains(
+                            termo,
+                            StringComparison.OrdinalIgnoreCase)
+                            ?? false)
+
+                        ||
+
+                        (p.UsuarioNome?.Contains(
+                            termo,
+                            StringComparison.OrdinalIgnoreCase)
+                            ?? false)
+
+                        ||
+
+                        (p.Descricao?.Contains(
+                            termo,
+                            StringComparison.OrdinalIgnoreCase)
+                            ?? false))
+                    .ToList();
+
+            AtualizarGrid(filtrados);
         }
 
-        private async void btnAtualizar_Click(object sender, EventArgs e)
+
+        // ============================================================
+        // ATUALIZAR LISTA
+        // ============================================================
+
+        private async void btnAtualizar_Click(
+            object sender,
+            EventArgs e)
         {
             await CarregarProjetosAsync();
         }
+
+        // ============================================================
+        // EXCLUIR PERMANENTEMENTE
+        // ============================================================
+
+        private async void btnExcluir_Click(object sender, EventArgs e)
+        {
+            // --------------------------------------------------------
+            // VERIFICA SE EXISTE PROJETO SELECIONADO
+            // --------------------------------------------------------
+
+            if (_projetoSelecionadoId == null)
+            {
+                MessageBox.Show(
+                    "Selecione um projeto para excluir.",
+                    "Atenção",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                return;
+            }
+
+
+            // --------------------------------------------------------
+            // LOCALIZA O PROJETO SELECIONADO
+            // --------------------------------------------------------
+
+            var projetoSelecionado =
+                _listaProjetos.FirstOrDefault(
+                    p => p.Id == _projetoSelecionadoId.Value);
+
+            if (projetoSelecionado == null)
+            {
+                MessageBox.Show(
+                    "Não foi possível localizar o projeto selecionado.",
+                    "Atenção",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+
+
+            // --------------------------------------------------------
+            // PRIMEIRA CONFIRMAÇÃO
+            // --------------------------------------------------------
+
+            var confirmacao =
+                MessageBox.Show(
+                    $"Deseja realmente excluir permanentemente o projeto " +
+                    $"'{projetoSelecionado.Nome}'?\n\n" +
+                    "Esta ação não poderá ser desfeita.",
+                    "Excluir Projeto Permanentemente",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+
+            if (confirmacao != DialogResult.Yes)
+                return;
+
+
+            // --------------------------------------------------------
+            // SEGUNDA CONFIRMAÇÃO
+            // --------------------------------------------------------
+
+            var confirmacaoFinal =
+                MessageBox.Show(
+                    $"ATENÇÃO!\n\n" +
+                    $"O projeto '{projetoSelecionado.Nome}' será removido " +
+                    $"permanentemente do sistema.\n\n" +
+                    $"Deseja continuar?",
+                    "Confirmação de Exclusão",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+
+            if (confirmacaoFinal != DialogResult.Yes)
+                return;
+
+
+            try
+            {
+                btnExcluir.Enabled = false;
+
+
+                // ----------------------------------------------------
+                // CHAMA A API
+                // ----------------------------------------------------
+
+                await _apiProjeto.ExcluirPermanentementeAsync(
+                    _projetoSelecionadoId.Value);
+
+
+                // ----------------------------------------------------
+                // SUCESSO
+                // ----------------------------------------------------
+
+                MessageBox.Show(
+                    "Projeto excluído permanentemente com sucesso!",
+                    "Sucesso",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+
+                // ----------------------------------------------------
+                // ATUALIZA A LISTA
+                // ----------------------------------------------------
+
+                await CarregarProjetosAsync();
+
+                LimparCampos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Erro ao excluir permanentemente o projeto: {ex.Message}",
+                    "Erro",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btnExcluir.Enabled =
+                    _projetoSelecionadoId != null;
+            }
+        }
     }
+
 }

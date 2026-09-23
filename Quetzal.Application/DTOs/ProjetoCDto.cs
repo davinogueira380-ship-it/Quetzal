@@ -17,6 +17,7 @@ namespace Quetzal.Application.DTOs
         public string? UsuarioNome { get; set; }   //Add por Fausto, para exibicao, na duvida ainda se mantem
         public string ClienteId { get; set; } = string.Empty;
 
+        public List<string> Fotos { get; set; } = new List<string>();
 
         // Dados Ambiente
         //public int AmbienteId { get; set; }
@@ -52,10 +53,12 @@ namespace Quetzal.Application.DTOs
         public string UsuarioId { get; set; } = string.Empty;
         public string? UsuarioNome { get; set; }
 
+        public List<string> Fotos { get; set; } = new List<string>();
+
         //public ICollection<AmbienteDto> Ambientes { get; set; } = new List<AmbienteDto>(); 
 
         //Voltar aqui STHEFANNY ↑
-       
+
     }
 
     // Dto recebe dados de atualização de um novo projeto existente

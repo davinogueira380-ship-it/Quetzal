@@ -11,28 +11,30 @@ namespace Quetzal.Desktop.ApiClientes
         public string UsuarioId { get; set; } = string.Empty;
         public string? UsuarioNome { get; set; }
 
-        public int AmbienteId { get; set; }
-        public string? AmbienteNome { get; set; }
+        //public int AmbienteId { get; set; }
+        //public string? AmbienteNome { get; set; }
 
         // Lista de identificadores de ambientes associados a este projeto
-        public List<int> AmbientesIds { get; set; } = new List<int>();
+        //public List<int> AmbientesIds { get; set; } = new List<int>();
 
         // Lista de fotos por ambiente (AmbienteId -> URL ou Base64)
-        public List<FotoAmbienteDto> Fotos { get; set; } = new List<FotoAmbienteDto>();
+        //public List<FotoAmbienteDto> Fotos { get; set; } = new List<FotoAmbienteDto>();
 
         public bool Ativo { get; set; } = true;
         public DateTime DataCadastro { get; set; } = DateTime.Now;
         public DateTime? DataAtualizacao { get; set; }
         public DateTime? DataExclusao { get; set; }
+
+        public List<string> Fotos { get; set; } = new List<string>();
     }
 
-    public class FotoAmbienteDto
-    {
-        public int AmbienteId { get; set; }
-        public string AmbienteNome { get; set; } = string.Empty;
-        public string CaminhoOuBase64 { get; set; } = string.Empty;
-        public string Descricao { get; set; } = string.Empty;
-    }
+    //public class FotoAmbienteDto
+    //{
+    //    public int AmbienteId { get; set; }
+    //    public string AmbienteNome { get; set; } = string.Empty;
+    //    public string CaminhoOuBase64 { get; set; } = string.Empty;
+    //    public string Descricao { get; set; } = string.Empty;
+    //}
 
     public class ProjetoCApiCliente : ClienteHttp
     {

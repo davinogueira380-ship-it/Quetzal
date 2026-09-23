@@ -257,6 +257,87 @@ namespace Quetzal.Desktop.UserControls
                     MessageBoxIcon.Error);
             }
         }
+        // EXCLUIR CLIENTE
+
+        private async void btnExcluir_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(_clienteSelecionadoId))
+            {
+                MessageBox.Show(
+                    "Selecione um cliente na tabela para excluir.",
+                    "Atenção",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                return;
+            }
+
+            var clienteAtual = _listaClientes
+                .FirstOrDefault(c => c.Id == _clienteSelecionadoId);
+
+            if (clienteAtual == null)
+            {
+                MessageBox.Show(
+                    "Não foi possível localizar o cliente selecionado.",
+                    "Atenção",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+
+            var confirmacao = MessageBox.Show(
+                $"Deseja realmente EXCLUIR o cliente abaixo?\n\n" +
+                $"Cliente: {clienteAtual.NomeCompleto}\n" +
+                $"E-mail: {clienteAtual.Email}\n\n" +
+                "Esta operação removerá o cadastro do cliente.",
+                "Confirmar Exclusão",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (confirmacao != DialogResult.Yes)
+                return;
+
+            try
+            {
+                btnExcluir.Enabled = false;
+                btnSalvar.Enabled = false;
+                btnAlternarAtivacao.Enabled = false;
+
+                await _apiUsuario.ExcluirAsync(
+                    _clienteSelecionadoId);
+
+                MessageBox.Show(
+                    $"Cliente '{clienteAtual.NomeCompleto}' excluído com sucesso!",
+                    "Cliente Excluído",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                _clienteSelecionadoId = null;
+
+                txtNomeCompleto.Clear();
+                txtEmail.Clear();
+                txtTelefone.Clear();
+
+                swPerfilAtivo.Checked = false;
+
+                await CarregarClientesAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Erro ao excluir cliente: {ex.Message}",
+                    "Erro",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btnExcluir.Enabled = true;
+                btnSalvar.Enabled = true;
+                btnAlternarAtivacao.Enabled = true;
+            }
+        }
 
         // PESQUISA
 

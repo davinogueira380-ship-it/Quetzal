@@ -72,6 +72,8 @@ namespace Quetzal.Application.Servicos.Implementacoes
                 {
                     projetoC.UsuarioId = dto.UsuarioId;
                 }
+                // Fotos do projeto
+                projetoC.Fotos = dto.Fotos ?? new List<string>();
 
                 var projetoCAdicionado =
                     await _repositorio.AdicionarAsync(projetoC);
@@ -112,6 +114,9 @@ namespace Quetzal.Application.Servicos.Implementacoes
                 {
                     projetoCExistente.UsuarioId = dto.UsuarioId;
                 }
+
+                // Atualiza as fotos do projeto
+                projetoCExistente.Fotos = dto.Fotos ?? new List<string>();
 
                 await _repositorio.AtualizarAsync(projetoCExistente);
 

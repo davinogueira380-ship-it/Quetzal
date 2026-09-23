@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Quetzal.Domain.Entidades;
+using System.Text.Json;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Quetzal.Infrastructure.Dados
 {
@@ -51,7 +53,6 @@ namespace Quetzal.Infrastructure.Dados
 
                 // Não mapear PortfolioId aqui (não existe como FK em Ambiente no seu modelo atual)
             });
-
             builder.Entity<ProjetoC>(entidade =>
             {
                 entidade.ToTable("ProjetosC");
@@ -62,6 +63,39 @@ namespace Quetzal.Infrastructure.Dados
 
                 entidade.Property(p => p.Descricao)
                     .IsRequired();
+
+                // Salva a lista de fotos como JSON no SQL Server
+                entidade.Property(p => p.Fotos)
+                    .HasConversion(
+                        fotos => JsonSerializer.Serialize(
+                            fotos,
+                            (JsonSerializerOptions?)null),
+
+                        json => JsonSerializer.Deserialize<List<string>>(
+                            json,
+                            (JsonSerializerOptions?)null)
+                            ?? new List<string>())
+                    .HasColumnType("nvarchar(max)");
+
+                // Necessário para o Entity Framework detectar
+                // alterações feitas dentro da lista
+                entidade.Property(p => p.Fotos)
+                    .Metadata.SetValueComparer(
+                        new ValueComparer<List<string>>(
+                            (lista1, lista2) =>
+                                lista1 != null &&
+                                lista2 != null &&
+                                lista1.SequenceEqual(lista2),
+
+                            lista =>
+                                lista.Aggregate(
+                                    0,
+                                    (hash, item) =>
+                                        HashCode.Combine(hash, item.GetHashCode())),
+
+                            lista =>
+                                lista.ToList()
+                        ));
 
                 entidade.HasOne(p => p.Usuario)
                     .WithMany(u => u.ProjetosC)
