@@ -8,7 +8,7 @@ using Quetzal.UI.ViewModels;
 namespace Quetzal.UI.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin,Operador")]
+    //[Authorize(Roles = "Admin,Operador")]
     public class ProjetoCController : Controller
     {
         private readonly ApiCliente _api;

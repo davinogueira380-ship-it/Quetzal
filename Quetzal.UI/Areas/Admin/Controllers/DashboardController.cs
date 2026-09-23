@@ -8,7 +8,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
 {
     // Chama a API internamente usando HttpClient (server-to-server) e passa o resultado como modelo
     [Area("Admin")]
-    [Authorize(Roles = "Admin,Operador")]
+    //[Authorize(Roles = "Admin,Operador")]
     public class DashboardController : Controller
     {
         private readonly ApiCliente _api;
