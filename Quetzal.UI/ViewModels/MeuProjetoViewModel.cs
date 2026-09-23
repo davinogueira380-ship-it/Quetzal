@@ -8,10 +8,6 @@ namespace Quetzal.UI.ViewModels
         public string Nome { get; set; } = string.Empty;
         public string Descricao { get; set; } = string.Empty;
         public string? ImagemUpload { get; set; }
-        public List<string> AmbientesNomes { get; set; } = new();
         public bool Ativo { get; set; }
-
-        public string AmbientesFormatados =>
-            AmbientesNomes.Any() ? string.Join(", ", AmbientesNomes) : "Nenhum ambiente definido ainda";
     }
 }

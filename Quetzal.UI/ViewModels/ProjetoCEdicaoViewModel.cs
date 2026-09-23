@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Quetzal.UI.ViewModels
 {
@@ -25,15 +24,6 @@ namespace Quetzal.UI.ViewModels
 
         public string? ImagemAtualUrl { get; set; }
 
-        // Vários ambientes por projeto (N:N) -- ids marcados nos checkboxes.
-        // Mapeia para CriarProjetoCDto/AtualizarProjetoCDto.AmbientesIds
-        [Required(ErrorMessage = "Selecione ao menos um ambiente.")]
-        [MinLength(1, ErrorMessage = "Selecione ao menos um ambiente.")]
-        [Display(Name = "Ambientes")]
-        public List<int> AmbientesSelecionadosIds { get; set; } = new();
-
-        public List<SelectListItem> AmbientesDisponiveis { get; set; } = new();
-
         // Somente leitura -- agora a API expõe UsuarioNome, não precisa
         // mais mostrar só o Id cru
         [Display(Name = "Cliente")]
@@ -42,5 +32,8 @@ namespace Quetzal.UI.ViewModels
         public bool EhEdicao => Id.HasValue && Id.Value > 0;
 
         public string TituloPagina => "Editar Projeto";
+
+         // CriarProjetoCDto no final desta resposta
+        public string? UsuarioId { get; set; }
     }
 }

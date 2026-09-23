@@ -22,9 +22,6 @@ namespace Quetzal.UI.ViewModels
         [Display(Name = "Cliente")]
         public string ClienteNome { get; set; } = string.Empty;
 
-        // Nomes dos ambientes vinculados (N:N) — só o texto, sem Id
-        public List<string> AmbientesNomes { get; set; } = new();
-
         [Display(Name = "Ativo")]
         public bool Ativo { get; set; }
 
@@ -38,9 +35,5 @@ namespace Quetzal.UI.ViewModels
 
         public string StatusCssClass => Ativo ? "badge bg-success" : "badge bg-secondary";
 
-        // Junta os nomes dos ambientes numa única frase para a listagem,
-        // ex: "Sala de Estar, Quarto, Cozinha"
-        public string AmbientesFormatados =>
-            AmbientesNomes.Any() ? string.Join(", ", AmbientesNomes) : "Nenhum ambiente vinculado";
     }
 }

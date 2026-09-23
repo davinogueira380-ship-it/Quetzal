@@ -42,7 +42,7 @@ namespace Quetzal.Application.DTOs
         public string Descricao { get; set; } = string.Empty;
         public string ImagemUpload { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "O ambiente é obrigatório.")]
+        //[Required(ErrorMessage = "O ambiente é obrigatório.")]
         //public int AmbienteId { get; set; }
 
         // Para suporte à checkbox múltipla do cliente desktop
