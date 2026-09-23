@@ -39,7 +39,6 @@ namespace Quetzal.UI.Areas.Admin.Controllers
                 Descricao = p.Descricao,
                 ImagemUpload = p.ImagemUpload,
                 ClienteNome = string.IsNullOrWhiteSpace(p.UsuarioNome) ? "(sem nome cadastrado)" : p.UsuarioNome,
-                AmbientesNomes = p.Ambientes.Select(a => a.Nome).ToList(),
                 Ativo = p.Ativo,
                 DataCadastro = p.DataCadastro
             }).ToList();
@@ -68,10 +67,8 @@ namespace Quetzal.UI.Areas.Admin.Controllers
                 Descricao = dados.Descricao,
                 ImagemAtualUrl = dados.ImagemUpload,
                 ClienteNome = string.IsNullOrWhiteSpace(dados.UsuarioNome) ? "(sem nome cadastrado)" : dados.UsuarioNome,
-                AmbientesSelecionadosIds = dados.AmbientesIds
             };
 
-            await PreencherCheckboxesAmbientes(viewModel);
             return View(viewModel);
         }
 
@@ -82,7 +79,6 @@ namespace Quetzal.UI.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
-                await PreencherCheckboxesAmbientes(viewModel);
                 return View(viewModel);
             }
 
@@ -95,7 +91,6 @@ namespace Quetzal.UI.Areas.Admin.Controllers
                 if (!resultado.Sucesso)
                 {
                     ModelState.AddModelError(nameof(viewModel.ImagemArquivo), resultado.Erro!);
-                    await PreencherCheckboxesAmbientes(viewModel);
                     return View(viewModel);
                 }
 
@@ -108,7 +103,6 @@ namespace Quetzal.UI.Areas.Admin.Controllers
                 Nome = viewModel.Nome,
                 Descricao = viewModel.Descricao,
                 ImagemUpload = caminhoImagem,
-                AmbientesIds = viewModel.AmbientesSelecionadosIds
             };
 
             var resposta = await _api.PutAsync<ProjetoCApiModelo, AtualizarProjetoCApiModelo>(
@@ -117,7 +111,6 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             if (!resposta.Sucesso)
             {
                 AdicionarErrosDaApi(resposta.Erros, resposta.Mensagem);
-                await PreencherCheckboxesAmbientes(viewModel);
                 return View(viewModel);
             }
 
@@ -165,26 +158,6 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Busca os ambientes ativos na API e marca quais já pertencem a este projeto
-        private async Task PreencherCheckboxesAmbientes(ProjetoCEdicaoViewModel viewModel)
-        {
-            var resposta = await _api.GetAsync<List<AmbienteApiModelo>>("api/Ambiente");
-
-            if (resposta.Sucesso && resposta.Dados != null)
-            {
-                viewModel.AmbientesDisponiveis = resposta.Dados
-                    .Select(a => new SelectListItem
-                    {
-                        Value = a.Id.ToString(),
-                        Text = a.Nome,
-                        Selected = viewModel.AmbientesSelecionadosIds.Contains(a.Id)
-                    })
-                    .ToList();
-            }
-        }
-
-   
-
         // era: string[]? erros  →  .Length
         // vira: List<string>? erros  →  .Count
         private void AdicionarErrosDaApi(List<string>? erros, string mensagemGeral)
@@ -213,8 +186,6 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             public string ImagemUpload { get; set; } = string.Empty;
             public string UsuarioId { get; set; } = string.Empty;
             public string? UsuarioNome { get; set; }
-            public List<int> AmbientesIds { get; set; } = new();
-            public List<AmbienteApiModelo> Ambientes { get; set; } = new();
             public bool Ativo { get; set; }
             public DateTime DataCadastro { get; set; }
         }
@@ -226,14 +197,9 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             public string Nome { get; set; } = string.Empty;
             public string Descricao { get; set; } = string.Empty;
             public string ImagemUpload { get; set; } = string.Empty;
-            public List<int> AmbientesIds { get; set; } = new();
+            public string UsuarioId { get; set; } = string.Empty;
         }
 
-        // -> corresponde a AmbienteDto na API (usado só para os checkboxes)
-        public class AmbienteApiModelo
-        {
-            public int Id { get; set; }
-            public string Nome { get; set; } = string.Empty;
-        }
+      
     }
 }

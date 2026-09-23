@@ -42,7 +42,6 @@ namespace Quetzal.UI.Areas.Cliente.Controllers
                 Nome = dados.Nome,
                 Descricao = dados.Descricao,
                 ImagemUpload = dados.ImagemUpload,
-                AmbientesNomes = dados.Ambientes.Select(a => a.Nome).ToList(),
                 Ativo = dados.Ativo
             };
 
@@ -57,14 +56,9 @@ namespace Quetzal.UI.Areas.Cliente.Controllers
             public string Nome { get; set; } = string.Empty;
             public string Descricao { get; set; } = string.Empty;
             public string ImagemUpload { get; set; } = string.Empty;
-            public List<AmbienteApiModelo> Ambientes { get; set; } = new();
             public bool Ativo { get; set; }
         }
 
-        public class AmbienteApiModelo
-        {
-            public int Id { get; set; }
-            public string Nome { get; set; } = string.Empty;
-        }
+        
     }
 }
