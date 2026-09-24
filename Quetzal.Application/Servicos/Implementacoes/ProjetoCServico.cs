@@ -11,23 +11,28 @@ namespace Quetzal.Application.Servicos.Implementacoes
         private readonly IProjetoCRepositorio _repositorio;
         private readonly IMapper _mapper;
 
-
-    public ProjetoCServico(
-        IProjetoCRepositorio repositorio,
-        IMapper mapper)
+        public ProjetoCServico(
+            IProjetoCRepositorio repositorio,
+            IMapper mapper)
         {
             _repositorio = repositorio;
             _mapper = mapper;
         }
+
+        // =========================================================
+        // OBTER TODOS
+        // =========================================================
 
         public async Task<ApiResposta<IEnumerable<ProjetoCDto>>> ObterTodosAsync(
             bool incluirInativos = false)
         {
             try
             {
-                var projetosC = await _repositorio.ObterTodosAsync(incluirInativos);
+                var projetosC =
+                    await _repositorio.ObterTodosAsync(incluirInativos);
 
-                var dtos = _mapper.Map<IEnumerable<ProjetoCDto>>(projetosC);
+                var dtos =
+                    _mapper.Map<IEnumerable<ProjetoCDto>>(projetosC);
 
                 return ApiResposta<IEnumerable<ProjetoCDto>>.Ok(dtos);
             }
@@ -38,17 +43,25 @@ namespace Quetzal.Application.Servicos.Implementacoes
             }
         }
 
+        // =========================================================
+        // OBTER POR ID
+        // =========================================================
+
         public async Task<ApiResposta<ProjetoCDto>> ObterPorIdAsync(int id)
         {
             try
             {
-                var projetoC = await _repositorio.ObterPorIdAsync(id);
+                var projetoC =
+                    await _repositorio.ObterPorIdAsync(id);
 
                 if (projetoC == null)
+                {
                     return ApiResposta<ProjetoCDto>.Falha(
                         "Projeto nao encontrado.");
+                }
 
-                var dto = _mapper.Map<ProjetoCDto>(projetoC);
+                var dto =
+                    _mapper.Map<ProjetoCDto>(projetoC);
 
                 return ApiResposta<ProjetoCDto>.Ok(dto);
             }
@@ -59,21 +72,41 @@ namespace Quetzal.Application.Servicos.Implementacoes
             }
         }
 
+        // =========================================================
+        // CADASTRAR
+        // =========================================================
+
         public async Task<ApiResposta<ProjetoCDto>> CadastrarAsync(
             CriarProjetoCDto dto)
         {
             try
             {
-                var projetoC = _mapper.Map<ProjetoC>(dto);
+                var projetoC =
+                    _mapper.Map<ProjetoC>(dto);
 
-                // Define o UsuarioId enviado pelo cliente.
-                // Esse campo representa a FK para ApplicationUser.
+                // Define o usuário/cliente proprietário do projeto.
                 if (!string.IsNullOrWhiteSpace(dto.UsuarioId))
                 {
                     projetoC.UsuarioId = dto.UsuarioId;
                 }
-                // Fotos do projeto
-                projetoC.Fotos = dto.Fotos ?? new List<string>();
+
+                // =================================================
+                // FOTOS
+                // =================================================
+                // O DTO recebe List<string>.
+                //
+                // Aqui cada string é transformada em uma entidade
+                // ProjetoCFoto para ser armazenada na tabela
+                // ProjetoCFotos.
+                // =================================================
+
+                projetoC.Fotos = (dto.Fotos ?? new List<string>())
+                    .Select((foto, indice) => new ProjetoCFoto
+                    {
+                        Foto = foto,
+                        Ordem = indice + 1
+                    })
+                    .ToList();
 
                 var projetoCAdicionado =
                     await _repositorio.AdicionarAsync(projetoC);
@@ -92,6 +125,10 @@ namespace Quetzal.Application.Servicos.Implementacoes
             }
         }
 
+        // =========================================================
+        // ATUALIZAR
+        // =========================================================
+
         public async Task<ApiResposta<ProjetoCDto>> AtualizarAsync(
             int id,
             AtualizarProjetoCDto dto)
@@ -102,21 +139,37 @@ namespace Quetzal.Application.Servicos.Implementacoes
                     await _repositorio.ObterPorIdAsync(id);
 
                 if (projetoCExistente == null)
+                {
                     return ApiResposta<ProjetoCDto>.Falha(
                         "Projeto do cliente não encontrado.");
+                }
 
                 // Atualiza os campos simples do projeto.
                 _mapper.Map(dto, projetoCExistente);
 
-                // Atualiza o usuário proprietário somente
+                // Atualiza o usuário/cliente proprietário somente
                 // quando um UsuarioId válido for enviado.
                 if (!string.IsNullOrWhiteSpace(dto.UsuarioId))
                 {
                     projetoCExistente.UsuarioId = dto.UsuarioId;
                 }
 
-                // Atualiza as fotos do projeto
-                projetoCExistente.Fotos = dto.Fotos ?? new List<string>();
+                // =================================================
+                // ATUALIZA AS FOTOS
+                // =================================================
+                // Converte novamente a List<string> recebida pelo
+                // DTO para a coleção de ProjetoCFoto do Domain.
+                // =================================================
+
+                projetoCExistente.Fotos =
+                    (dto.Fotos ?? new List<string>())
+                    .Select((foto, indice) => new ProjetoCFoto
+                    {
+                        ProjetoCId = projetoCExistente.Id,
+                        Foto = foto,
+                        Ordem = indice + 1
+                    })
+                    .ToList();
 
                 await _repositorio.AtualizarAsync(projetoCExistente);
 
@@ -134,6 +187,10 @@ namespace Quetzal.Application.Servicos.Implementacoes
             }
         }
 
+        // =========================================================
+        // DESATIVAR
+        // =========================================================
+
         public async Task<ApiResposta<bool>> DesativarAsync(int id)
         {
             try
@@ -142,8 +199,10 @@ namespace Quetzal.Application.Servicos.Implementacoes
                     await _repositorio.ObterPorIdAsync(id);
 
                 if (projetoC == null)
+                {
                     return ApiResposta<bool>.Falha(
                         "Projeto do cliente não encontrado.");
+                }
 
                 await _repositorio.DesativarAsync(id);
 
@@ -158,7 +217,12 @@ namespace Quetzal.Application.Servicos.Implementacoes
             }
         }
 
-        public async Task<ApiResposta<bool>> ExcluirPermanentementeAsync(int id)
+        // =========================================================
+        // EXCLUIR PERMANENTEMENTE
+        // =========================================================
+
+        public async Task<ApiResposta<bool>> ExcluirPermanentementeAsync(
+            int id)
         {
             try
             {
@@ -166,8 +230,10 @@ namespace Quetzal.Application.Servicos.Implementacoes
                     await _repositorio.ObterPorIdAsync(id);
 
                 if (projetoC == null)
+                {
                     return ApiResposta<bool>.Falha(
                         "Projeto do cliente não encontrado.");
+                }
 
                 await _repositorio.ExcluirPermanentementeAsync(id);
 
@@ -182,6 +248,10 @@ namespace Quetzal.Application.Servicos.Implementacoes
             }
         }
 
+        // =========================================================
+        // REATIVAR
+        // =========================================================
+
         public async Task<ApiResposta<bool>> ReativarAsync(int id)
         {
             try
@@ -190,12 +260,16 @@ namespace Quetzal.Application.Servicos.Implementacoes
                     await _repositorio.ObterPorIdAsync(id);
 
                 if (projetoC == null)
+                {
                     return ApiResposta<bool>.Falha(
                         "Projeto do cliente não encontrado.");
+                }
 
                 if (projetoC.Ativo)
+                {
                     return ApiResposta<bool>.Falha(
                         "Projeto do cliente já está ativo.");
+                }
 
                 await _repositorio.ReativarAsync(id);
 
@@ -210,5 +284,4 @@ namespace Quetzal.Application.Servicos.Implementacoes
             }
         }
     }
-
 }
