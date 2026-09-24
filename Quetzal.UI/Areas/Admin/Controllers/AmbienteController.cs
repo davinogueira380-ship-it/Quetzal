@@ -41,7 +41,10 @@ namespace Quetzal.UI.Areas.Admin.Controllers
                 Ativo = a.Ativo,
                 TotalProjetos = a.TotalProjetos,
                 DataCadastro = a.DataCastro
-            }).ToList();
+            })
+                .OrderByDescending(a => a.Ativo)
+                .ThenBy(a => a.Nome, StringComparer.OrdinalIgnoreCase)
+                .ToList();
 
             return View(viewModel);
         }

@@ -1,0 +1,74 @@
+﻿@model List<UsuarioViewModel>
+@{
+    ViewData["Title"] = "Clientes";
+}
+
+<div class="admin-topbar">
+    <h1>Clientes</h1>
+</div>
+
+<div class="admin-tabela-wrapper">
+    @if (!Model.Any())
+    {
+        <p class="text-center py-4 mb-0">Nenhum usuário cadastrado ainda.</p>
+    }
+    else
+    {
+        var meuEmail = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Email)?.Value;
+
+        <table class="admin-tabela">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Telefone</th>
+                    <th>Perfis</th>
+                    <th>Status</th>
+                    <th>Cadastrado em</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.NomeCompleto</td>
+                        <td>@item.Email</td>
+                        <td>@item.Telefone</td>
+                        <td>@item.PerfisFormatados</td>
+                        <td>
+                            <span class="@(item.Ativo ? "badge-admin-ativo" : "badge-admin-inativo")">
+                                @item.StatusTexto
+                            </span>
+                        </td>
+                        <td>@item.DataCadastro.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @if (string.Equals(item.Email, meuEmail, StringComparison.OrdinalIgnoreCase))
+                            {
+                                <span class="text-muted">Você</span>
+                            }
+                            else if (item.Ativo)
+                            {
+                                <form asp-action="Desativar" asp-route-id="@item.Id" method="post" class="d-inline">
+                                    <button type="submit" class="btn-admin-secundario"
+                                        onclick="return confirm('Desativar o acesso deste usuário?');">
+                                        <i class="fa-solid fa-user-slash"></i> Desativar
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-action="Ativar" asp-route-id="@item.Id" method="post" class="d-inline">
+                                    <button type="submit" class="btn-admin-secundario"
+                                        onclick="return confirm('Reativar o acesso deste usuário?');">
+                                        <i class="fa-solid fa-user-check"></i> Ativar
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

@@ -257,6 +257,44 @@ body.admin-body {
   flex-wrap: wrap;
 }
 
+.btn-admin-secundario,
+.btn-admin-perigo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    min-width: 100px;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.85rem;
+    font-family: inherit;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all .3s;
+}
+
+.btn-admin-secundario {
+    border: 1px solid var(--clr-quaternary);
+    background: transparent;
+    color: var(--clr-quaternary);
+}
+
+    .btn-admin-secundario:hover {
+        background-color: var(--clr-quaternary);
+        color: white;
+    }
+
+.btn-admin-perigo {
+    border: 1px solid #b23b3b;
+    background: transparent;
+    color: #b23b3b;
+}
+
+    .btn-admin-perigo:hover {
+        background-color: #b23b3b;
+        color: white;
+    }
 /* ── Formulários de Criar/Editar ── */
 
 .admin-form-wrapper {

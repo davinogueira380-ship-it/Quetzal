@@ -41,7 +41,10 @@ namespace Quetzal.UI.Areas.Admin.Controllers
                 ClienteNome = string.IsNullOrWhiteSpace(p.UsuarioNome) ? "(sem nome cadastrado)" : p.UsuarioNome,
                 Ativo = p.Ativo,
                 DataCadastro = p.DataCadastro
-            }).ToList();
+            })
+                .OrderByDescending(p => p.Ativo)
+                .ThenBy(p => p.Nome, StringComparer.OrdinalIgnoreCase)
+                .ToList();
 
             return View(viewModel);
         }

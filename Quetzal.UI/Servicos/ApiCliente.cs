@@ -88,4 +88,10 @@ public class ApiCliente
         requisicao.Content = conteudo;
         return EnviarAsync<T>(requisicao);
     }
+
+    public Task<ApiResposta<T>> PutAsync<T>(string endpoint)
+    {
+        var requisicao = CriarRequisicao(HttpMethod.Put, endpoint);
+        return EnviarAsync<T>(requisicao);
+    }
 }

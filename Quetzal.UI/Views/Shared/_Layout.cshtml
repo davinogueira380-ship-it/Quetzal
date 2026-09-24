@@ -1,3 +1,8 @@
+@{
+    var ehHome = string.Equals(ViewContext.RouteData.Values["controller"]?.ToString(), "Home", StringComparison.OrdinalIgnoreCase)
+              && string.Equals(ViewContext.RouteData.Values["action"]?.ToString(), "Index", StringComparison.OrdinalIgnoreCase);
+}
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -14,17 +19,17 @@
 
 <body>
     <!-- Cabeçalho -->
-    <div class="topo topo-pagina">
+    <div class="topo @(ehHome ? "" : "topo-pagina")">
 
         <nav class="navbar navbar-expand-lg">
             <div class="container">
 
                 <!-- LOGO -->
-                <div class="LogoNav">
-                    <a asp-controller="Home" asp-action="Index">
-                        <img src="~/img/logo.png" alt="Quetzal Logo">
-                    </a>
-                </div>
+            <div class="LogoNav">
+                <a asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/img/logo.png" alt="Quetzal Logo">
+                </a>
+            </div>
 
                 <!-- BOTÃO HAMBÚRGUER -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavegacao"
@@ -36,10 +41,9 @@
                 <div class="collapse navbar-collapse" id="menuNavegacao">
 
                     <ul class="menu-links">
-                        <li><a asp-controller="Home" asp-action="Index">Início</a></li>
-                        <li><a asp-controller="Home" asp-action="Index">#ambientes</a></li>
-                        <li><a asp-controller="Home" asp-action="Index">#contato</a></li>
-                        <li><a asp-controller="Home" asp-action="Index">#sobremim</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Index">Início</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Index" asp-fragment="ambientes">Ambientes</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Index" asp-fragment="sobremim">Sobre Mim</a></li>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             @* IsInRole lê os Claims de Role que o ContaController gravou no cookie *@

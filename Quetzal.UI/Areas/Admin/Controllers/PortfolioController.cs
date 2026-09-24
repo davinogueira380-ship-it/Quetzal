@@ -43,7 +43,10 @@ namespace Quetzal.UI.Areas.Admin.Controllers
                 AmbienteNome = p.AmbienteNome,
                 Ativo = p.Ativo,
                 DataCadastro = p.DataCadastro
-            }).ToList();
+            })
+                .OrderByDescending(p => p.Ativo)
+                .ThenBy(p => p.NomeProjeto, StringComparer.OrdinalIgnoreCase)
+                .ToList();
 
             return View(viewModel);
         }
