@@ -217,7 +217,6 @@ namespace Quetzal.Infrastructure.Migrations
                     NomeProjeto = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ImagemUpload = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Ativo = table.Column<bool>(type: "bit", nullable: false),
                     DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DataExclusao = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -231,6 +230,27 @@ namespace Quetzal.Infrastructure.Migrations
                         principalTable: "Identidade_Usuarios",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjetoCFotos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjetoCId = table.Column<int>(type: "int", nullable: false),
+                    Foto = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Ordem = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjetoCFotos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjetoCFotos_ProjetosC_ProjetoCId",
+                        column: x => x.ProjetoCId,
+                        principalTable: "ProjetosC",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -278,6 +298,11 @@ namespace Quetzal.Infrastructure.Migrations
                 column: "AmbienteId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProjetoCFotos_ProjetoCId",
+                table: "ProjetoCFotos",
+                column: "ProjetoCId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProjetosC_UsuarioId",
                 table: "ProjetosC",
                 column: "UsuarioId");
@@ -305,13 +330,16 @@ namespace Quetzal.Infrastructure.Migrations
                 name: "Portfolio");
 
             migrationBuilder.DropTable(
-                name: "ProjetosC");
+                name: "ProjetoCFotos");
 
             migrationBuilder.DropTable(
                 name: "Identidade_Perfis");
 
             migrationBuilder.DropTable(
                 name: "Ambientes");
+
+            migrationBuilder.DropTable(
+                name: "ProjetosC");
 
             migrationBuilder.DropTable(
                 name: "Identidade_Usuarios");

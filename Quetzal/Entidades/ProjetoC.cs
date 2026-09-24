@@ -9,9 +9,8 @@
         // Descrição do projeto
         public string Descricao { get; set; } = string.Empty;
         // Imagem que vai ser exibida no site
-        //public string? ImagemUpload { get; set; } seria apenas uma foto foi subst por lista abaixo
-
-        public List<string> Fotos { get; set; } = new List<string>();
+        
+        public ICollection<ProjetoCFoto> Fotos { get; set; }= new List<ProjetoCFoto>();
         public bool Ativo { get; set; } // Indica se o projeto está ativo ou não
         public DateTime? DataAtualizacao { get; set; } // Data de atualização do projeto
         public DateTime? DataExclusao { get; set; } // Data de exclusão do projeto

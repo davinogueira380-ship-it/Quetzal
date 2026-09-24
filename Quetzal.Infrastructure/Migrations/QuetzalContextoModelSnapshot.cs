@@ -349,9 +349,6 @@ namespace Quetzal.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImagemUpload")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NomeProjeto")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -366,6 +363,31 @@ namespace Quetzal.Infrastructure.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("ProjetosC", (string)null);
+                });
+
+            modelBuilder.Entity("Quetzal.Domain.Entidades.ProjetoCFoto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Foto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Ordem")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjetoCId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjetoCId");
+
+                    b.ToTable("ProjetoCFotos", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -441,6 +463,17 @@ namespace Quetzal.Infrastructure.Migrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("Quetzal.Domain.Entidades.ProjetoCFoto", b =>
+                {
+                    b.HasOne("Quetzal.Domain.Entidades.ProjetoC", "ProjetoC")
+                        .WithMany("Fotos")
+                        .HasForeignKey("ProjetoCId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProjetoC");
+                });
+
             modelBuilder.Entity("Quetzal.Domain.Entidades.Ambiente", b =>
                 {
                     b.Navigation("Portfolios");
@@ -449,6 +482,11 @@ namespace Quetzal.Infrastructure.Migrations
             modelBuilder.Entity("Quetzal.Domain.Entidades.ApplicationUser", b =>
                 {
                     b.Navigation("ProjetosC");
+                });
+
+            modelBuilder.Entity("Quetzal.Domain.Entidades.ProjetoC", b =>
+                {
+                    b.Navigation("Fotos");
                 });
 #pragma warning restore 612, 618
         }

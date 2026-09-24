@@ -2,25 +2,38 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Quetzal.Domain.Entidades;
-using System.Text.Json;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Quetzal.Infrastructure.Dados
 {
     public class QuetzalContexto : IdentityDbContext<ApplicationUser>
     {
-        public QuetzalContexto(DbContextOptions<QuetzalContexto> options) : base(options)
+        public QuetzalContexto(DbContextOptions<QuetzalContexto> options)
+            : base(options)
         {
         }
+
+        // =========================
+        // TABELAS DO SISTEMA
+        // =========================
 
         public DbSet<Portfolio> Portfolios { get; set; }
         public DbSet<Ambiente> Ambientes { get; set; }
         public DbSet<ProjetoC> ProjetoC { get; set; }
+
+        // Fotos pertencentes aos projetos
+        public DbSet<ProjetoCFoto> ProjetoCFotos { get; set; }
+
         public DbSet<ApplicationUser> Usuarios { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+
+            // =====================================================
+            // PORTFOLIO
+            // =====================================================
 
             builder.Entity<Portfolio>(entidade =>
             {
@@ -43,6 +56,11 @@ namespace Quetzal.Infrastructure.Dados
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
+
+            // =====================================================
+            // AMBIENTE
+            // =====================================================
+
             builder.Entity<Ambiente>(entidade =>
             {
                 entidade.ToTable("Ambientes");
@@ -51,8 +69,15 @@ namespace Quetzal.Infrastructure.Dados
                     .IsRequired()
                     .HasMaxLength(100);
 
-                // Não mapear PortfolioId aqui (não existe como FK em Ambiente no seu modelo atual)
+                // Não mapear PortfolioId aqui.
+                // Atualmente Ambiente não possui essa FK.
             });
+
+
+            // =====================================================
+            // PROJETO DO CLIENTE
+            // =====================================================
+
             builder.Entity<ProjetoC>(entidade =>
             {
                 entidade.ToTable("ProjetosC");
@@ -64,54 +89,64 @@ namespace Quetzal.Infrastructure.Dados
                 entidade.Property(p => p.Descricao)
                     .IsRequired();
 
-                // Salva a lista de fotos como JSON no SQL Server
-                entidade.Property(p => p.Fotos)
-                    .HasConversion(
-                        fotos => JsonSerializer.Serialize(
-                            fotos,
-                            (JsonSerializerOptions?)null),
+                // Relacionamento:
+                //
+                // ProjetoC 1 -------- N ProjetoCFoto
+                //
+                // Um projeto pode possuir várias fotos.
+                entidade.HasMany(p => p.Fotos)
+                    .WithOne(f => f.ProjetoC)
+                    .HasForeignKey(f => f.ProjetoCId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
-                        json => JsonSerializer.Deserialize<List<string>>(
-                            json,
-                            (JsonSerializerOptions?)null)
-                            ?? new List<string>())
-                    .HasColumnType("nvarchar(max)");
-
-                // Necessário para o Entity Framework detectar
-                // alterações feitas dentro da lista
-                entidade.Property(p => p.Fotos)
-                    .Metadata.SetValueComparer(
-                        new ValueComparer<List<string>>(
-                            (lista1, lista2) =>
-                                lista1 != null &&
-                                lista2 != null &&
-                                lista1.SequenceEqual(lista2),
-
-                            lista =>
-                                lista.Aggregate(
-                                    0,
-                                    (hash, item) =>
-                                        HashCode.Combine(hash, item.GetHashCode())),
-
-                            lista =>
-                                lista.ToList()
-                        ));
-
+                // Relacionamento do projeto com o cliente/usuário
                 entidade.HasOne(p => p.Usuario)
                     .WithMany(u => u.ProjetosC)
                     .HasForeignKey(p => p.UsuarioId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
-            // Configura many-to-many entre Ambiente e ProjetoC
-            //builder.Entity<Ambiente>()
-            //    .HasMany(a => a.ProjetosC)
-            //    .WithMany(p => p.Ambientes)
-            //    .UsingEntity(join => join.ToTable("AmbienteProjetoC"));
+
+            // =====================================================
+            // FOTOS DO PROJETO
+            // =====================================================
+
+            builder.Entity<ProjetoCFoto>(entidade =>
+            {
+                entidade.ToTable("ProjetoCFotos");
+
+                entidade.HasKey(f => f.Id);
+
+                // Conteúdo/informação da foto
+                entidade.Property(f => f.Foto)
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
+
+                // Ordem em que a foto será apresentada
+                entidade.Property(f => f.Ordem)
+                    .IsRequired();
+            });
+
+
+            // =====================================================
+            // RELACIONAMENTO AMBIENTE / PROJETOC
+            // =====================================================
+            // Mantido comentado porque esse relacionamento
+            // também estava comentado no seu código original.
+
+            // builder.Entity<Ambiente>()
+            //     .HasMany(a => a.ProjetosC)
+            //     .WithMany(p => p.Ambientes)
+            //     .UsingEntity(join =>
+            //         join.ToTable("AmbienteProjetoC"));
+
+
+            // =====================================================
+            // USUÁRIOS
+            // =====================================================
 
             builder.Entity<ApplicationUser>(entidade =>
             {
-               
                 entidade.Property(u => u.NomeCompleto)
                     .IsRequired()
                     .HasMaxLength(200);
@@ -128,17 +163,34 @@ namespace Quetzal.Infrastructure.Dados
                     .HasMaxLength(11);
 
                 entidade.Property(u => u.SenhaHash)
-                        .HasMaxLength(100);
+                    .HasMaxLength(100);
             });
 
-            // Renomear tabelas do Identity
-            builder.Entity<ApplicationUser>().ToTable("Identidade_Usuarios");
-            builder.Entity<IdentityRole>().ToTable("Identidade_Perfis");
-            builder.Entity<IdentityUserRole<string>>().ToTable("Identidade_UsuarioPerfis");
-            builder.Entity<IdentityUserClaim<string>>().ToTable("Identidade_UsuarioClaims");
-            builder.Entity<IdentityUserLogin<string>>().ToTable("Identidade_UsuarioLogins");
-            builder.Entity<IdentityRoleClaim<string>>().ToTable("Identidade_PerfilClaims");
-            builder.Entity<IdentityUserToken<string>>().ToTable("Identidade_UsuarioTokens");
+
+            // =====================================================
+            // NOMES DAS TABELAS DO IDENTITY
+            // =====================================================
+
+            builder.Entity<ApplicationUser>()
+                .ToTable("Identidade_Usuarios");
+
+            builder.Entity<IdentityRole>()
+                .ToTable("Identidade_Perfis");
+
+            builder.Entity<IdentityUserRole<string>>()
+                .ToTable("Identidade_UsuarioPerfis");
+
+            builder.Entity<IdentityUserClaim<string>>()
+                .ToTable("Identidade_UsuarioClaims");
+
+            builder.Entity<IdentityUserLogin<string>>()
+                .ToTable("Identidade_UsuarioLogins");
+
+            builder.Entity<IdentityRoleClaim<string>>()
+                .ToTable("Identidade_PerfilClaims");
+
+            builder.Entity<IdentityUserToken<string>>()
+                .ToTable("Identidade_UsuarioTokens");
         }
     }
 }
