@@ -4,6 +4,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Quetzal.Application.DTOs
 {
+    public class ProjetoCFotoDto
+    {
+        public int Id { get; set; }
+
+        public string Foto { get; set; } = string.Empty;
+
+        public int Ordem { get; set; }
+    }
+
     public class ProjetoCDto
     {
         public int Id { get; set; }
@@ -20,6 +29,9 @@ namespace Quetzal.Application.DTOs
 
         public List<string> Fotos { get; set; } =
             new List<string>();
+
+        public List<ProjetoCFotoDto> FotosDetalhadas { get; set; } =
+            new List<ProjetoCFotoDto>();
 
         public bool Ativo { get; set; }
 

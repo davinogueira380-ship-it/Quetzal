@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quetzal.Infrastructure.Dados;
 
@@ -11,9 +12,11 @@ using Quetzal.Infrastructure.Dados;
 namespace Quetzal.Infrastructure.Migrations
 {
     [DbContext(typeof(QuetzalContexto))]
-    partial class QuetzalContextoModelSnapshot : ModelSnapshot
+    [Migration("20260924045751_PortfolioMultiplasFotos")]
+    partial class PortfolioMultiplasFotos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quetzal.Infrastructure.Dados;
 
@@ -11,9 +12,11 @@ using Quetzal.Infrastructure.Dados;
 namespace Quetzal.Infrastructure.Migrations
 {
     [DbContext(typeof(QuetzalContexto))]
-    partial class QuetzalContextoModelSnapshot : ModelSnapshot
+    [Migration("20260924033911_RelacionaPortfolioProjetoC")]
+    partial class RelacionaPortfolioProjetoC
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -333,30 +336,6 @@ namespace Quetzal.Infrastructure.Migrations
                     b.ToTable("Portfolio", (string)null);
                 });
 
-            modelBuilder.Entity("Quetzal.Domain.Entidades.PortfolioFoto", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("PortfolioId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProjetoCFotoId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjetoCFotoId");
-
-                    b.HasIndex("PortfolioId", "ProjetoCFotoId")
-                        .IsUnique();
-
-                    b.ToTable("PortfolioFotos", (string)null);
-                });
-
             modelBuilder.Entity("Quetzal.Domain.Entidades.ProjetoC", b =>
                 {
                     b.Property<int>("Id")
@@ -488,25 +467,6 @@ namespace Quetzal.Infrastructure.Migrations
                     b.Navigation("ProjetoC");
                 });
 
-            modelBuilder.Entity("Quetzal.Domain.Entidades.PortfolioFoto", b =>
-                {
-                    b.HasOne("Quetzal.Domain.Entidades.Portfolio", "Portfolio")
-                        .WithMany("Fotos")
-                        .HasForeignKey("PortfolioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Quetzal.Domain.Entidades.ProjetoCFoto", "ProjetoCFoto")
-                        .WithMany()
-                        .HasForeignKey("ProjetoCFotoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Portfolio");
-
-                    b.Navigation("ProjetoCFoto");
-                });
-
             modelBuilder.Entity("Quetzal.Domain.Entidades.ProjetoC", b =>
                 {
                     b.HasOne("Quetzal.Domain.Entidades.ApplicationUser", "Usuario")
@@ -537,11 +497,6 @@ namespace Quetzal.Infrastructure.Migrations
             modelBuilder.Entity("Quetzal.Domain.Entidades.ApplicationUser", b =>
                 {
                     b.Navigation("ProjetosC");
-                });
-
-            modelBuilder.Entity("Quetzal.Domain.Entidades.Portfolio", b =>
-                {
-                    b.Navigation("Fotos");
                 });
 
             modelBuilder.Entity("Quetzal.Domain.Entidades.ProjetoC", b =>

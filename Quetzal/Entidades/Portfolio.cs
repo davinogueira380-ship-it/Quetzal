@@ -1,44 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Quetzal.Domain.Entidades;
-
-// O cliente vai ter acesso a vários projetos, e cada projeto vai ter um cliente associado a ele.
-// A relação entre Cliente e Projeto é de um para muitos, ou seja, um cliente pode ter vários projetos, mas cada projeto pertence a apenas um cliente.
-
-// Quetzal\Domain\Entidades\Portfolio.cs
-public class Portfolio
+namespace Quetzal.Domain.Entidades
 {
-    public int Id { get; set; }
-    public string? NomeProjeto { get; set; }
-    public int AmbienteId { get; set; }
-    public Ambiente Ambiente { get; set; } = null!;
-    public string Descricao { get; set; } = string.Empty;
-    public string? ImagemUpload { get; set; }
-    public bool Ativo { get; set; }
-    public DateTime DataCriacao { get; set; }
-    public DateTime? DataAtualizacao { get; set; }
-    public DateTime? DataExclusao { get; set; }
+    public class Portfolio
+    {
+        public int Id { get; set; }
+
+        public string? NomeProjeto { get; set; }
+
+        public int AmbienteId { get; set; }
+
+        public Ambiente Ambiente { get; set; } = null!;
+
+        public string Descricao { get; set; } = string.Empty;
+
+        // Mantido temporariamente para não quebrar outras partes do projeto.
+        // Depois poderemos remover quando toda a nova estrutura estiver funcionando.
+        public string? ImagemUpload { get; set; }
+
+        // Projeto de origem
+        public int? ProjetoCId { get; set; }
+
+        public ProjetoC? ProjetoC { get; set; }
+
+        // Fotos do ProjetoC escolhidas para aparecer no portfólio
+        public ICollection<PortfolioFoto> Fotos { get; set; }
+            = new List<PortfolioFoto>();
+
+        public bool Ativo { get; set; }
+
+        public DateTime DataCriacao { get; set; }
+
+        public DateTime? DataAtualizacao { get; set; }
+
+        public DateTime? DataExclusao { get; set; }
+    }
 }
-
-/// <summary>
-/// Comentado para incluir o código sugerido pelo copilot.
-/// <summary/>
-
-//public class Portfolio
-//{
-//    public int Id { get; set; }
-//    public string? NomeProjeto { get; set; } //FK da tabela Usuario
-//    public Ambiente Ambiente { get; set; } = null!; // FK da tabela Ambiente
-//    public int AmbienteId { get; set; } // FK da tabela Ambiente
-//    public string Descricao { get; set; } = string.Empty; // Descrição do projeto
-//    public string? ImagemUpload { get; set; } // Imagem que vai ser exibida no site
-
-//    public bool Ativo { get; set; }
-
-//    public DateTime DataCriacao { get; set; } // Data de criação do projeto
-//    public DateTime? DataAtualizacao { get; set; } // Data de atualização do projeto
-//    public DateTime?  DataExclusao { get; set; }
-
-//}

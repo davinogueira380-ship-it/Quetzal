@@ -12,28 +12,23 @@ namespace Quetzal.Infrastructure.Dados
         {
         }
 
-        // =========================
-        // TABELAS DO SISTEMA
-        // =========================
-
         public DbSet<Portfolio> Portfolios { get; set; }
         public DbSet<Ambiente> Ambientes { get; set; }
         public DbSet<ProjetoC> ProjetoC { get; set; }
-
-        // Fotos pertencentes aos projetos
         public DbSet<ProjetoCFoto> ProjetoCFotos { get; set; }
 
-        public DbSet<ApplicationUser> Usuarios { get; set; }
+        // Relacionamento entre Portfolio e as fotos escolhidas do ProjetoC
+        public DbSet<PortfolioFoto> PortfolioFotos { get; set; }
 
+        public DbSet<ApplicationUser> Usuarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-
-            // =====================================================
+            // ============================================================
             // PORTFOLIO
-            // =====================================================
+            // ============================================================
 
             builder.Entity<Portfolio>(entidade =>
             {
@@ -49,17 +44,55 @@ namespace Quetzal.Infrastructure.Dados
                 entidade.Property(p => p.ImagemUpload)
                     .HasMaxLength(500);
 
-                // Relacionamento 1:N: Portfolio -> Ambiente
                 entidade.HasOne(p => p.Ambiente)
                     .WithMany(a => a.Portfolios)
                     .HasForeignKey(p => p.AmbienteId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                entidade.HasOne(p => p.ProjetoC)
+                    .WithMany()
+                    .HasForeignKey(p => p.ProjetoCId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entidade.HasMany(p => p.Fotos)
+                    .WithOne(f => f.Portfolio)
+                    .HasForeignKey(f => f.PortfolioId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
+            // ============================================================
+            // PORTFOLIO FOTO
+            // ============================================================
 
-            // =====================================================
+            builder.Entity<PortfolioFoto>(entidade =>
+            {
+                entidade.ToTable("PortfolioFotos");
+
+                entidade.HasKey(pf => pf.Id);
+
+                entidade.HasOne(pf => pf.Portfolio)
+                    .WithMany(p => p.Fotos)
+                    .HasForeignKey(pf => pf.PortfolioId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entidade.HasOne(pf => pf.ProjetoCFoto)
+                    .WithMany()
+                    .HasForeignKey(pf => pf.ProjetoCFotoId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                // Impede que a mesma foto seja adicionada duas vezes
+                // ao mesmo Portfolio.
+                entidade.HasIndex(pf => new
+                {
+                    pf.PortfolioId,
+                    pf.ProjetoCFotoId
+                })
+                .IsUnique();
+            });
+
+            // ============================================================
             // AMBIENTE
-            // =====================================================
+            // ============================================================
 
             builder.Entity<Ambiente>(entidade =>
             {
@@ -68,15 +101,11 @@ namespace Quetzal.Infrastructure.Dados
                 entidade.Property(a => a.Nome)
                     .IsRequired()
                     .HasMaxLength(100);
-
-                // Não mapear PortfolioId aqui.
-                // Atualmente Ambiente não possui essa FK.
             });
 
-
-            // =====================================================
-            // PROJETO DO CLIENTE
-            // =====================================================
+            // ============================================================
+            // PROJETO C
+            // ============================================================
 
             builder.Entity<ProjetoC>(entidade =>
             {
@@ -89,27 +118,20 @@ namespace Quetzal.Infrastructure.Dados
                 entidade.Property(p => p.Descricao)
                     .IsRequired();
 
-                // Relacionamento:
-                //
-                // ProjetoC 1 -------- N ProjetoCFoto
-                //
-                // Um projeto pode possuir várias fotos.
                 entidade.HasMany(p => p.Fotos)
                     .WithOne(f => f.ProjetoC)
                     .HasForeignKey(f => f.ProjetoCId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                // Relacionamento do projeto com o cliente/usuário
                 entidade.HasOne(p => p.Usuario)
                     .WithMany(u => u.ProjetosC)
                     .HasForeignKey(p => p.UsuarioId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
-
-            // =====================================================
-            // FOTOS DO PROJETO
-            // =====================================================
+            // ============================================================
+            // PROJETO C FOTO
+            // ============================================================
 
             builder.Entity<ProjetoCFoto>(entidade =>
             {
@@ -117,33 +139,17 @@ namespace Quetzal.Infrastructure.Dados
 
                 entidade.HasKey(f => f.Id);
 
-                // Conteúdo/informação da foto
                 entidade.Property(f => f.Foto)
                     .IsRequired()
                     .HasColumnType("nvarchar(max)");
 
-                // Ordem em que a foto será apresentada
                 entidade.Property(f => f.Ordem)
                     .IsRequired();
             });
 
-
-            // =====================================================
-            // RELACIONAMENTO AMBIENTE / PROJETOC
-            // =====================================================
-            // Mantido comentado porque esse relacionamento
-            // também estava comentado no seu código original.
-
-            // builder.Entity<Ambiente>()
-            //     .HasMany(a => a.ProjetosC)
-            //     .WithMany(p => p.Ambientes)
-            //     .UsingEntity(join =>
-            //         join.ToTable("AmbienteProjetoC"));
-
-
-            // =====================================================
-            // USUÁRIOS
-            // =====================================================
+            // ============================================================
+            // USUARIO
+            // ============================================================
 
             builder.Entity<ApplicationUser>(entidade =>
             {
@@ -166,10 +172,9 @@ namespace Quetzal.Infrastructure.Dados
                     .HasMaxLength(100);
             });
 
-
-            // =====================================================
-            // NOMES DAS TABELAS DO IDENTITY
-            // =====================================================
+            // ============================================================
+            // TABELAS DO IDENTITY
+            // ============================================================
 
             builder.Entity<ApplicationUser>()
                 .ToTable("Identidade_Usuarios");
