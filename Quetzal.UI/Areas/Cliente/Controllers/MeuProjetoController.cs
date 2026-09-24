@@ -13,7 +13,7 @@ namespace Quetzal.UI.Areas.Cliente.Controllers
     // O Cliente só enxerga esta única tela -- nenhum CRUD, só leitura do
     // estado atual do projeto que a Admin vinculou a ele.
     [Area("Cliente")]
-    //[Authorize(Roles = "Cliente")]
+    [Authorize(Roles = "Cliente")]
     public class MeuProjetoController : Controller
     {
         private readonly ApiCliente _api;

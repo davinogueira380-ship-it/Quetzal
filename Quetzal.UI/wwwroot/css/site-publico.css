@@ -994,3 +994,16 @@ html {
         font-weight: 600;
         margin-bottom: 1.5rem;
     }
+
+/* Fotos múltiplas dos projetos publicados */
+#portfolio .portfolio-fotos {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#portfolio .portfolio-fotos img {
+    width: 100%;
+    display: block;
+    border-radius: 2%;
+}

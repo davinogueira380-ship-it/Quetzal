@@ -49,11 +49,11 @@
                             @* IsInRole lê os Claims de Role que o ContaController gravou no cookie *@
                             @if (User.IsInRole("Admin") || User.IsInRole("Operador"))
                             {
-                                <li><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Painel Admin</a></li>
+                                <li><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
                             }
-                            else if (User.IsInRole("Cliente"))
+                            else if (User.IsInRole("Cliente") || User.IsInRole("Usuario"))
                             {
-                                <li><a asp-area="Cliente" asp-controller="MeuProjeto" asp-action="Index">Meu Projeto</a></li>
+                                <li><a asp-area="Cliente" asp-controller="MeuProjeto" asp-action="Index">Minha área</a></li>
                             }
 
                             <li>

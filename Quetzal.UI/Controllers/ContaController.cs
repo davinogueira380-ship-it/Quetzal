@@ -108,7 +108,7 @@ namespace Quetzal.UI.Controllers
                 return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
             }
 
-            if (perfis.Contains("Cliente"))
+            if (perfis.Contains("Cliente") || perfis.Contains("Usuario"))
             {
                 return RedirectToAction("Index", "MeuProjeto", new { area = "Cliente" });
             }
@@ -176,7 +176,7 @@ namespace Quetzal.UI.Controllers
             if (loginResposta.Sucesso && loginResposta.Dados != null)
             {
                 await AutenticarUsuarioAsync(loginResposta.Dados, lembrarMe: false);
-                return RedirectToAction("Index", "Home");
+                return RedirecionarPorPerfil(loginResposta.Dados.Perfis);
             }
 
             // Se o auto-login falhar por algum motivo, manda para a tela de login manualmente

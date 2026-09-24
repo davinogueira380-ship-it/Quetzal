@@ -5,6 +5,10 @@
 
 <div class="admin-topbar">
     <h1>Projetos de Clientes</h1>
+
+    <a asp-action="Criar" class="btn-admin-primario">
+        <i class="fa-solid fa-plus"></i> Novo projeto
+    </a>
 </div>
 
 <div class="admin-tabela-wrapper">
@@ -53,7 +57,7 @@
                                 {
                                     <form asp-action="Desativar" asp-route-id="@item.Id" method="post" class="d-inline">
                                         <button type="submit" class="btn-admin-secundario"
-                                            onclick="return confirm('Desativar este projeto?');">
+                                                onclick="return confirm('Desativar este projeto?');">
                                             <i class="fa-solid fa-eye-slash"></i> Desativar
                                         </button>
                                     </form>
@@ -62,7 +66,7 @@
                                 {
                                     <form asp-action="Reativar" asp-route-id="@item.Id" method="post" class="d-inline">
                                         <button type="submit" class="btn-admin-secundario"
-                                            onclick="return confirm('Reativar este projeto?');">
+                                                onclick="return confirm('Reativar este projeto?');">
                                             <i class="fa-solid fa-eye"></i> Reativar
                                         </button>
                                     </form>
@@ -70,8 +74,8 @@
 
                                 <form asp-action="ExcluirPermanente" asp-route-id="@item.Id" method="post" class="d-inline">
                                     <button type="submit" class="btn-admin-perigo"
-                                        onclick="return confirm('Excluir PERMANENTEMENTE este projeto? Essa ação não pode ser desfeita.');">
-                                        <i class="fa-solid fa-trash"></i>
+                                            onclick="return confirm('Excluir PERMANENTEMENTE este projeto? Essa ação não pode ser desfeita.');">
+                                        <i class="fa-solid fa-trash"></i> Excluir
                                     </button>
                                 </form>
                             </div>

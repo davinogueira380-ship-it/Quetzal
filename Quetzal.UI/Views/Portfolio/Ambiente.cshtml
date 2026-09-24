@@ -31,7 +31,16 @@
                         {
                             <div class="row gy-4 Projeto1">
                                 <div class="col-12 col-lg-6">
-                                    @if (!string.IsNullOrWhiteSpace(item.ImagemUpload))
+                                    @if (item.FotosSelecionadas.Any())
+                                    {
+                                        <div class="portfolio-fotos">
+                                            @foreach (var foto in item.FotosSelecionadas.OrderBy(f => f.Ordem))
+                                            {
+                                                <img src="@foto.Foto" alt="@item.NomeProjeto" loading="lazy">
+                                            }
+                                        </div>
+                                    }
+                                    else if (!string.IsNullOrWhiteSpace(item.ImagemUpload))
                                     {
                                         <img src="@item.ImagemUpload" alt="@item.NomeProjeto">
                                     }
@@ -61,8 +70,18 @@
                                         <p>@item.Descricao</p>
                                     </div>
                                 </div>
+
                                 <div class="col-12 col-lg-6 order-1 order-lg-2">
-                                    @if (!string.IsNullOrWhiteSpace(item.ImagemUpload))
+                                    @if (item.FotosSelecionadas.Any())
+                                    {
+                                        <div class="portfolio-fotos">
+                                            @foreach (var foto in item.FotosSelecionadas.OrderBy(f => f.Ordem))
+                                            {
+                                                <img src="@foto.Foto" alt="@item.NomeProjeto" loading="lazy">
+                                            }
+                                        </div>
+                                    }
+                                    else if (!string.IsNullOrWhiteSpace(item.ImagemUpload))
                                     {
                                         <img src="@item.ImagemUpload" alt="@item.NomeProjeto">
                                     }

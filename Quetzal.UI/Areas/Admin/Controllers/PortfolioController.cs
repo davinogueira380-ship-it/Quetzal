@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Quetzal.UI.Infraestrutura;
 using Quetzal.UI.Servicos;
 using Quetzal.UI.ViewModels;
 
 namespace Quetzal.UI.Areas.Admin.Controllers
 {
-
     // CRUD completo de itens do Portfólio (vitrine pública do site).
     // Index -> Criar (GET/POST) -> Editar (GET/POST) -> Desativar/Reativar/ExcluirPermanente
     [Area("Admin")]
@@ -15,12 +13,10 @@ namespace Quetzal.UI.Areas.Admin.Controllers
     public class PortfolioController : Controller
     {
         private readonly ApiCliente _api;
-        private readonly ServicoUpload _upload;   // ← trocou de _ambiente para _upload
 
-        public PortfolioController(ApiCliente api, ServicoUpload upload)
+        public PortfolioController(ApiCliente api)
         {
             _api = api;
-            _upload = upload;
         }
 
         // GET: /Admin/Portfolio
@@ -41,6 +37,16 @@ namespace Quetzal.UI.Areas.Admin.Controllers
                 Descricao = p.Descricao,
                 ImagemUpload = p.ImagemUpload,
                 AmbienteNome = p.AmbienteNome,
+                ProjetoCId = p.ProjetoCId,
+                FotosSelecionadas = p.FotosSelecionadas
+                    .OrderBy(f => f.Ordem)
+                    .Select(f => new PortfolioFotoViewModel
+                    {
+                        ProjetoCFotoId = f.ProjetoCFotoId,
+                        Foto = f.Foto,
+                        Ordem = f.Ordem
+                    })
+                    .ToList(),
                 Ativo = p.Ativo,
                 DataCadastro = p.DataCadastro
             })
@@ -55,7 +61,10 @@ namespace Quetzal.UI.Areas.Admin.Controllers
         public async Task<IActionResult> Criar()
         {
             var viewModel = new PortfolioEdicaoViewModel();
+
             await PreencherDropdownAmbientes(viewModel);
+            await PreencherProjetosComFotos(viewModel);
+
             return View(viewModel);
         }
 
@@ -67,15 +76,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 await PreencherDropdownAmbientes(viewModel);
-                return View(viewModel);
-            }
-
-            var resultado = await _upload.SalvarImagemAsync(viewModel.ImagemArquivo, "portfolio");
-
-            if (!resultado.Sucesso)
-            {
-                ModelState.AddModelError(nameof(viewModel.ImagemArquivo), resultado.Erro!);
-                await PreencherDropdownAmbientes(viewModel);
+                await PreencherProjetosComFotos(viewModel);
                 return View(viewModel);
             }
 
@@ -83,16 +84,20 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             {
                 NomeProjeto = viewModel.NomeProjeto,
                 Descricao = viewModel.Descricao,
-                ImagemUpload = resultado.CaminhoRelativo ?? string.Empty,
-                AmbienteId = viewModel.AmbienteId
+                AmbienteId = viewModel.AmbienteId,
+                ProjetoCId = viewModel.ProjetoCId,
+                ProjetoCFotosIds = viewModel.ProjetoCFotosIds
             };
 
-            var resposta = await _api.PostAsync<PortfolioApiModelo, CriarPortfolioApiModelo>("api/Portfolio", dto);
+            var resposta = await _api.PostAsync<PortfolioApiModelo, CriarPortfolioApiModelo>(
+                "api/Portfolio",
+                dto);
 
             if (!resposta.Sucesso)
             {
                 AdicionarErrosDaApi(resposta.Erros, resposta.Mensagem);
                 await PreencherDropdownAmbientes(viewModel);
+                await PreencherProjetosComFotos(viewModel);
                 return View(viewModel);
             }
 
@@ -117,11 +122,13 @@ namespace Quetzal.UI.Areas.Admin.Controllers
                 Id = dados.Id,
                 NomeProjeto = dados.NomeProjeto,
                 Descricao = dados.Descricao,
-                ImagemAtualUrl = dados.ImagemUpload,
-                AmbienteId = dados.AmbienteId
+                AmbienteId = dados.AmbienteId,
+                ProjetoCId = dados.ProjetoCId,
+                ProjetoCFotosIds = dados.ProjetoCFotosIds.ToList()
             };
 
             await PreencherDropdownAmbientes(viewModel);
+            await PreencherProjetosComFotos(viewModel);
             return View(viewModel);
         }
 
@@ -133,23 +140,8 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 await PreencherDropdownAmbientes(viewModel);
+                await PreencherProjetosComFotos(viewModel);
                 return View(viewModel);
-            }
-
-            var caminhoImagem = viewModel.ImagemAtualUrl ?? string.Empty;
-
-            if (viewModel.ImagemArquivo != null)
-            {
-                var resultado = await _upload.SalvarImagemAsync(viewModel.ImagemArquivo, "portfolio");
-
-                if (!resultado.Sucesso)
-                {
-                    ModelState.AddModelError(nameof(viewModel.ImagemArquivo), resultado.Erro!);
-                    await PreencherDropdownAmbientes(viewModel);
-                    return View(viewModel);
-                }
-
-                caminhoImagem = resultado.CaminhoRelativo ?? caminhoImagem;
             }
 
             var dto = new AtualizarPortfolioApiModelo
@@ -157,17 +149,20 @@ namespace Quetzal.UI.Areas.Admin.Controllers
                 Id = id,
                 NomeProjeto = viewModel.NomeProjeto,
                 Descricao = viewModel.Descricao,
-                ImagemUpload = caminhoImagem,
-                AmbienteId = viewModel.AmbienteId
+                AmbienteId = viewModel.AmbienteId,
+                ProjetoCId = viewModel.ProjetoCId,
+                ProjetoCFotosIds = viewModel.ProjetoCFotosIds
             };
 
             var resposta = await _api.PutAsync<PortfolioApiModelo, AtualizarPortfolioApiModelo>(
-                $"api/Portfolio/{id}/atualizar", dto);
+                $"api/Portfolio/{id}/atualizar",
+                dto);
 
             if (!resposta.Sucesso)
             {
                 AdicionarErrosDaApi(resposta.Erros, resposta.Mensagem);
                 await PreencherDropdownAmbientes(viewModel);
+                await PreencherProjetosComFotos(viewModel);
                 return View(viewModel);
             }
 
@@ -176,7 +171,6 @@ namespace Quetzal.UI.Areas.Admin.Controllers
         }
 
         // POST: /Admin/Portfolio/Desativar/5
-        // Soft delete -- o registro continua no banco, só sai da vitrine pública
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Desativar(int id)
@@ -194,7 +188,9 @@ namespace Quetzal.UI.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Reativar(int id)
         {
-            var resposta = await _api.PutAsync<object, object>($"api/Portfolio/{id}/reativar", new { });
+            var resposta = await _api.PutAsync<object, object>(
+                $"api/Portfolio/{id}/reativar",
+                new { });
 
             TempData[resposta.Sucesso ? "MensagemSucesso" : "MensagemErro"] =
                 resposta.Sucesso ? "Projeto reativado." : resposta.Mensagem;
@@ -203,20 +199,21 @@ namespace Quetzal.UI.Areas.Admin.Controllers
         }
 
         // POST: /Admin/Portfolio/ExcluirPermanente/5
-        // Hard delete -- remove de vez do banco.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ExcluirPermanente(int id)
         {
-            var resposta = await _api.DeleteAsync<object>($"api/Portfolio/{id}/permanente");
+            var resposta = await _api.DeleteAsync<object>(
+                $"api/Portfolio/{id}/permanente");
 
             TempData[resposta.Sucesso ? "MensagemSucesso" : "MensagemErro"] =
-                resposta.Sucesso ? "Projeto excluído permanentemente." : resposta.Mensagem;
+                resposta.Sucesso
+                    ? "Projeto excluído permanentemente."
+                    : resposta.Mensagem;
 
             return RedirectToAction(nameof(Index));
         }
 
-        // Busca os ambientes ativos na API e monta a lista de opções do dropdown
         private async Task PreencherDropdownAmbientes(PortfolioEdicaoViewModel viewModel)
         {
             var resposta = await _api.GetAsync<List<AmbienteApiModelo>>("api/Ambiente");
@@ -234,12 +231,37 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             }
         }
 
-      
+        private async Task PreencherProjetosComFotos(
+            PortfolioEdicaoViewModel viewModel)
+        {
+            var resposta = await _api.GetAsync<List<ProjetoCApiModelo>>(
+                "api/ProjetoC");
 
-        // Traduz os erros vindos da API para o ModelState, para aparecerem
-        // junto com os campos do formulário via asp-validation-summary
-        // era: string[]? erros  →  .Length
-        // vira: List<string>? erros  →  .Count
+            if (!resposta.Sucesso || resposta.Dados == null)
+            {
+                return;
+            }
+
+            viewModel.ProjetosDisponiveis = resposta.Dados
+                .Where(p => p.FotosDetalhadas.Any())
+                .OrderBy(p => p.Nome, StringComparer.OrdinalIgnoreCase)
+                .Select(p => new ProjetoCPortfolioViewModel
+                {
+                    Id = p.Id,
+                    Nome = p.Nome,
+                    Fotos = p.FotosDetalhadas
+                        .OrderBy(f => f.Ordem)
+                        .Select(f => new ProjetoCFotoPortfolioViewModel
+                        {
+                            Id = f.Id,
+                            Foto = f.Foto,
+                            Ordem = f.Ordem
+                        })
+                        .ToList()
+                })
+                .ToList();
+        }
+
         private void AdicionarErrosDaApi(List<string>? erros, string mensagemGeral)
         {
             if (erros != null && erros.Count > 0)
@@ -264,33 +286,58 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             public string ImagemUpload { get; set; } = string.Empty;
             public int AmbienteId { get; set; }
             public string AmbienteNome { get; set; } = string.Empty;
+            public int? ProjetoCId { get; set; }
+            public string ProjetoCNome { get; set; } = string.Empty;
+            public List<int> ProjetoCFotosIds { get; set; } = new();
+            public List<PortfolioFotoApiModelo> FotosSelecionadas { get; set; } = new();
             public bool Ativo { get; set; }
             public DateTime DataCadastro { get; set; }
+            public DateTime? DataAtualizacao { get; set; }
+            public DateTime? DataExclusao { get; set; }
         }
 
-        // -> corresponde a CriarPortfolioDto na API
+        public class PortfolioFotoApiModelo
+        {
+            public int ProjetoCFotoId { get; set; }
+            public string Foto { get; set; } = string.Empty;
+            public int Ordem { get; set; }
+        }
+
         public class CriarPortfolioApiModelo
         {
             public string NomeProjeto { get; set; } = string.Empty;
             public string Descricao { get; set; } = string.Empty;
             public string ImagemUpload { get; set; } = string.Empty;
             public int AmbienteId { get; set; }
+            public int? ProjetoCId { get; set; }
+            public List<int> ProjetoCFotosIds { get; set; } = new();
         }
 
-        // -> corresponde a AtualizarPortfolioDto na API
         public class AtualizarPortfolioApiModelo : CriarPortfolioApiModelo
         {
             public int Id { get; set; }
         }
 
-        // -> corresponde a AmbienteDto na API (usado só para o dropdown)
         public class AmbienteApiModelo
         {
             public int Id { get; set; }
             public string Nome { get; set; } = string.Empty;
         }
+
+        public class ProjetoCApiModelo
+        {
+            public int Id { get; set; }
+            public string Nome { get; set; } = string.Empty;
+            public string? UsuarioId { get; set; }
+            public string? UsuarioNome { get; set; }
+            public List<ProjetoCFotoApiModelo> FotosDetalhadas { get; set; } = new();
+        }
+
+        public class ProjetoCFotoApiModelo
+        {
+            public int Id { get; set; }
+            public string Foto { get; set; } = string.Empty;
+            public int Ordem { get; set; }
+        }
     }
 }
-
-
-

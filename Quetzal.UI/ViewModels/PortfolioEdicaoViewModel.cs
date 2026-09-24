@@ -1,13 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Quetzal.UI.ViewModels
 {
     // Telas: /Admin/Portfolio/Criar e /Admin/Portfolio/Editar/{id}
-    // Mapeia para: CriarPortfolioDto / AtualizarPortfolioDto (via PortfolioController)
     public class PortfolioEdicaoViewModel
     {
-        // Nulo na criação, preenchido na edição
         public int? Id { get; set; }
 
         [Required(ErrorMessage = "O nome do projeto é obrigatório")]
@@ -20,25 +19,51 @@ namespace Quetzal.UI.ViewModels
         [Display(Name = "Descrição")]
         public string Descricao { get; set; } = string.Empty;
 
-        // Upload -- existe só na UI, nunca é enviado como IFormFile para a API.
-        // O Controller salva o arquivo em wwwroot e manda só o caminho (string).
+        // Mantido por compatibilidade com outros pontos da UI.
+        // Portfolio não faz mais upload de imagem; usa fotos de ProjetoC.
         [Display(Name = "Imagem do Projeto")]
         public IFormFile? ImagemArquivo { get; set; }
 
-        // Caminho da imagem já salva, para mostrar o preview na edição
         public string? ImagemAtualUrl { get; set; }
 
         [Required(ErrorMessage = "O ambiente é obrigatório.")]
         [Display(Name = "Ambiente")]
         public int AmbienteId { get; set; }
 
-        // Populado pelo Controller a partir de GET api/Ambiente,
-        // para montar o <select asp-for="AmbienteId" asp-items="Model.AmbientesDisponiveis">
+        [Required(ErrorMessage = "O projeto do cliente é obrigatório.")]
+        [Display(Name = "Projeto do Cliente")]
+        public int? ProjetoCId { get; set; }
+
+        // IDs das fotos já cadastradas em ProjetoC que serão publicadas.
+        [MinLength(1, ErrorMessage = "Selecione pelo menos uma foto para publicar no portfólio.")]
+        public List<int> ProjetoCFotosIds { get; set; } = new();
+
         public List<SelectListItem> AmbientesDisponiveis { get; set; } = new();
 
-        // Só de exibição -- o título da página muda conforme o modo
+        public List<ProjetoCPortfolioViewModel> ProjetosDisponiveis { get; set; } = new();
+
         public bool EhEdicao => Id.HasValue && Id.Value > 0;
 
-        public string TituloPagina => EhEdicao ? "Editar projeto do portfólio" : "Novo projeto no portfólio";
+        public string TituloPagina => EhEdicao
+            ? "Editar projeto do portfólio"
+            : "Novo projeto no portfólio";
+    }
+
+    public class ProjetoCPortfolioViewModel
+    {
+        public int Id { get; set; }
+
+        public string Nome { get; set; } = string.Empty;
+
+        public List<ProjetoCFotoPortfolioViewModel> Fotos { get; set; } = new();
+    }
+
+    public class ProjetoCFotoPortfolioViewModel
+    {
+        public int Id { get; set; }
+
+        public string Foto { get; set; } = string.Empty;
+
+        public int Ordem { get; set; }
     }
 }

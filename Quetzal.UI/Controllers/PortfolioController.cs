@@ -19,7 +19,8 @@ namespace Quetzal.UI.Controllers
         [HttpGet("Portfolio/Ambiente/{ambienteId:int}")]
         public async Task<IActionResult> Ambiente(int ambienteId)
         {
-            var respostaAmbiente = await _api.GetAsync<AmbienteApiModelo>($"api/Ambiente/{ambienteId}");
+            var respostaAmbiente = await _api.GetAsync<AmbienteApiModelo>(
+                $"api/Ambiente/{ambienteId}");
 
             if (!respostaAmbiente.Sucesso || respostaAmbiente.Dados == null)
             {
@@ -37,6 +38,16 @@ namespace Quetzal.UI.Controllers
                     Descricao = p.Descricao,
                     ImagemUpload = p.ImagemUpload,
                     AmbienteNome = p.AmbienteNome,
+                    ProjetoCId = p.ProjetoCId,
+                    FotosSelecionadas = p.FotosSelecionadas
+                        .OrderBy(f => f.Ordem)
+                        .Select(f => new PortfolioFotoViewModel
+                        {
+                            ProjetoCFotoId = f.ProjetoCFotoId,
+                            Foto = f.Foto,
+                            Ordem = f.Ordem
+                        })
+                        .ToList(),
                     Ativo = p.Ativo,
                     DataCadastro = p.DataCadastro
                 }).ToList()
@@ -53,8 +64,6 @@ namespace Quetzal.UI.Controllers
             return View(viewModel);
         }
 
-        // ── Modelos auxiliares para mapear a comunicação com a API ──
-
         public class AmbienteApiModelo
         {
             public int Id { get; set; }
@@ -69,8 +78,17 @@ namespace Quetzal.UI.Controllers
             public string Descricao { get; set; } = string.Empty;
             public string ImagemUpload { get; set; } = string.Empty;
             public string AmbienteNome { get; set; } = string.Empty;
+            public int? ProjetoCId { get; set; }
+            public List<PortfolioFotoApiModelo> FotosSelecionadas { get; set; } = new();
             public bool Ativo { get; set; }
             public DateTime DataCadastro { get; set; }
+        }
+
+        public class PortfolioFotoApiModelo
+        {
+            public int ProjetoCFotoId { get; set; }
+            public string Foto { get; set; } = string.Empty;
+            public int Ordem { get; set; }
         }
     }
 }

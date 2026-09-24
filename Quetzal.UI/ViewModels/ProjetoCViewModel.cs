@@ -2,8 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Quetzal.UI.ViewModels
 {
-    // Tela: /Admin/Projetos (listagem) e /Admin/Projetos/Detalhes/{id}
-    // Mapeia de: ProjetoCDto (via ProjetoCController.ProjetoCApiModelo)
+    // Tela: /Admin/ProjetoC
     public class ProjetoCViewModel
     {
         public int Id { get; set; }
@@ -17,8 +16,6 @@ namespace Quetzal.UI.ViewModels
         [Display(Name = "Imagem")]
         public string? ImagemUpload { get; set; }
 
-        // Dados do cliente dono do projeto — somente leitura, vindos do
-        // ProjetoCDto.ClienteNome
         [Display(Name = "Cliente")]
         public string ClienteNome { get; set; } = string.Empty;
 
@@ -29,11 +26,8 @@ namespace Quetzal.UI.ViewModels
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DataCadastro { get; set; }
 
-        // Campos calculados só para exibição
-
         public string StatusTexto => Ativo ? "Ativo" : "Inativo";
 
         public string StatusCssClass => Ativo ? "badge bg-success" : "badge bg-secondary";
-
     }
 }

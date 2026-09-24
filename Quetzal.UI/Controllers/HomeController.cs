@@ -41,18 +41,18 @@ namespace Quetzal.UI.Controllers
                     }).ToList()
                     : new List<AmbienteViewModel>(),
 
-                // Pega só os 8 mais recentes que tenham imagem.
-                // O carrossel não precisa de tudo, e a Home fica leve.
+                // Pega até 8 fotos publicadas, ordenando primeiro pelos projetos mais recentes.
                 ImagensCarrossel = respostaCarrossel.Sucesso && respostaCarrossel.Dados != null
                     ? respostaCarrossel.Dados
-                        .Where(p => !string.IsNullOrWhiteSpace(p.ImagemUpload))
                         .OrderByDescending(p => p.DataCadastro)
+                        .SelectMany(p => p.FotosSelecionadas
+                            .OrderBy(f => f.Ordem)
+                            .Select(f => new ImagemCarrosselViewModel
+                            {
+                                Url = f.Foto,
+                                TextoAlternativo = p.NomeProjeto
+                            }))
                         .Take(8)
-                        .Select(p => new ImagemCarrosselViewModel
-                        {
-                            Url = p.ImagemUpload,
-                            TextoAlternativo = p.NomeProjeto
-                        })
                         .ToList()
                     : new List<ImagemCarrosselViewModel>()
             };
@@ -120,7 +120,15 @@ namespace Quetzal.UI.Controllers
             public int Id { get; set; }
             public string NomeProjeto { get; set; } = string.Empty;
             public string? ImagemUpload { get; set; }
+            public List<PortfolioFotoApiModelo> FotosSelecionadas { get; set; } = new();
             public DateTime DataCadastro { get; set; }
+        }
+
+        public class PortfolioFotoApiModelo
+        {
+            public int ProjetoCFotoId { get; set; }
+            public string Foto { get; set; } = string.Empty;
+            public int Ordem { get; set; }
         }
     }
 }

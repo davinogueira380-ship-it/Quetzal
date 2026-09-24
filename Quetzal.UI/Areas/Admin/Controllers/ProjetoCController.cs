@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quetzal.UI.Infraestrutura;
@@ -21,7 +21,6 @@ namespace Quetzal.UI.Areas.Admin.Controllers
         }
 
         // GET: /Admin/ProjetoC
-        // Nota: a rota é "todas", diferente do Portfolio que usa "todos"
         public async Task<IActionResult> Index()
         {
             var resposta = await _api.GetAsync<List<ProjetoCApiModelo>>("api/ProjetoC/todas");
@@ -37,21 +36,77 @@ namespace Quetzal.UI.Areas.Admin.Controllers
                 Id = p.Id,
                 Nome = p.Nome,
                 Descricao = p.Descricao,
-                ImagemUpload = p.ImagemUpload,
-                ClienteNome = string.IsNullOrWhiteSpace(p.UsuarioNome) ? "(sem nome cadastrado)" : p.UsuarioNome,
+                ImagemUpload = p.Fotos.FirstOrDefault() ?? p.ImagemUpload,
+                ClienteNome = string.IsNullOrWhiteSpace(p.UsuarioNome)
+                    ? "(sem nome cadastrado)"
+                    : p.UsuarioNome,
                 Ativo = p.Ativo,
                 DataCadastro = p.DataCadastro
             })
-                .OrderByDescending(p => p.Ativo)
-                .ThenBy(p => p.Nome, StringComparer.OrdinalIgnoreCase)
-                .ToList();
+            .OrderByDescending(p => p.Ativo)
+            .ThenBy(p => p.Nome, StringComparer.OrdinalIgnoreCase)
+            .ToList();
 
             return View(viewModel);
         }
 
+        // GET: /Admin/ProjetoC/Criar
+        public async Task<IActionResult> Criar()
+        {
+            var viewModel = new ProjetoCEdicaoViewModel();
+
+            await PreencherClientes(viewModel);
+
+            return View("Editar", viewModel);
+        }
+
+        // POST: /Admin/ProjetoC/Criar
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Criar(ProjetoCEdicaoViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                await PreencherClientes(viewModel);
+                return View("Editar", viewModel);
+            }
+
+            var resultadoFotos = await SalvarFotosAsync(viewModel.FotosArquivos);
+
+            if (!resultadoFotos.Sucesso)
+            {
+                ModelState.AddModelError(
+                    nameof(viewModel.FotosArquivos),
+                    resultadoFotos.Erro!);
+
+                await PreencherClientes(viewModel);
+                return View("Editar", viewModel);
+            }
+
+            var dto = new CriarProjetoCApiModelo
+            {
+                Nome = viewModel.Nome,
+                Descricao = viewModel.Descricao,
+                UsuarioId = viewModel.UsuarioId ?? string.Empty,
+                Fotos = resultadoFotos.Fotos
+            };
+
+            var resposta = await _api.PostAsync<ProjetoCApiModelo, CriarProjetoCApiModelo>(
+                "api/ProjetoC",
+                dto);
+
+            if (!resposta.Sucesso)
+            {
+                AdicionarErrosDaApi(resposta.Erros, resposta.Mensagem);
+                await PreencherClientes(viewModel);
+                return View("Editar", viewModel);
+            }
+
+            TempData["MensagemSucesso"] = "Projeto do cliente cadastrado com sucesso!";
+            return RedirectToAction(nameof(Index));
+        }
+
         // GET: /Admin/ProjetoC/Editar/5
-        // Sem action "Criar" de propósito -- o projeto já nasce vinculado
-        // ao cliente em outro fluxo (fora do admin)
         public async Task<IActionResult> Editar(int id)
         {
             var resposta = await _api.GetAsync<ProjetoCApiModelo>($"api/ProjetoC/{id}");
@@ -63,14 +118,47 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             }
 
             var dados = resposta.Dados;
+
+            var fotosExistentes = dados.FotosDetalhadas
+                .OrderBy(f => f.Ordem)
+                .Select(f => new ProjetoCFotoEdicaoViewModel
+                {
+                    Id = f.Id,
+                    Foto = f.Foto,
+                    Ordem = f.Ordem
+                })
+                .ToList();
+
+            // Compatibilidade com projetos antigos que ainda possuem
+            // somente ImagemUpload.
+            if (!fotosExistentes.Any() &&
+                !string.IsNullOrWhiteSpace(dados.ImagemUpload))
+            {
+                fotosExistentes.Add(new ProjetoCFotoEdicaoViewModel
+                {
+                    Id = 0,
+                    Foto = dados.ImagemUpload,
+                    Ordem = 1
+                });
+            }
+
             var viewModel = new ProjetoCEdicaoViewModel
             {
                 Id = dados.Id,
                 Nome = dados.Nome,
                 Descricao = dados.Descricao,
+                UsuarioId = dados.UsuarioId,
+                ClienteNome = string.IsNullOrWhiteSpace(dados.UsuarioNome)
+                    ? "(sem nome cadastrado)"
+                    : dados.UsuarioNome,
                 ImagemAtualUrl = dados.ImagemUpload,
-                ClienteNome = string.IsNullOrWhiteSpace(dados.UsuarioNome) ? "(sem nome cadastrado)" : dados.UsuarioNome,
+                FotosExistentes = fotosExistentes,
+                FotosExistentesSelecionadas = fotosExistentes
+                    .Select(f => f.Foto)
+                    .ToList()
             };
+
+            await PreencherClientes(viewModel);
 
             return View(viewModel);
         }
@@ -78,49 +166,65 @@ namespace Quetzal.UI.Areas.Admin.Controllers
         // POST: /Admin/ProjetoC/Editar/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Editar(int id, ProjetoCEdicaoViewModel viewModel)
+        public async Task<IActionResult> Editar(
+            int id,
+            ProjetoCEdicaoViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
+                await PreencherClientes(viewModel);
+                await PreencherFotosExistentes(viewModel, id);
                 return View(viewModel);
             }
 
-            var caminhoImagem = viewModel.ImagemAtualUrl ?? string.Empty;
+            var fotosFinais = new List<string>();
 
-            if (viewModel.ImagemArquivo != null)
+            // Fotos existentes que permanecerão no projeto.
+            fotosFinais.AddRange(
+                (viewModel.FotosExistentesSelecionadas ?? new List<string>())
+                    .Where(f => !string.IsNullOrWhiteSpace(f))
+                    .Distinct());
+
+            // Novas fotos enviadas agora.
+            var resultadoFotos = await SalvarFotosAsync(viewModel.FotosArquivos);
+
+            if (!resultadoFotos.Sucesso)
             {
-                var resultado = await _upload.SalvarImagemAsync(viewModel.ImagemArquivo, "projetos");
+                ModelState.AddModelError(
+                    nameof(viewModel.FotosArquivos),
+                    resultadoFotos.Erro!);
 
-                if (!resultado.Sucesso)
-                {
-                    ModelState.AddModelError(nameof(viewModel.ImagemArquivo), resultado.Erro!);
-                    return View(viewModel);
-                }
-
-                caminhoImagem = resultado.CaminhoRelativo ?? caminhoImagem;
+                await PreencherClientes(viewModel);
+                await PreencherFotosExistentes(viewModel, id);
+                return View(viewModel);
             }
+
+            fotosFinais.AddRange(resultadoFotos.Fotos);
 
             var dto = new AtualizarProjetoCApiModelo
             {
                 Id = id,
                 Nome = viewModel.Nome,
                 Descricao = viewModel.Descricao,
-                ImagemUpload = caminhoImagem,
+                UsuarioId = viewModel.UsuarioId ?? string.Empty,
+                Fotos = fotosFinais
             };
 
             var resposta = await _api.PutAsync<ProjetoCApiModelo, AtualizarProjetoCApiModelo>(
-                $"api/ProjetoC/{id}/atualizar", dto);
+                $"api/ProjetoC/{id}/atualizar",
+                dto);
 
             if (!resposta.Sucesso)
             {
                 AdicionarErrosDaApi(resposta.Erros, resposta.Mensagem);
+                await PreencherClientes(viewModel);
+                await PreencherFotosExistentes(viewModel, id);
                 return View(viewModel);
             }
 
             TempData["MensagemSucesso"] = "Projeto atualizado com sucesso!";
             return RedirectToAction(nameof(Index));
         }
-
 
         // POST: /Admin/ProjetoC/Desativar/5
         [HttpPost]
@@ -140,7 +244,9 @@ namespace Quetzal.UI.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Reativar(int id)
         {
-            var resposta = await _api.PutAsync<object, object>($"api/ProjetoC/{id}/reativar", new { });
+            var resposta = await _api.PutAsync<object, object>(
+                $"api/ProjetoC/{id}/reativar",
+                new { });
 
             TempData[resposta.Sucesso ? "MensagemSucesso" : "MensagemErro"] =
                 resposta.Sucesso ? "Projeto reativado." : resposta.Mensagem;
@@ -153,17 +259,100 @@ namespace Quetzal.UI.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ExcluirPermanente(int id)
         {
-            var resposta = await _api.DeleteAsync<object>($"api/ProjetoC/{id}/permanente");
+            var resposta = await _api.DeleteAsync<object>(
+                $"api/ProjetoC/{id}/permanente");
 
             TempData[resposta.Sucesso ? "MensagemSucesso" : "MensagemErro"] =
-                resposta.Sucesso ? "Projeto excluído permanentemente." : resposta.Mensagem;
+                resposta.Sucesso
+                    ? "Projeto excluído permanentemente."
+                    : resposta.Mensagem;
 
             return RedirectToAction(nameof(Index));
         }
 
-        // era: string[]? erros  →  .Length
-        // vira: List<string>? erros  →  .Count
-        private void AdicionarErrosDaApi(List<string>? erros, string mensagemGeral)
+        private async Task PreencherClientes(
+            ProjetoCEdicaoViewModel viewModel)
+        {
+            var resposta = await _api.GetAsync<List<UsuarioApiModelo>>("api/Usuarios");
+
+            if (!resposta.Sucesso || resposta.Dados == null)
+                return;
+
+            viewModel.ClientesDisponiveis = resposta.Dados
+                .OrderBy(u => u.NomeCompleto, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(u => u.Email, StringComparer.OrdinalIgnoreCase)
+                .Select(u => new SelectListItem
+                {
+                    Value = u.Id,
+                    Text = string.IsNullOrWhiteSpace(u.NomeCompleto)
+                        ? u.Email
+                        : $"{u.NomeCompleto}{(u.Ativo ? string.Empty : " (Inativo)")}",
+                    Selected = u.Id == viewModel.UsuarioId
+                })
+                .ToList();
+        }
+
+        private async Task PreencherFotosExistentes(
+            ProjetoCEdicaoViewModel viewModel,
+            int id)
+        {
+            var resposta = await _api.GetAsync<ProjetoCApiModelo>(
+                $"api/ProjetoC/{id}");
+
+            if (!resposta.Sucesso || resposta.Dados == null)
+                return;
+
+            viewModel.FotosExistentes = resposta.Dados.FotosDetalhadas
+                .OrderBy(f => f.Ordem)
+                .Select(f => new ProjetoCFotoEdicaoViewModel
+                {
+                    Id = f.Id,
+                    Foto = f.Foto,
+                    Ordem = f.Ordem
+                })
+                .ToList();
+
+            if (!viewModel.FotosExistentes.Any() &&
+                !string.IsNullOrWhiteSpace(resposta.Dados.ImagemUpload))
+            {
+                viewModel.FotosExistentes.Add(
+                    new ProjetoCFotoEdicaoViewModel
+                    {
+                        Id = 0,
+                        Foto = resposta.Dados.ImagemUpload,
+                        Ordem = 1
+                    });
+            }
+        }
+
+        private async Task<(bool Sucesso, List<string> Fotos, string? Erro)> SalvarFotosAsync(
+            IEnumerable<IFormFile>? arquivos)
+        {
+            var fotos = new List<string>();
+
+            foreach (var arquivo in arquivos ?? Enumerable.Empty<IFormFile>())
+            {
+                var resultado = await _upload.SalvarImagemAsync(
+                    arquivo,
+                    "projetos");
+
+                if (!resultado.Sucesso)
+                {
+                    return (false, fotos, resultado.Erro);
+                }
+
+                if (!string.IsNullOrWhiteSpace(resultado.CaminhoRelativo))
+                {
+                    fotos.Add(resultado.CaminhoRelativo);
+                }
+            }
+
+            return (true, fotos, null);
+        }
+
+        private void AdicionarErrosDaApi(
+            List<string>? erros,
+            string mensagemGeral)
         {
             if (erros != null && erros.Count > 0)
             {
@@ -178,8 +367,6 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             }
         }
 
-        // ── Modelos auxiliares para mapear a comunicação com a API ──
-
         // -> corresponde a ProjetoCDto na API
         public class ProjetoCApiModelo
         {
@@ -189,20 +376,46 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             public string ImagemUpload { get; set; } = string.Empty;
             public string UsuarioId { get; set; } = string.Empty;
             public string? UsuarioNome { get; set; }
+            public string ClienteId { get; set; } = string.Empty;
+            public List<string> Fotos { get; set; } = new();
+            public List<ProjetoCFotoApiModelo> FotosDetalhadas { get; set; } = new();
             public bool Ativo { get; set; }
             public DateTime DataCadastro { get; set; }
+            public DateTime? DataAtualizacao { get; set; }
+            public DateTime? DataExclusao { get; set; }
         }
 
-        // -> corresponde a AtualizarProjetoCDto na API
-        public class AtualizarProjetoCApiModelo
+        public class ProjetoCFotoApiModelo
         {
             public int Id { get; set; }
-            public string Nome { get; set; } = string.Empty;
-            public string Descricao { get; set; } = string.Empty;
-            public string ImagemUpload { get; set; } = string.Empty;
-            public string UsuarioId { get; set; } = string.Empty;
+            public string Foto { get; set; } = string.Empty;
+            public int Ordem { get; set; }
         }
 
-      
+        public class CriarProjetoCApiModelo
+        {
+            public string Nome { get; set; } = string.Empty;
+            public string Descricao { get; set; } = string.Empty;
+            public string UsuarioId { get; set; } = string.Empty;
+            public string? UsuarioNome { get; set; }
+            public List<string> Fotos { get; set; } = new();
+            public bool Ativo { get; set; } = true;
+        }
+
+        public class AtualizarProjetoCApiModelo : CriarProjetoCApiModelo
+        {
+            public int Id { get; set; }
+        }
+
+        public class UsuarioApiModelo
+        {
+            public string Id { get; set; } = string.Empty;
+            public string NomeCompleto { get; set; } = string.Empty;
+            public string Email { get; set; } = string.Empty;
+            public string Telefone { get; set; } = string.Empty;
+            public bool Ativo { get; set; }
+            public DateTime DataCadastro { get; set; }
+            public List<string> Perfis { get; set; } = new();
+        }
     }
 }

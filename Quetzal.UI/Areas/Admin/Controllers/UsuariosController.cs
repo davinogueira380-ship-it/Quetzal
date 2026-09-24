@@ -8,7 +8,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
     // Gestão de contas: ativar/desativar bloqueia o LOGIN do usuário
     // (a API já checa "!user.Ativo" no AuthController.Login).
     [Area("Admin")]
-    //[Authorize(Roles = "Admin,Operador")]
+    [Authorize(Roles = "Admin,Operador")]
     public class UsuariosController : Controller
     {
         private readonly ApiCliente _api;

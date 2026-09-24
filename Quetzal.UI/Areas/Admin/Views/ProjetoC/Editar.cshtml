@@ -1,24 +1,32 @@
 @model ProjetoCEdicaoViewModel
 @{
-    ViewData["Title"] = "Editar Projeto";
+    ViewData["Title"] = Model.TituloPagina;
 }
 
 <div class="admin-topbar">
-    <h1>Editar Projeto</h1>
+    <h1>@Model.TituloPagina</h1>
 </div>
 
-<div class="admin-form-wrapper">
+<div class="admin-form-wrapper admin-form-wrapper-galeria">
     <div asp-validation-summary="ModelOnly" class="admin-alerta admin-alerta-erro"></div>
 
-    <div class="mb-3">
-        <label>Cliente</label>
-        <input type="text" class="form-control" value="@Model.ClienteNome" readonly disabled>
-    </div>
+    <form asp-action="@(Model.EhEdicao ? "Editar" : "Criar")"
+          asp-route-id="@Model.Id"
+          method="post"
+          enctype="multipart/form-data"
+          id="formProjetoC">
 
-    <form asp-action="Editar" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="Id" />
-        <input type="hidden" asp-for="ImagemAtualUrl" />
-        <input type="hidden" asp-for="UsuarioId" />
+
+        <div class="mb-3">
+            <label asp-for="UsuarioId"></label>
+            <select asp-for="UsuarioId"
+                    asp-items="Model.ClientesDisponiveis"
+                    class="form-select">
+                <option value="">-- Selecione o usuário --</option>
+            </select>
+            <span asp-validation-for="UsuarioId" class="text-danger"></span>
+        </div>
 
         <div class="mb-3">
             <label asp-for="Nome"></label>
@@ -32,21 +40,89 @@
             <span asp-validation-for="Descricao" class="text-danger"></span>
         </div>
 
-        <div class="mb-3">
-            <label asp-for="ImagemArquivo"></label>
-            <input asp-for="ImagemArquivo" class="form-control" type="file" accept="image/*" />
+        <div class="galeria-edicao-layout">
+            <div>
+                <label class="form-label">Fotos do projeto</label>
 
-            @if (!string.IsNullOrWhiteSpace(Model.ImagemAtualUrl))
-            {
-                <p class="mt-2 mb-1"><small>Imagem atual:</small></p>
-                <img src="@Model.ImagemAtualUrl" alt="Imagem atual" class="imagem-preview">
-            }
+                <div class="mb-3">
+                    <label for="FotosArquivos" class="form-label">Adicionar novas fotos</label>
+                    <input asp-for="FotosArquivos"
+                           id="FotosArquivos"
+                           class="form-control"
+                           type="file"
+                           accept="image/jpeg,image/png,image/webp,image/bmp,image/gif"
+                           multiple />
+                    <small class="text-muted d-block mt-1">
+                        A inclusão de fotos é opcional. Você pode adicionar várias imagens de uma vez.
+                    </small>
+                </div>
+
+                <div class="foto-menu-wrapper mb-3">
+                    <label class="form-label">Selecionar foto</label>
+
+                    <div class="foto-dropdown" id="fotosDropdown">
+                        <button type="button"
+                                id="fotosDropdownButton"
+                                class="form-select foto-dropdown-button">
+                            <span id="fotosDropdownButtonText">-- Selecione uma foto --</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+
+                        <div id="fotosDropdownMenu"
+                             class="foto-dropdown-menu"
+                             hidden></div>
+                    </div>
+                </div>
+
+                <div id="fotosGrid" class="fotos-selecao-grid"></div>
+
+                @foreach (var foto in Model.FotosExistentes.OrderBy(f => f.Ordem))
+                {
+                    if (Model.FotosExistentesSelecionadas.Contains(foto.Foto))
+                    {
+                        <input type="hidden"
+                               name="FotosExistentesSelecionadas"
+                               value="@foto.Foto"
+                               data-existing-photo-key="@($"existing-{foto.Id}-{foto.Ordem}")" />
+                    }
+                }
+
+                <div id="fotosVazias"
+                     class="admin-alerta"
+                     style="display:none;">
+                    Nenhuma foto adicionada ainda.
+                </div>
+
+                <span asp-validation-for="FotosArquivos" class="text-danger"></span>
+            </div>
+
+            <div class="foto-preview-lateral">
+                <span class="foto-preview-titulo">Visualização</span>
+
+                <div class="foto-preview-frame">
+                    <img id="fotoPreview"
+                         src=""
+                         alt="Pré-visualização"
+                         hidden />
+
+                    <span id="fotoPreviewPlaceholder">Selecione uma foto</span>
+                </div>
+
+                <button type="button"
+                        id="btnExcluirFoto"
+                        class="btn-admin-perigo foto-preview-excluir"
+                        hidden>
+                    <i class="fa-solid fa-trash"></i>
+                    Excluir foto
+                </button>
+            </div>
         </div>
 
         <div class="d-flex gap-2 mt-4">
             <button type="submit" class="btn-admin-primario">
                 <i class="fa-solid fa-check"></i> Salvar
             </button>
+
             <a asp-action="Index" class="btn-admin-secundario">Cancelar</a>
         </div>
     </form>
@@ -54,4 +130,309 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("formProjetoC");
+            const inputArquivos = document.getElementById("FotosArquivos");
+            const fotosDropdownButton = document.getElementById("fotosDropdownButton");
+            const fotosDropdownButtonText = document.getElementById("fotosDropdownButtonText");
+            const fotosDropdownMenu = document.getElementById("fotosDropdownMenu");
+            const fotosGrid = document.getElementById("fotosGrid");
+            const fotosVazias = document.getElementById("fotosVazias");
+            const preview = document.getElementById("fotoPreview");
+            const placeholder = document.getElementById("fotoPreviewPlaceholder");
+            const btnExcluirFoto = document.getElementById("btnExcluirFoto");
+
+            const existingPhotos = Array.from(document.querySelectorAll(
+                'input[name="FotosExistentesSelecionadas"]'))
+                .map((input, index) => ({
+                    key: input.dataset.existingPhotoKey || `existing-${index}`,
+                    url: input.value,
+                    input,
+                    active: true,
+                    label: `Foto ${index + 1}`
+                }));
+
+            let novosArquivos = [];
+            let selected = null;
+
+            function atualizarVazio() {
+                const existeFoto =
+                    existingPhotos.some(f => f.active) ||
+                    novosArquivos.length > 0;
+
+                fotosVazias.style.display = existeFoto ? "none" : "block";
+            }
+
+            function mostrarPreview(url, tipo, key) {
+                selected = url && tipo && key
+                    ? { url, tipo, key }
+                    : null;
+
+                if (!selected) {
+                    preview.hidden = true;
+                    preview.removeAttribute("src");
+                    placeholder.hidden = false;
+                    btnExcluirFoto.hidden = true;
+                    fotosDropdownButtonText.textContent = "-- Selecione uma foto --";
+                    return;
+                }
+
+                preview.src = url;
+                preview.hidden = false;
+                placeholder.hidden = true;
+                btnExcluirFoto.hidden = false;
+                fotosDropdownButtonText.textContent = selected.label || "Foto selecionada";
+            }
+
+            function selecionarFoto(tipo, key, url, label) {
+                selected = { tipo, key, url, label };
+
+                fotosDropdownMenu
+                    .querySelectorAll(".foto-dropdown-item")
+                    .forEach(item => {
+                        item.classList.toggle(
+                            "foto-dropdown-item-ativa",
+                            item.dataset.photoKey === key);
+                    });
+
+                fotosGrid.querySelectorAll(".foto-selecao-card")
+                    .forEach(card => {
+                        card.classList.toggle(
+                            "foto-selecao-card-ativa",
+                            card.dataset.photoKey === key);
+                    });
+
+                mostrarPreview(url, tipo, key);
+            }
+
+            function reconstruirMenu() {
+                const valorAtual = selected?.key || "";
+                fotosDropdownMenu.innerHTML = "";
+
+                const disponiveis = [];
+
+                existingPhotos
+                    .filter(f => f.active)
+                    .forEach(function (foto) {
+                        disponiveis.push({
+                            key: foto.key,
+                            url: foto.url,
+                            label: foto.label,
+                            tipo: "existing"
+                        });
+                    });
+
+                novosArquivos.forEach(function (foto) {
+                    disponiveis.push({
+                        key: foto.key,
+                        url: foto.url,
+                        label: foto.label,
+                        tipo: "new"
+                    });
+                });
+
+                if (disponiveis.length === 0) {
+                    const vazio = document.createElement("div");
+                    vazio.className = "foto-dropdown-vazio";
+                    vazio.textContent = "Nenhuma foto disponível";
+                    fotosDropdownMenu.appendChild(vazio);
+                    return;
+                }
+
+                disponiveis.forEach(function (foto) {
+                    const item = document.createElement("button");
+                    item.type = "button";
+                    item.className = "foto-dropdown-item";
+                    item.dataset.photoKey = foto.key;
+
+                    const imagem = document.createElement("img");
+                    imagem.src = foto.url;
+                    imagem.alt = foto.label;
+                    imagem.loading = "lazy";
+
+                    const nome = document.createElement("span");
+                    nome.textContent = foto.label;
+
+                    item.appendChild(imagem);
+                    item.appendChild(nome);
+
+                    item.addEventListener("click", function () {
+                        selecionarFoto(
+                            foto.tipo,
+                            foto.key,
+                            foto.url,
+                            foto.label);
+
+                        fotosDropdownMenu.hidden = true;
+                    });
+
+                    if (valorAtual === foto.key) {
+                        item.classList.add("foto-dropdown-item-ativa");
+                    }
+
+                    fotosDropdownMenu.appendChild(item);
+                });
+            }
+
+            function renderizarGrid() {
+                fotosGrid.innerHTML = "";
+
+                existingPhotos
+                    .filter(f => f.active)
+                    .forEach(function (foto) {
+                        const card = criarCard(
+                            foto.key,
+                            foto.url,
+                            foto.label,
+                            "existing");
+
+                        fotosGrid.appendChild(card);
+                    });
+
+                novosArquivos.forEach(function (foto) {
+                    const card = criarCard(
+                        foto.key,
+                        foto.url,
+                        foto.label,
+                        "new");
+
+                    fotosGrid.appendChild(card);
+                });
+
+                atualizarVazio();
+            }
+
+            function criarCard(key, url, label, tipo) {
+                const card = document.createElement("button");
+                card.type = "button";
+                card.className = "foto-selecao-card";
+                card.dataset.photoKey = key;
+
+                const imagem = document.createElement("img");
+                imagem.src = url;
+                imagem.alt = label;
+                imagem.loading = "lazy";
+
+                const info = document.createElement("span");
+                info.className = "foto-selecao-info";
+                info.textContent = label;
+
+                card.appendChild(imagem);
+                card.appendChild(info);
+
+                card.addEventListener("click", function () {
+                    selecionarFoto(tipo, key, url, label);
+                });
+
+                if (selected?.key === key) {
+                    card.classList.add("foto-selecao-card-ativa");
+                }
+
+                return card;
+            }
+
+            function sincronizarArquivos() {
+                const dataTransfer = new DataTransfer();
+
+                novosArquivos.forEach(function (foto) {
+                    dataTransfer.items.add(foto.arquivo);
+                });
+
+                inputArquivos.files = dataTransfer.files;
+            }
+
+            function adicionarNovasFotos() {
+                Array.from(inputArquivos.files || []).forEach(function (arquivo) {
+                    const duplicado = novosArquivos.some(function (foto) {
+                        return foto.arquivo.name === arquivo.name &&
+                            foto.arquivo.size === arquivo.size &&
+                            foto.arquivo.lastModified === arquivo.lastModified;
+                    });
+
+                    if (!duplicado) {
+                        novosArquivos.push({
+                            key: `new-${crypto.randomUUID()}`,
+                            arquivo,
+                            url: URL.createObjectURL(arquivo),
+                            label: arquivo.name
+                        });
+                    }
+                });
+
+                sincronizarArquivos();
+                reconstruirMenu();
+                renderizarGrid();
+            }
+
+            function excluirSelecionada() {
+                if (!selected) return;
+
+                if (selected.tipo === "existing") {
+                    const foto = existingPhotos.find(f => f.key === selected.key);
+
+                    if (foto) {
+                        foto.active = false;
+                        foto.input.remove();
+                    }
+                } else {
+                    const index = novosArquivos.findIndex(
+                        f => f.key === selected.key);
+
+                    if (index >= 0) {
+                        URL.revokeObjectURL(novosArquivos[index].url);
+                        novosArquivos.splice(index, 1);
+                    }
+
+                    sincronizarArquivos();
+                }
+
+                selected = null;
+                mostrarPreview(null);
+                reconstruirMenu();
+                renderizarGrid();
+            }
+
+            fotosDropdownButton.addEventListener("click", function () {
+                fotosDropdownMenu.hidden = !fotosDropdownMenu.hidden;
+            });
+
+            document.addEventListener("click", function (event) {
+                const dentro =
+                    event.target.closest("#fotosDropdown");
+
+                if (!dentro) {
+                    fotosDropdownMenu.hidden = true;
+                }
+            });
+
+            inputArquivos.addEventListener("change", function () {
+                adicionarNovasFotos();
+            });
+
+            btnExcluirFoto.addEventListener("click", function () {
+                if (!selected) return;
+
+                if (confirm("Excluir esta foto do projeto?")) {
+                    excluirSelecionada();
+                }
+            });
+
+            form.addEventListener("submit", function () {
+                sincronizarArquivos();
+            });
+
+            reconstruirMenu();
+            renderizarGrid();
+
+            if (existingPhotos.length > 0) {
+                selecionarFoto(
+                    "existing",
+                    existingPhotos[0].key,
+                    existingPhotos[0].url,
+                    existingPhotos[0].label);
+            }
+        });
+    </script>
 }

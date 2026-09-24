@@ -420,3 +420,220 @@ body.admin-body {
     padding: 1.2rem;
   }
 }
+
+
+/* =========================================================
+   GALERIA DE FOTOS - PROJETO C / PORTFOLIO
+   ========================================================= */
+
+.admin-form-wrapper-galeria {
+  max-width: 1050px;
+}
+
+.galeria-edicao-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 230px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.foto-menu-wrapper {
+  max-width: 620px;
+}
+
+.foto-dropdown {
+  position: relative;
+}
+
+.foto-dropdown-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  cursor: pointer;
+  min-height: 42px;
+}
+
+.foto-dropdown-button i {
+  margin-left: .75rem;
+  flex-shrink: 0;
+}
+
+.foto-dropdown-menu {
+  position: absolute;
+  z-index: 1000;
+  top: calc(100% + .25rem);
+  left: 0;
+  width: 100%;
+  max-height: 330px;
+  overflow-y: auto;
+  padding: .35rem;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+}
+
+.foto-dropdown-item {
+  width: 100%;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .45rem .55rem;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.foto-dropdown-item:hover,
+.foto-dropdown-item-ativa {
+  background: #f2f2f2;
+}
+
+.foto-dropdown-item img {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.foto-dropdown-item-nome {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.foto-dropdown-item-com-checkbox {
+  cursor: pointer;
+}
+
+.foto-dropdown-item-com-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex: 0 0 18px;
+  cursor: pointer;
+}
+
+.foto-dropdown-vazio {
+  padding: .9rem;
+  color: #888;
+  text-align: center;
+}
+
+.fotos-selecao-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+  gap: 1rem;
+}
+
+.foto-selecao-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: .5rem;
+  background: #fff;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+}
+
+.foto-selecao-card:hover {
+  border-color: var(--clr-secondary);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .08);
+  transform: translateY(-1px);
+}
+
+.foto-selecao-card-ativa {
+  border-color: var(--clr-quaternary);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, .08);
+}
+
+.foto-selecao-card > img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+  border-radius: 7px;
+}
+
+.foto-selecao-info {
+  display: block;
+  margin-top: .5rem;
+  font-size: .8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.foto-preview-lateral {
+  position: sticky;
+  top: 1rem;
+}
+
+.foto-preview-titulo {
+  display: block;
+  font-weight: 600;
+  color: var(--clr-quaternary);
+  margin-bottom: .5rem;
+}
+
+.foto-preview-frame {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #f7f7f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: .5rem;
+}
+
+.foto-preview-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 7px;
+}
+
+.foto-preview-frame span {
+  color: #999;
+  text-align: center;
+  font-size: .9rem;
+}
+
+.foto-preview-excluir {
+  width: 100%;
+  margin-top: .75rem;
+  border-color: #b23b3b;
+  background: #b23b3b;
+  color: white;
+}
+
+.foto-preview-excluir:hover {
+  background: #922d2d;
+  border-color: #922d2d;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .galeria-edicao-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .foto-preview-lateral {
+    position: static;
+    order: -1;
+    max-width: 230px;
+  }
+}

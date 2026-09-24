@@ -2,8 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Quetzal.UI.ViewModels
 {
-    // Tela: /Admin/Portfolio (listagem)
-    // Mapeia de: PortfolioDto (via PortfolioController.ApiModelo, ver PortfolioController.cs)
+    // Tela: /Admin/Portfolio e telas públicas de Portfolio.
     public class PortfolioViewModel
     {
         public int Id { get; set; }
@@ -14,11 +13,16 @@ namespace Quetzal.UI.ViewModels
         [Display(Name = "Descrição")]
         public string Descricao { get; set; } = string.Empty;
 
+        // Compatibilidade com registros antigos.
         [Display(Name = "Imagem")]
         public string? ImagemUpload { get; set; }
 
         [Display(Name = "Ambiente")]
         public string AmbienteNome { get; set; } = string.Empty;
+
+        public int? ProjetoCId { get; set; }
+
+        public List<PortfolioFotoViewModel> FotosSelecionadas { get; set; } = new();
 
         [Display(Name = "Ativo")]
         public bool Ativo { get; set; }
@@ -27,10 +31,17 @@ namespace Quetzal.UI.ViewModels
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DataCadastro { get; set; }
 
-        // Campos calculados só para exibição
-
         public string StatusTexto => Ativo ? "Ativo" : "Inativo";
 
         public string StatusCssClass => Ativo ? "badge bg-success" : "badge bg-secondary";
+    }
+
+    public class PortfolioFotoViewModel
+    {
+        public int ProjetoCFotoId { get; set; }
+
+        public string Foto { get; set; } = string.Empty;
+
+        public int Ordem { get; set; }
     }
 }

@@ -1,10 +1,10 @@
 @model PortfolioEdicaoViewModel
 @{
-    ViewData["Title"] = "Editar projeto do Portfólio";
+    ViewData["Title"] = Model.TituloPagina;
 }
 
 <div class="admin-topbar">
-    <h1>Editar projeto do Portfólio</h1>
+    <h1>@Model.TituloPagina</h1>
 </div>
 
 <partial name="_Form" model="Model" />

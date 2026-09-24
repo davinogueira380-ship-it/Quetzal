@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Quetzal.UI.ViewModels
 {
-    // Telas: /Admin/Projetos/Editar/{id}
-    // o projeto nasce vinculado ao cliente em outro lugar (fora do admin) -- o admin
-    // só edita o conteúdo de um projeto já existente.
+    // Telas: /Admin/ProjetoC/Criar e /Admin/ProjetoC/Editar/{id}
     public class ProjetoCEdicaoViewModel
     {
         public int? Id { get; set; }
@@ -19,21 +19,42 @@ namespace Quetzal.UI.ViewModels
         [Display(Name = "Descrição")]
         public string Descricao { get; set; } = string.Empty;
 
+        // Mantido por compatibilidade com outros pontos da UI.
+        // O novo formulário usa FotosArquivos.
         [Display(Name = "Imagem do Projeto")]
         public IFormFile? ImagemArquivo { get; set; }
 
         public string? ImagemAtualUrl { get; set; }
 
-        // Somente leitura -- agora a API expõe UsuarioNome, não precisa
-        // mais mostrar só o Id cru
+        [Required(ErrorMessage = "O cliente é obrigatório.")]
         [Display(Name = "Cliente")]
+        public string? UsuarioId { get; set; }
+
+        // Somente leitura na edição.
         public string ClienteNome { get; set; } = string.Empty;
+
+        public List<SelectListItem> ClientesDisponiveis { get; set; } = new();
+
+        // Fotos já salvas no ProjetoC.
+        public List<ProjetoCFotoEdicaoViewModel> FotosExistentes { get; set; } = new();
+
+        // Fotos existentes que continuarão vinculadas após o salvar.
+        public List<string> FotosExistentesSelecionadas { get; set; } = new();
+
+        // Novos arquivos escolhidos no formulário.
+        public List<IFormFile>? FotosArquivos { get; set; }
 
         public bool EhEdicao => Id.HasValue && Id.Value > 0;
 
-        public string TituloPagina => "Editar Projeto";
+        public string TituloPagina => EhEdicao ? "Editar Projeto" : "Novo Projeto";
+    }
 
-         // CriarProjetoCDto no final desta resposta
-        public string? UsuarioId { get; set; }
+    public class ProjetoCFotoEdicaoViewModel
+    {
+        public int Id { get; set; }
+
+        public string Foto { get; set; } = string.Empty;
+
+        public int Ordem { get; set; }
     }
 }

@@ -5,7 +5,8 @@
 
 <div class="admin-topbar">
     <h1>Portfólio</h1>
-    <a asp-area="Admin" asp-controller="Portfolio" asp-action="Criar" class="btn-admin-primario">
+
+    <a asp-action="Criar" class="btn-admin-primario">
         <i class="fa-solid fa-plus"></i> Novo projeto
     </a>
 </div>
@@ -33,9 +34,17 @@
                 {
                     <tr>
                         <td>
-                            @if (!string.IsNullOrWhiteSpace(item.ImagemUpload))
+                            @if (item.FotosSelecionadas.Any())
                             {
-                                <img src="@item.ImagemUpload" alt="@item.NomeProjeto" class="thumb">
+                                <img src="@item.FotosSelecionadas.OrderBy(f => f.Ordem).First().Foto"
+                                     alt="@item.NomeProjeto"
+                                     class="thumb">
+                            }
+                            else if (!string.IsNullOrWhiteSpace(item.ImagemUpload))
+                            {
+                                <img src="@item.ImagemUpload"
+                                     alt="@item.NomeProjeto"
+                                     class="thumb">
                             }
                         </td>
                         <td>@item.NomeProjeto</td>
@@ -56,7 +65,7 @@
                                 {
                                     <form asp-action="Desativar" asp-route-id="@item.Id" method="post" class="d-inline">
                                         <button type="submit" class="btn-admin-secundario"
-                                            onclick="return confirm('Desativar este projeto do portfólio?');">
+                                                onclick="return confirm('Desativar este projeto do portfólio?');">
                                             <i class="fa-solid fa-eye-slash"></i> Desativar
                                         </button>
                                     </form>
@@ -65,7 +74,7 @@
                                 {
                                     <form asp-action="Reativar" asp-route-id="@item.Id" method="post" class="d-inline">
                                         <button type="submit" class="btn-admin-secundario"
-                                            onclick="return confirm('Reativar este projeto?');">
+                                                onclick="return confirm('Reativar este projeto?');">
                                             <i class="fa-solid fa-eye"></i> Reativar
                                         </button>
                                     </form>
@@ -73,7 +82,7 @@
 
                                 <form asp-action="ExcluirPermanente" asp-route-id="@item.Id" method="post" class="d-inline">
                                     <button type="submit" class="btn-admin-perigo"
-                                        onclick="return confirm('Excluir PERMANENTEMENTE este ambiente? Essa ação não pode ser desfeita.');">
+                                            onclick="return confirm('Excluir PERMANENTEMENTE este projeto? Essa ação não pode ser desfeita.');">
                                         <i class="fa-solid fa-trash"></i> Excluir
                                     </button>
                                 </form>
