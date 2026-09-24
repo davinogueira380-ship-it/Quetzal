@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Quetzal.Application.DTOs;
 using Quetzal.Domain.Entidades;
 using System;
@@ -284,7 +284,11 @@ namespace Quetzal.Application.Mapeamentos
 
                 .ForMember(
                     dest => dest.DataExclusao,
-                    opt => opt.Ignore());
+                    opt => opt.Ignore())
+
+                .ForMember(
+                    dest => dest.Ativo,
+                    opt => opt.MapFrom(src => src.Ativo));
 
 
             CreateMap<AtualizarProjetoCDto, ProjetoC>()

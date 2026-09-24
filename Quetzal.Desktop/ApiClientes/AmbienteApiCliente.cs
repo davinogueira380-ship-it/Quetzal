@@ -1,4 +1,4 @@
-﻿// ============================================================
+// ============================================================
 // Nome:         CategoriaApiCliente.cs
 // Objetivo:     Realizar todas as chamadas HTTP relacionadas ao
 //               gerenciamento de categorias na API do SenacFlix.
@@ -54,9 +54,15 @@ public class AmbienteDto
     // Metodos de consulta (leitura)
     // --------------------------------------------------------
 
-    public async Task<List<AmbienteDto>> ObterTodasAsync()
+    public async Task<List<AmbienteDto>> ObterTodasAsync(bool incluirInativas = true)
     {
-        var resposta = await GetAsync<ApiRespostaSimples<List<AmbienteDto>>>(RotaBase);
+        var rota = incluirInativas
+            ? $"{RotaBase}/todas"
+            : RotaBase;
+
+        var resposta =
+            await GetAsync<ApiRespostaSimples<List<AmbienteDto>>>(rota);
+
         return resposta?.Dados ?? new List<AmbienteDto>();
     }
 
@@ -74,8 +80,10 @@ public class AmbienteDto
 
     public async Task<ApiRespostaSimples<AmbienteDto>> AtualizarAsync(int id, CriarAmbienteDto dados)
     {
-        // Chama PUT /api/ambiente/{id} com os dados atualizados no corpo
-        return await PutAsync<ApiRespostaSimples<AmbienteDto>>($"{RotaBase}/{id}", dados);
+        // A API expõe a atualização em PUT /api/ambiente/{id}/atualizar.
+        return await PutAsync<ApiRespostaSimples<AmbienteDto>>(
+            $"{RotaBase}/{id}/atualizar",
+            dados);
     }
 
     // --------------------------------------------------------

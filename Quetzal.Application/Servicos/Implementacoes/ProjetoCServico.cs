@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Quetzal.Application.DTOs;
 using Quetzal.Application.Servicos.Interfaces;
 using Quetzal.Domain.Entidades;
@@ -103,6 +104,7 @@ namespace Quetzal.Application.Servicos.Implementacoes
                 projetoC.Fotos = (dto.Fotos ?? new List<string>())
                     .Select((foto, indice) => new ProjetoCFoto
                     {
+                        ProjetoC = projetoC,
                         Foto = foto,
                         Ordem = indice + 1
                     })
@@ -118,10 +120,15 @@ namespace Quetzal.Application.Servicos.Implementacoes
                     projetoCDto,
                     "Projeto do cliente cadastrado com sucesso.");
             }
+            catch (DbUpdateException ex)
+            {
+                return ApiResposta<ProjetoCDto>.Falha(
+                    $"Erro ao cadastrar o projeto do cliente no banco: {DetalharExcecao(ex)}");
+            }
             catch (Exception ex)
             {
                 return ApiResposta<ProjetoCDto>.Falha(
-                    $"Erro ao cadastrar o projeto do cliente: {ex.Message}");
+                    $"Erro ao cadastrar o projeto do cliente: {DetalharExcecao(ex)}");
             }
         }
 
@@ -154,22 +161,48 @@ namespace Quetzal.Application.Servicos.Implementacoes
                     projetoCExistente.UsuarioId = dto.UsuarioId;
                 }
 
+                //// =================================================
+                //// ATUALIZA AS FOTOS
+                //// =================================================
+                //// Converte novamente a List<string> recebida pelo
+                //// DTO para a coleção de ProjetoCFoto do Domain.
+                //// =================================================
+
+                //projetoCExistente.Fotos =
+                //    (dto.Fotos ?? new List<string>())
+                //    .Select((foto, indice) => new ProjetoCFoto
+                //    {
+                //        ProjetoCId = projetoCExistente.Id,
+                //        Foto = foto,
+                //        Ordem = indice + 1
+                //    })
+                //    .ToList();
+
                 // =================================================
                 // ATUALIZA AS FOTOS
                 // =================================================
-                // Converte novamente a List<string> recebida pelo
-                // DTO para a coleção de ProjetoCFoto do Domain.
-                // =================================================
 
-                projetoCExistente.Fotos =
-                    (dto.Fotos ?? new List<string>())
-                    .Select((foto, indice) => new ProjetoCFoto
-                    {
-                        ProjetoCId = projetoCExistente.Id,
-                        Foto = foto,
-                        Ordem = indice + 1
-                    })
-                    .ToList();
+                var fotosExistentes = projetoCExistente.Fotos.ToList();
+
+                // Remove as fotos antigas da coleção rastreada
+                foreach (var fotoExistente in fotosExistentes)
+                {
+                    projetoCExistente.Fotos.Remove(fotoExistente);
+                }
+
+                // Adiciona as novas fotos
+                var novasFotos = dto.Fotos ?? new List<string>();
+
+                for (int i = 0; i < novasFotos.Count; i++)
+                {
+                    projetoCExistente.Fotos.Add(
+                        new ProjetoCFoto
+                        {
+                            ProjetoCId = projetoCExistente.Id,
+                            Foto = novasFotos[i],
+                            Ordem = i + 1
+                        });
+                }
 
                 await _repositorio.AtualizarAsync(projetoCExistente);
 
@@ -180,10 +213,21 @@ namespace Quetzal.Application.Servicos.Implementacoes
                     projetoCDto,
                     "Projeto do cliente atualizado com sucesso.");
             }
+            //catch (Exception ex)
+            //{
+            //    return ApiResposta<ProjetoCDto>.Falha(
+            //        $"Erro ao atualizar o projeto do cliente: {ex.Message}");
+            //}
+
+            catch (DbUpdateException ex)
+            {
+                return ApiResposta<ProjetoCDto>.Falha(
+                    $"Erro ao atualizar o projeto do cliente no banco: {DetalharExcecao(ex)}");
+            }
             catch (Exception ex)
             {
                 return ApiResposta<ProjetoCDto>.Falha(
-                    $"Erro ao atualizar o projeto do cliente: {ex.Message}");
+                    $"Erro ao atualizar o projeto do cliente: {DetalharExcecao(ex)}");
             }
         }
 
@@ -251,6 +295,25 @@ namespace Quetzal.Application.Servicos.Implementacoes
         // =========================================================
         // REATIVAR
         // =========================================================
+
+        private static string DetalharExcecao(Exception ex)
+        {
+            var mensagens = new List<string>();
+            var atual = ex;
+
+            while (atual != null)
+            {
+                if (!string.IsNullOrWhiteSpace(atual.Message) &&
+                    !mensagens.Contains(atual.Message))
+                {
+                    mensagens.Add(atual.Message);
+                }
+
+                atual = atual.InnerException;
+            }
+
+            return string.Join(" | ", mensagens);
+        }
 
         public async Task<ApiResposta<bool>> ReativarAsync(int id)
         {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -56,12 +56,16 @@ namespace Quetzal.Application.DTOs
             ErrorMessage = "A descrição é obrigatória.")]
         public string Descricao { get; set; } = string.Empty;
 
+        [Required(
+            ErrorMessage = "O cliente é obrigatório.")]
         public string UsuarioId { get; set; } = string.Empty;
 
         public string? UsuarioNome { get; set; }
 
         public List<string> Fotos { get; set; } =
             new List<string>();
+
+        public bool Ativo { get; set; } = true;
     }
 
     public class AtualizarProjetoCDto : CriarProjetoCDto

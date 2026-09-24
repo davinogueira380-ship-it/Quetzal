@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -21,6 +21,8 @@ namespace Quetzal.Desktop.UserControls
 
             ConfigurarGrid();
             LimparFormulario();
+
+            Load += AmbientesControl_Load;
         }
 
         private void ConfigurarGrid()
@@ -43,10 +45,16 @@ namespace Quetzal.Desktop.UserControls
             txtNome.Clear();
             txtDescricao.Clear();
             swAtivo.Checked = true;
+            btnDesativar.Text = "🗑️ Desativar Ambiente";
 
             dgvAmbientes.ClearSelection();
 
             txtNome.Focus();
+        }
+
+        private async void AmbientesControl_Load(object? sender, EventArgs e)
+        {
+            await CarregarAmbientes();
         }
 
         private void btnNovo_Click(object sender, EventArgs e)
@@ -76,7 +84,7 @@ namespace Quetzal.Desktop.UserControls
                 }
                 else
                 {
-                    AtualizarAmbiente();
+                    await AtualizarAmbienteAsync();
                 }
             }
             catch (Exception ex)
@@ -89,12 +97,12 @@ namespace Quetzal.Desktop.UserControls
             }
         }
 
-        private void btnDesativar_Click(object sender, EventArgs e)
+        private async void btnDesativar_Click(object sender, EventArgs e)
         {
             if (_ambienteSelecionadoId == null)
             {
                 MessageBox.Show(
-                    "Selecione um ambiente para desativar.",
+                    "Selecione um ambiente.",
                     "Atenção",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
@@ -102,9 +110,13 @@ namespace Quetzal.Desktop.UserControls
                 return;
             }
 
+            bool estaAtivo = swAtivo.Checked;
+            string acao = estaAtivo ? "desativar" : "reativar";
+            string titulo = estaAtivo ? "Confirmar desativação" : "Confirmar reativação";
+
             DialogResult resultado = MessageBox.Show(
-                "Deseja realmente desativar este ambiente?",
-                "Confirmar desativação",
+                $"Deseja realmente {acao} este ambiente?",
+                titulo,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
@@ -113,15 +125,47 @@ namespace Quetzal.Desktop.UserControls
 
             try
             {
-                DesativarAmbiente();
+                btnDesativar.Enabled = false;
+
+                var resposta = estaAtivo
+                    ? await _apiAmbiente.DesativarAsync(_ambienteSelecionadoId.Value)
+                    : await _apiAmbiente.ReativarAsync(_ambienteSelecionadoId.Value);
+
+                if (resposta?.Sucesso == true)
+                {
+                    MessageBox.Show(
+                        resposta.Mensagem ?? (estaAtivo
+                            ? "Ambiente desativado com sucesso!"
+                            : "Ambiente reativado com sucesso!"),
+                        "Sucesso",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+
+                    await CarregarAmbientes();
+                    LimparFormulario();
+                }
+                else
+                {
+                    MessageBox.Show(
+                        resposta?.Mensagem ?? (estaAtivo
+                            ? "Não foi possível desativar o ambiente."
+                            : "Não foi possível reativar o ambiente."),
+                        "Atenção",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    $"Ocorreu um erro ao desativar o ambiente.\n\n{ex.Message}",
+                    $"Ocorreu um erro ao {(estaAtivo ? "desativar" : "reativar")} o ambiente.\n\n{ex.Message}",
                     "Erro",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btnDesativar.Enabled = true;
             }
         }
 
@@ -182,6 +226,10 @@ namespace Quetzal.Desktop.UserControls
                 swAtivo.Checked =
                     Convert.ToBoolean(linha.Cells["colAtivo"].Value);
             }
+
+            btnDesativar.Text = swAtivo.Checked
+                ? "🗑️ Desativar Ambiente"
+                : "♻️ Reativar Ambiente";
         }
 
         private async Task CriarAmbiente()
@@ -215,31 +263,51 @@ namespace Quetzal.Desktop.UserControls
             }
         }
 
-        private void AtualizarAmbiente()
+        private async Task AtualizarAmbienteAsync()
         {
-            // A integração com a API será colocada aqui.
+            if (_ambienteSelecionadoId == null)
+                return;
 
-            MessageBox.Show(
-                "Ambiente pronto para ser atualizado.",
-                "Sucesso",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            var dto = new CriarAmbienteDto
+            {
+                Nome = txtNome.Text.Trim(),
+                Descricao = txtDescricao.Text.Trim()
+            };
 
-            CarregarAmbientes();
-        }
+            try
+            {
+                var resposta = await _apiAmbiente.AtualizarAsync(
+                    _ambienteSelecionadoId.Value,
+                    dto);
 
-        private void DesativarAmbiente()
-        {
-            // A integração com a API será colocada aqui.
+                if (resposta?.Sucesso == true)
+                {
+                    MessageBox.Show(
+                        resposta.Mensagem ?? "Ambiente atualizado com sucesso!",
+                        "Sucesso",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
 
-            MessageBox.Show(
-                "Ambiente pronto para ser desativado.",
-                "Sucesso",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
-
-            CarregarAmbientes();
-            LimparFormulario();
+                    await CarregarAmbientes();
+                    LimparFormulario();
+                }
+                else
+                {
+                    MessageBox.Show(
+                        resposta?.Mensagem ?? "Não foi possível atualizar o ambiente.",
+                        "Atenção",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Ocorreu um erro ao atualizar o ambiente.\n\n{ex.Message}",
+                    "Erro",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
 
         private async Task CarregarAmbientes()

@@ -48,7 +48,11 @@ namespace Quetzal.Infrastructure.Repositorios
 
         public async Task AtualizarAsync(ProjetoC projetoC)
         {
-            _context.ProjetoC.Update(projetoC);
+            // _context.ProjetoC.Update(projetoC);
+
+            // O projeto já foi carregado pelo mesmo DbContext
+            // e, portanto, já está sendo rastreado pelo EF Core.
+
 
             await _context.SaveChangesAsync();
         }

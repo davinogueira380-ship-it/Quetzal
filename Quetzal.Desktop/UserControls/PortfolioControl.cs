@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -105,8 +105,9 @@ namespace Quetzal.Desktop.UserControls
 
         private async Task CarregarAmbientesAsync()
         {
+            // Para novos portfolios, somente ambientes ativos devem ser selecionáveis.
             _listaAmbientes =
-                await _apiAmbiente.ObterTodasAsync();
+                await _apiAmbiente.ObterTodasAsync(incluirInativas: false);
 
             cmbAmbiente.Items.Clear();
 
