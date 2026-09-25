@@ -4,7 +4,7 @@
     // modelo próprio em vez de receber List<AmbienteViewModel> direto.
     public class HomeViewModel
     {
-        public List<AmbienteViewModel> Ambientes { get; set; } = new();
+        public List<PortfolioViewModel> Portfolios { get; set; } = new();
         public List<ImagemCarrosselViewModel> ImagensCarrossel { get; set; } = new();
     }
 
