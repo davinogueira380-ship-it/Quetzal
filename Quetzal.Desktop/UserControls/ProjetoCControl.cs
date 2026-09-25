@@ -421,8 +421,18 @@ namespace Quetzal.Desktop.UserControls
 
                 if (_fotosDoProjeto.Count > 0)
                 {
-                    lstFotos.SelectedIndex =
-                        _fotosDoProjeto.Count - 1;
+                    int ultimoIndice = _fotosDoProjeto.Count - 1;
+
+                    lstFotos.SelectedIndex = ultimoIndice;
+
+                    var fotoSelecionada = _fotosDoProjeto[ultimoIndice];
+
+                    if (fotoSelecionada.Imagem != null)
+                    {
+                        picPreviewFoto.Image = fotoSelecionada.Imagem;
+                        picPreviewFoto.SizeMode = PictureBoxSizeMode.Zoom;
+                        picPreviewFoto.Refresh();
+                    }
                 }
             }
             catch (Exception ex)
@@ -446,18 +456,7 @@ namespace Quetzal.Desktop.UserControls
 
             for (int i = 0; i < _fotosDoProjeto.Count; i++)
             {
-                var foto = _fotosDoProjeto[i];
-
-                if (string.IsNullOrWhiteSpace(
-                    foto.CaminhoArquivo))
-                {
-                    lstFotos.Items.Add(
-                        $"Foto {i + 1}");
-                }
-                else
-                {
-                    lstFotos.Items.Add(foto);
-                }
+                lstFotos.Items.Add($"Foto {i + 1}");
             }
         }
 

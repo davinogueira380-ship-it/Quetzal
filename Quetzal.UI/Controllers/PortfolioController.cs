@@ -44,7 +44,8 @@ namespace Quetzal.UI.Controllers
                         .Select(f => new PortfolioFotoViewModel
                         {
                             ProjetoCFotoId = f.ProjetoCFotoId,
-                            Foto = f.Foto,
+                            // Foto = f.Foto, foi trocado pelo codigo abaixo Kelly 24-09
+                            Foto = PrepararImagemParaExibicao(f.Foto),
                             Ordem = f.Ordem
                         })
                         .ToList(),
@@ -63,7 +64,39 @@ namespace Quetzal.UI.Controllers
 
             return View(viewModel);
         }
+        private static string PrepararImagemParaExibicao(string? foto) // metodo adicionado Kelly 24-09
+        {
+            if (string.IsNullOrWhiteSpace(foto))
+                return string.Empty;
 
+            // Já é uma imagem Base64 pronta para o navegador.
+            if (foto.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase))
+                return foto;
+
+            // É um caminho/URL de imagem já existente, por exemplo:
+            // /uploads/projetos/foto.jpg
+            if (foto.StartsWith("/") ||
+                foto.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                foto.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            {
+                return foto;
+            }
+
+            // Caso contrário, tratamos como Base64 puro vindo da Desktop.
+            // Detecta o tipo mais comum pelo início do Base64.
+            string tipoImagem;
+
+            if (foto.StartsWith("iVBOR", StringComparison.Ordinal))
+                tipoImagem = "image/png";
+            else if (foto.StartsWith("UklGR", StringComparison.Ordinal))
+                tipoImagem = "image/webp";
+            else if (foto.StartsWith("Qk", StringComparison.Ordinal))
+                tipoImagem = "image/bmp";
+            else
+                tipoImagem = "image/jpeg";
+
+            return $"data:{tipoImagem};base64,{foto}";
+        }
         public class AmbienteApiModelo
         {
             public int Id { get; set; }
