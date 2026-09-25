@@ -1,4 +1,5 @@
 @model HomeViewModel
+@using System.Text.Json
 @{
     ViewData["Title"] = "Início";
 }
@@ -17,38 +18,99 @@
     </div>
 </section>
 
-<section id="ambientes">
+<section id="portfolio">
     <div class="container">
-        <h2>Ambientes</h2>
-        <p class="ambientes-descricao">Selecione um ambiente para conhecer nosso portfólio.</p>
 
-        @if (!Model.Ambientes.Any())
+        <div class="apresentacao">
+            <h2>Portfólio</h2>
+            <p>Conheça alguns dos nossos projetos.</p>
+        </div>
+
+        @if (!Model.Portfolios.Any())
         {
-            <p class="text-center">Em breve, novos ambientes por aqui.</p>
+            <p class="text-center py-5">Em breve, novos projetos por aqui.</p>
         }
         else
         {
-            <div class="row gy-4 Galeria">
-                @foreach (var ambiente in Model.Ambientes)
-                {
-                    <div class="col-12 col-lg-6">
-                        <a asp-controller="Portfolio" asp-action="Ambiente" asp-route-ambienteId="@ambiente.Id">
-                            @if (!string.IsNullOrWhiteSpace(ambiente.ImagemUpload))
-                            {
-                                <img class="img-fluid" src="@ambiente.ImagemUpload" alt="@ambiente.Nome">
-                            }
-                                else
-                                {
-                                    <div class="imagem-placeholder">
-                                     <span class="icone">🖼️</span>
-                                     <span class="texto">Foto em breve</span>
+            @for (var i = 0; i < Model.Portfolios.Count; i++)
+            {
+                var item = Model.Portfolios[i];
+                var par = i % 2 == 0;
+
+                // Capa = primeira foto selecionada (por Ordem); cai para ImagemUpload em registros antigos.
+                var fotosPortfolio = item.FotosSelecionadas.Any()
+                    ? item.FotosSelecionadas.OrderBy(f => f.Ordem).Select(f => f.Foto).ToList()
+                    : (!string.IsNullOrWhiteSpace(item.ImagemUpload) ? new List<string> { item.ImagemUpload! } : new List<string>());
+                var capaUrl = fotosPortfolio.FirstOrDefault();
+                var fotosJson = JsonSerializer.Serialize(fotosPortfolio);
+
+                <ul>
+                    <li>
+                        @if (par)
+                        {
+                            <div class="row gy-4 Projeto1">
+                                <div class="col-12 col-lg-6">
+                                    @if (capaUrl != null)
+                                    {
+                                        <div class="portfolio-capa" onclick="abrirGaleriaPortfolio(this)"
+                                             data-fotos="@fotosJson" data-nome="@item.NomeProjeto" tabindex="0"
+                                             role="button" aria-label="Ver galeria de @item.NomeProjeto"
+                                             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirGaleriaPortfolio(this);}">
+                                            <img src="@capaUrl" alt="@item.NomeProjeto" loading="lazy">
+                                            <span class="portfolio-capa-dica">Ver galeria</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="imagem-placeholder">
+                                            <span class="icone">🖼️</span>
+                                            <span class="texto">Foto em breve</span>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="col-12 col-lg-6">
+                                    <div class="texto1">
+                                        <h1>@item.NomeProjeto</h1>
+                                        <p>@item.Descricao</p>
                                     </div>
-                                }
-                                <span>@ambiente.Nome</span>
-                        </a>
-                    </div>
-                }
-            </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row gy-4 Projeto2">
+                                <div class="col-12 col-lg-6 order-2 order-lg-1">
+                                    <div class="texto2">
+                                        <h1>@item.NomeProjeto</h1>
+                                        <p>@item.Descricao</p>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-lg-6 order-1 order-lg-2">
+                                    @if (capaUrl != null)
+                                    {
+                                        <div class="portfolio-capa" onclick="abrirGaleriaPortfolio(this)"
+                                             data-fotos="@fotosJson" data-nome="@item.NomeProjeto" tabindex="0"
+                                             role="button" aria-label="Ver galeria de @item.NomeProjeto"
+                                             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();abrirGaleriaPortfolio(this);}">
+                                            <img src="@capaUrl" alt="@item.NomeProjeto" loading="lazy">
+                                            <span class="portfolio-capa-dica">Ver galeria</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="imagem-placeholder">
+                                            <span class="icone">🖼️</span>
+                                            <span class="texto">Foto em breve</span>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </li>
+                </ul>
+            }
         }
     </div>
 </section>
@@ -182,3 +244,24 @@
         }
     </div>
 </section>
+
+<!-- Galeria em miniaturas de um portfólio, aberta ao clicar na capa da seção #portfolio -->
+<div class="galeria-portfolio-overlay" id="galeriaPortfolioOverlay" onclick="fecharGaleriaPortfolio()">
+    <div class="galeria-portfolio-conteudo" onclick="event.stopPropagation()">
+        <button type="button" class="galeria-portfolio-fechar" onclick="fecharGaleriaPortfolio()"
+                aria-label="Fechar galeria">&times;</button>
+        <h3 id="galeriaPortfolioTitulo"></h3>
+        <div class="galeria-portfolio-miniaturas" id="galeriaPortfolioMiniaturas"></div>
+    </div>
+</div>
+
+<!-- Imagem ampliada ao clicar em uma miniatura -->
+<div class="galeria-portfolio-ampliada" id="galeriaPortfolioAmpliada" onclick="fecharImagemAmpliada()">
+    <button type="button" class="galeria-portfolio-fechar-ampliada" onclick="fecharImagemAmpliada()"
+            aria-label="Fechar imagem">&times;</button>
+    <button type="button" class="galeria-portfolio-seta galeria-portfolio-seta-esquerda"
+            onclick="event.stopPropagation(); mudarImagemAmpliada(-1)" aria-label="Foto anterior">&#10094;</button>
+    <img id="galeriaPortfolioImagemAmpliada" src="" alt="">
+    <button type="button" class="galeria-portfolio-seta galeria-portfolio-seta-direita"
+            onclick="event.stopPropagation(); mudarImagemAmpliada(1)" aria-label="Próxima foto">&#10095;</button>
+</div>

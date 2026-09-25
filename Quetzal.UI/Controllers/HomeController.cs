@@ -18,43 +18,45 @@ namespace Quetzal.UI.Controllers
         // Landing page pública do site
         public async Task<IActionResult> Index()
         {
-            // Duas chamadas independentes — dispara as duas e espera juntas,
-            // em vez de uma depois da outra. Corta o tempo de carga quase pela metade.
-            var tarefaAmbientes = _api.GetAsync<List<AmbienteApiModelo>>("api/Ambiente");
-            var tarefaCarrossel = _api.GetAsync<List<PortfolioApiModelo>>("api/Portfolio");
+            var respostaPortfolio = await _api.GetAsync<List<PortfolioApiModelo>>("api/Portfolio");
 
-            await Task.WhenAll(tarefaAmbientes, tarefaCarrossel);
-
-            var respostaAmbientes = await tarefaAmbientes;
-            var respostaCarrossel = await tarefaCarrossel;
+            var portfoliosOrdenados = respostaPortfolio.Sucesso && respostaPortfolio.Dados != null
+                ? respostaPortfolio.Dados.OrderByDescending(p => p.DataCadastro).ToList()
+                : new List<PortfolioApiModelo>();
 
             var viewModel = new HomeViewModel
             {
-                Ambientes = respostaAmbientes.Sucesso && respostaAmbientes.Dados != null
-                    ? respostaAmbientes.Dados.Select(a => new AmbienteViewModel
-                    {
-                        Id = a.Id,
-                        Nome = a.Nome,
-                        Descricao = a.Descricao,
-                        ImagemUpload = a.ImagemUpload,
-                        Ativo = a.Ativo
-                    }).ToList()
-                    : new List<AmbienteViewModel>(),
+                // Seção #portfolio da Home: mesma estrutura da página Portfolio/Ambiente,
+                // com imagem e texto alternando de lado a cada projeto.
+                Portfolios = portfoliosOrdenados.Select(p => new PortfolioViewModel
+                {
+                    Id = p.Id,
+                    NomeProjeto = p.NomeProjeto,
+                    Descricao = p.Descricao ?? string.Empty,
+                    ImagemUpload = p.ImagemUpload,
+                    DataCadastro = p.DataCadastro,
+                    FotosSelecionadas = p.FotosSelecionadas
+                        .OrderBy(f => f.Ordem)
+                        .Select(f => new PortfolioFotoViewModel
+                        {
+                            ProjetoCFotoId = f.ProjetoCFotoId,
+                            Foto = f.Foto,
+                            Ordem = f.Ordem
+                        })
+                        .ToList()
+                }).ToList(),
 
                 // Pega até 8 fotos publicadas, ordenando primeiro pelos projetos mais recentes.
-                ImagensCarrossel = respostaCarrossel.Sucesso && respostaCarrossel.Dados != null
-                    ? respostaCarrossel.Dados
-                        .OrderByDescending(p => p.DataCadastro)
-                        .SelectMany(p => p.FotosSelecionadas
-                            .OrderBy(f => f.Ordem)
-                            .Select(f => new ImagemCarrosselViewModel
-                            {
-                                Url = f.Foto,
-                                TextoAlternativo = p.NomeProjeto
-                            }))
-                        .Take(8)
-                        .ToList()
-                    : new List<ImagemCarrosselViewModel>()
+                ImagensCarrossel = portfoliosOrdenados
+                    .SelectMany(p => p.FotosSelecionadas
+                        .OrderBy(f => f.Ordem)
+                        .Select(f => new ImagemCarrosselViewModel
+                        {
+                            Url = f.Foto,
+                            TextoAlternativo = p.NomeProjeto
+                        }))
+                    .Take(8)
+                    .ToList()
             };
 
             return View(viewModel);
@@ -104,21 +106,12 @@ namespace Quetzal.UI.Controllers
             return View();
         }
 
-        // -> corresponde a AmbienteDto na API
-        public class AmbienteApiModelo
-        {
-            public int Id { get; set; }
-            public string Nome { get; set; } = string.Empty;
-            public string? Descricao { get; set; }
-            public bool Ativo { get; set; }
-            public string? ImagemUpload { get; set; }
-        }
-
-        // -> corresponde a PortfolioDto na API — só o que o carrossel precisa
+        // -> corresponde a PortfolioDto na API
         public class PortfolioApiModelo
         {
             public int Id { get; set; }
             public string NomeProjeto { get; set; } = string.Empty;
+            public string? Descricao { get; set; }
             public string? ImagemUpload { get; set; }
             public List<PortfolioFotoApiModelo> FotosSelecionadas { get; set; } = new();
             public DateTime DataCadastro { get; set; }
