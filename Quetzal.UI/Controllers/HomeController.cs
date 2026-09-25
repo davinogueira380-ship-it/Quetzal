@@ -40,7 +40,8 @@ namespace Quetzal.UI.Controllers
                         .Select(f => new PortfolioFotoViewModel
                         {
                             ProjetoCFotoId = f.ProjetoCFotoId,
-                            Foto = f.Foto,
+                            // Foto = f.Foto, - Kelly 24/09linha substituida pela abaixo para aparecer desktop no imagem no site
+                            Foto = PrepararImagemParaExibicao(f.Foto),
                             Ordem = f.Ordem
                         })
                         .ToList()
@@ -52,7 +53,8 @@ namespace Quetzal.UI.Controllers
                         .OrderBy(f => f.Ordem)
                         .Select(f => new ImagemCarrosselViewModel
                         {
-                            Url = f.Foto,
+                            // Url = f.Foto, - kelly 24/09 linha substituida pela abaixo para aparecer desktop no imagem no site
+                            Url = PrepararImagemParaExibicao(f.Foto),
                             TextoAlternativo = p.NomeProjeto
                         }))
                     .Take(8)
@@ -61,8 +63,38 @@ namespace Quetzal.UI.Controllers
 
             return View(viewModel);
         }
+        private static string PrepararImagemParaExibicao(string? foto)
+        {
+            if (string.IsNullOrWhiteSpace(foto))
+                return string.Empty;
 
-        
+            // Já está pronta para o navegador
+            if (foto.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase))
+                return foto;
+
+            // Já é um caminho ou URL
+            if (foto.StartsWith("/") ||
+                foto.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                foto.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            {
+                return foto;
+            }
+
+            // Base64 puro: identifica o tipo da imagem
+            string tipoImagem;
+
+            if (foto.StartsWith("iVBOR", StringComparison.Ordinal))
+                tipoImagem = "image/png";
+            else if (foto.StartsWith("UklGR", StringComparison.Ordinal))
+                tipoImagem = "image/webp";
+            else if (foto.StartsWith("Qk", StringComparison.Ordinal))
+                tipoImagem = "image/bmp";
+            else
+                tipoImagem = "image/jpeg";
+
+            return $"data:{tipoImagem};base64,{foto}";
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
