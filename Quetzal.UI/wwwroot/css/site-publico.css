@@ -500,6 +500,59 @@ html {
         text-align: center;
     }
 /* #endregion */
+/* #region filtro por ambiente (Home) */
+#filtro-ambientes {
+    background-color: var(--clr-tertiary);
+    padding: 0.5rem 0;
+}
+
+.linha-fade {
+    height: 1px;
+    width: 70%;
+    max-width: 480px;
+    margin: 0 auto;
+    background: linear-gradient(to right, transparent, var(--clr-quaternary) 50%, transparent);
+}
+
+.filtro-ambientes-conteudo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem 1rem;
+    padding: 1.25rem 0;
+    text-align: center;
+}
+
+.filtro-ambientes-label {
+    font-weight: 600;
+    color: var(--clr-quaternary);
+    white-space: nowrap;
+}
+
+.filtro-ambientes-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    justify-content: center;
+}
+
+.filtro-ambiente-link {
+    display: inline-block;
+    padding: 0.3rem 0.9rem;
+    border: 1px solid var(--clr-quaternary);
+    border-radius: 20px;
+    color: var(--clr-quaternary);
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: background 0.25s ease, color 0.25s ease;
+}
+
+    .filtro-ambiente-link:hover {
+        background: var(--clr-quaternary);
+        color: white;
+    }
+/* #endregion */
 /* #region sobremim */
 #sobremim {
     background: #fbead6;

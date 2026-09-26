@@ -2,6 +2,12 @@
 @using System.Text.Json
 @{
     ViewData["Title"] = "Início";
+
+    // Fotos de um portfólio, por Ordem; cai para ImagemUpload em registros antigos.
+    List<string> FotosDoPortfolio(PortfolioViewModel p) =>
+        p.FotosSelecionadas.Any()
+            ? p.FotosSelecionadas.OrderBy(f => f.Ordem).Select(f => f.Foto).ToList()
+            : (!string.IsNullOrWhiteSpace(p.ImagemUpload) ? new List<string> { p.ImagemUpload! } : new List<string>());
 }
 @* <head>
     <link rel="stylesheet" href="~/css/site-publico.css">
@@ -38,13 +44,11 @@
                 var par = i % 2 == 0;
 
                 // Capa = primeira foto selecionada (por Ordem); cai para ImagemUpload em registros antigos.
-                var fotosPortfolio = item.FotosSelecionadas.Any()
-                    ? item.FotosSelecionadas.OrderBy(f => f.Ordem).Select(f => f.Foto).ToList()
-                    : (!string.IsNullOrWhiteSpace(item.ImagemUpload) ? new List<string> { item.ImagemUpload! } : new List<string>());
+                var fotosPortfolio = FotosDoPortfolio(item);
                 var capaUrl = fotosPortfolio.FirstOrDefault();
                 var fotosJson = JsonSerializer.Serialize(fotosPortfolio);
 
-                <ul>
+                <ul data-ambiente="@item.AmbienteNome">
                     <li>
                         @if (par)
                         {
@@ -114,6 +118,39 @@
         }
     </div>
 </section>
+
+@if (Model.AmbientesFiltro.Any())
+{
+    var fotosTodos = Model.Portfolios.SelectMany(FotosDoPortfolio).ToList();
+    var fotosTodosJson = JsonSerializer.Serialize(fotosTodos);
+
+    <section id="filtro-ambientes">
+        <div class="linha-fade"></div>
+
+        <div class="container filtro-ambientes-conteudo">
+            <span class="filtro-ambientes-label">Filtre por ambiente:</span>
+
+            <div class="filtro-ambientes-links">
+                <a href="#" class="filtro-ambiente-link" data-fotos="@fotosTodosJson" data-nome="Todos os projetos"
+                   onclick="event.preventDefault(); abrirGaleriaPortfolio(this)">Todos</a>
+
+                @foreach (var ambiente in Model.AmbientesFiltro)
+                {
+                    var fotosAmbiente = Model.Portfolios
+                        .Where(p => p.AmbienteNome == ambiente)
+                        .SelectMany(FotosDoPortfolio)
+                        .ToList();
+                    var fotosAmbienteJson = JsonSerializer.Serialize(fotosAmbiente);
+
+                    <a href="#" class="filtro-ambiente-link" data-fotos="@fotosAmbienteJson" data-nome="@ambiente"
+                       onclick="event.preventDefault(); abrirGaleriaPortfolio(this)">@ambiente</a>
+                }
+            </div>
+        </div>
+
+        <div class="linha-fade"></div>
+    </section>
+}
 
 @*<section id="contato">
     <div class="Contato">
