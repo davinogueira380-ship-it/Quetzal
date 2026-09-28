@@ -7,7 +7,7 @@
     <h1>Portfólio</h1>
 
     <a asp-action="Criar" class="btn-admin-primario">
-        <i class="fa-solid fa-plus"></i> Novo projeto
+        <i class="fa-solid fa-plus"></i> Novo portfólio
     </a>
 </div>
 
@@ -64,7 +64,7 @@
                                 @if (item.Ativo)
                                 {
                                     <form asp-action="Desativar" asp-route-id="@item.Id" method="post" class="d-inline">
-                                        <button type="submit" class="btn-admin-secundario"
+                                        <button type="submit" class="btn-admin-status"
                                                 onclick="return confirm('Desativar este projeto do portfólio?');">
                                             <i class="fa-solid fa-eye-slash"></i> Desativar
                                         </button>
@@ -73,7 +73,7 @@
                                 else
                                 {
                                     <form asp-action="Reativar" asp-route-id="@item.Id" method="post" class="d-inline">
-                                        <button type="submit" class="btn-admin-secundario"
+                                        <button type="submit" class="btn-admin-status"
                                                 onclick="return confirm('Reativar este projeto?');">
                                             <i class="fa-solid fa-eye"></i> Reativar
                                         </button>

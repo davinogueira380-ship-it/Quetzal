@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quetzal.UI.Infraestrutura;
@@ -11,6 +11,9 @@ namespace Quetzal.UI.Areas.Admin.Controllers
     //[Authorize(Roles = "Admin,Operador")]
     public class ProjetoCController : Controller
     {
+        private const string MensagemProjetoNoPortfolio =
+            "Não é possível modificar um projeto enquanto ele estiver no portfólio público do site.";
+
         private readonly ApiCliente _api;
         private readonly ServicoUpload _upload;
 
@@ -216,7 +219,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
 
             if (!resposta.Sucesso)
             {
-                AdicionarErrosDaApi(resposta.Erros, resposta.Mensagem);
+                AdicionarErrosDaApi(resposta.Erros, MensagemDeErro(resposta));
                 await PreencherClientes(viewModel);
                 await PreencherFotosExistentes(viewModel, id);
                 return View(viewModel);
@@ -234,7 +237,7 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             var resposta = await _api.DeleteAsync<object>($"api/ProjetoC/{id}/desativar");
 
             TempData[resposta.Sucesso ? "MensagemSucesso" : "MensagemErro"] =
-                resposta.Sucesso ? "Projeto desativado." : resposta.Mensagem;
+                resposta.Sucesso ? "Projeto desativado." : MensagemDeErro(resposta);
 
             return RedirectToAction(nameof(Index));
         }
@@ -265,10 +268,17 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             TempData[resposta.Sucesso ? "MensagemSucesso" : "MensagemErro"] =
                 resposta.Sucesso
                     ? "Projeto excluído permanentemente."
-                    : resposta.Mensagem;
+                    : MensagemDeErro(resposta);
 
             return RedirectToAction(nameof(Index));
         }
+
+        // Falhas HTTP sem corpo padronizado (409/500) ocorrem quando a API bloqueia
+        // a operação porque o projeto/imagens estão em uso no portfólio público.
+        private static string MensagemDeErro<T>(ApiResposta<T> resposta)
+            => resposta.CodigoHttp is 409 or 500
+                ? MensagemProjetoNoPortfolio
+                : resposta.Mensagem ?? string.Empty;
 
         private async Task PreencherClientes(
             ProjetoCEdicaoViewModel viewModel)

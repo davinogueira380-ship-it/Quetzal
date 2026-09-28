@@ -1,13 +1,23 @@
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat-Regular.ttf') format('truetype');
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+
 /* #region global */
 /* usar asterisco na frente das chaves indica a edição na página inteira */
 
 /* 1. Trava o overflow horizontal global da página */
 html,
 body {
+    font-family: 'Montserrat', sans-serif;
     max-width: 100%;
     overflow-x: hidden;
     margin: 0;
     padding: 0;
+    background-color: var(--clr-fundo);
 }
 
 /* 2. Impede que imagens ou divs estourem a largura dos contêineres */
@@ -17,22 +27,30 @@ img {
 }
 
 * {
-    font-family: Montserrat;
+    font-family: 'Montserrat';
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     scroll-behavior: smooth;
 
     h2 {
-        color: #6b7556;
-        font-size: 4rem;
+        color: var(--clr-secondary);
+        /*  color: var(--clr-quaternary); */
+        font-size: 60px; /* Título */
         text-align: center;
         font-weight: 800;
     }
 
     p {
         color: black;
-        font-size: 2rem;
+        font-size: 19px; /* Texto Regular */
+        font-weight: 400;
+
+        strong,
+        b {
+            font-size: 18px; /* Texto Semibold */
+            font-weight: 600;
+        }
     }
 
     ul,
@@ -44,10 +62,14 @@ img {
 
 :root {
     --clr-primary: #F0C4CB;
-    --clr-secondary: #C87D87;
-    --clr-tertiary: #FBEAD6;
-    --clr-quaternary: #6B7556;
+    --clr-secondary: #C97D87;   /* rosa principal mais forte */
+    --clr-tertiary: #FBEAD6;    /* header e footer */
+    --clr-quaternary: #6B7455;  /* verde principal */
     --clr-quinary: #E5BCA9;
+    --clr-fundo: #FEFBF7;       /* bege claro do fundo / frame */
+    --clr-marrom: #9C9289;      /* marrom detalhe */
+    --clr-excluir: #D44C4C;     /* vermelho botão excluir */
+    --clr-status: rgba(255, 178, 178, 0.38); /* vermelho ativar/desativar/status */
 }
 
 html {
@@ -70,8 +92,9 @@ html {
 .topo {
     width: 100%;
     min-height: 100vh;
-    background: url('../img/hero-bg.jpg');
-    background-color: var(--clr-quinary);
+    background: url('../img/cliente-amplo.jpg');
+    background-color: var(--clr-fundo);
+   /* background-color: var(--clr-quinary); */
     background-position: center;
     background-size: cover;
     background-attachment: fixed;
@@ -84,7 +107,7 @@ html {
     justify-content: flex-start;
     align-items: center;
     padding: 0rem 2rem;
-    background-color: var(--clr-quinary);
+    background-color: var(--clr-tertiary);
     width: 100%;
     backdrop-filter: blur(1px);
     gap: 15rem;
@@ -106,6 +129,7 @@ html {
         width: 65px;
         height: auto;
         transition: all 0.3s ease;
+        filter: brightness(0) saturate(100%) invert(43%) sepia(12%) saturate(700%) hue-rotate(40deg) brightness(90%);
     }
 
     a:hover img {
@@ -118,6 +142,7 @@ html {
         width: 42px;
         height: auto;
         transition: all 0.3s ease;
+        filter: brightness(0) saturate(100%) invert(43%) sepia(12%) saturate(700%) hue-rotate(40deg) brightness(90%);
     }
 
     a:hover img {
@@ -144,19 +169,21 @@ html {
     display: flex;
     gap: 2rem;
 
+
+
     li a {
-        color: #FFFFFF;
+        color: var(--clr-quaternary);
         text-decoration: none;
-        font-family: sans-serif;
-        font-weight: 600;
-        font-size: 1.5rem;
-        transition: color 0.6s ease;
+        font-weight: 500; /* Texto Header Site Medium */
+        font-size: 26px;
+        transition: all 0.3s ease;
         display: inline-block;
         white-space: nowrap;
 
+
         &:hover {
-            color: var(--clr-quaternary);
             transform: scale(1.15);
+            font-weight: 550;
         }
     }
 }
@@ -218,14 +245,14 @@ html {
 
 
 
-:root {
+/*:root {
     --cor-primaria: #f0c4cb;
-    --cor-secudaria: #c87d87;
+    --cor-secudaria: #c97d87;
     --cor-fundo: #fbead6;
-    --cor-terciaria: #6b7556;
+    --cor-terciaria: #6b7455;
 }
 
-/* Botão Enviar do formulário */
+/* Botão Enviar do formulário 
 .btnDefault {
     padding: 2rem 3rem;
     border: 1px solid var(--cor-secudaria);
@@ -234,7 +261,7 @@ html {
     font-weight: 500;
     border-radius: 10px;
     transition: all .3s;
-    text-decoration-line: none;
+    text-decoration-line: none; 
 
     &:hover {
         cursor: pointer;
@@ -244,7 +271,7 @@ html {
     }
 }
 
-/* Botao whatsapp do formulário */
+/* Botao whatsapp do formulário 
 .btnWhatsapp {
     padding: 2rem 3rem;
     border: 1px solid var(--cor-secudaria);
@@ -261,13 +288,13 @@ html {
         background-color: var(--cor-secudaria);
         color: black;
     }
-}
+} */
 
 /* #endregion */
 
 /* #region inicio */
 #inicio {
-    background-color: var(--clr-quinary);
+    background-color: var(--clr-fundo);
     text-align: center;
     margin-top: 0%;
     width: 100%;
@@ -388,7 +415,7 @@ html {
 /* #endregion */
 /* #region portifolio */
 #portfolio {
-    background-color: var(--clr-tertiary);
+    background-color: var(--clr-fundo);
     padding-top: 3vh;
     padding-bottom: 3vh;
 }
@@ -479,7 +506,7 @@ html {
 /* Botões projeto */
 #portfolio .btnDefault1,
 #portfolio .btnDefault2 {
-    background-color: #6b7556;
+    background-color: #6B7455;
     color: white;
     padding: 12px 20px;
     font-size: 16px;
@@ -493,7 +520,7 @@ html {
     #portfolio .btnDefault1:hover,
     #portfolio .btnDefault2:hover {
         font-size: 16px;
-        color: #6b7556;
+        color: #6B7455;
         background: #e5bca9;
         padding: 12px 20px;
         transition: .5s;
@@ -502,7 +529,7 @@ html {
 /* #endregion */
 /* #region filtro por ambiente (Home) */
 #filtro-ambientes {
-    background-color: var(--clr-tertiary);
+    background-color: var(--clr-fundo);
     padding: 0.5rem 0;
 }
 
@@ -511,7 +538,7 @@ html {
     width: 70%;
     max-width: 480px;
     margin: 0 auto;
-    background: linear-gradient(to right, transparent, var(--clr-quaternary) 50%, transparent);
+    background: linear-gradient(to right, transparent, var(--clr-secondary) 50%, transparent);
 }
 
 .filtro-ambientes-conteudo {
@@ -526,7 +553,7 @@ html {
 
 .filtro-ambientes-label {
     font-weight: 600;
-    color: var(--clr-quaternary);
+    color: var(--clr-secondary);
     white-space: nowrap;
 }
 
@@ -540,22 +567,22 @@ html {
 .filtro-ambiente-link {
     display: inline-block;
     padding: 0.3rem 0.9rem;
-    border: 1px solid var(--clr-quaternary);
+    border: 1px solid var(--clr-secondary);
     border-radius: 20px;
-    color: var(--clr-quaternary);
+    color: var(--clr-secondary);
     font-size: 0.9rem;
     text-decoration: none;
     transition: background 0.25s ease, color 0.25s ease;
 }
 
     .filtro-ambiente-link:hover {
-        background: var(--clr-quaternary);
+        background: var(--clr-secondary);
         color: white;
     }
 /* #endregion */
 /* #region sobremim */
 #sobremim {
-    background: #fbead6;
+    background: var(--clr-fundo);
 }
 
 .sobre-container {
@@ -599,7 +626,7 @@ html {
 /* #endregion */
 /* #region carrosel instagram */
 #instagram {
-    background-color: #fbead6;
+    background-color: var(--clr-fundo);
     padding: 100px 10%;
     text-align: center;
 }
@@ -607,7 +634,7 @@ html {
     #instagram h2 {
         text-align: center;
         margin-bottom: 40px;
-        color: #C87D87;
+        color: #C97D87;
         font-size: 2.5rem;
     }
 
@@ -637,7 +664,7 @@ html {
 
 .seta {
     border: none;
-    background: #6b7556;
+    background: #6B7455;
     color: white;
     width: 50px;
     height: 50px;
@@ -649,7 +676,7 @@ html {
 }
 
     .seta:hover {
-        background: #c87d87;
+        background: #C97D87;
     }
 /* RESPONSIVIDADE */
 
@@ -721,14 +748,14 @@ html {
 
 
 .seta:hover {
-    background: #c87d87;
+    background: #C97D87;
 }
 /* #endregion */
 /* #region contato */
 
 .Contato {
     width: 100%;
-    background-color: var(--clr-tertiary);
+    background-color: var(--clr-fundo);
     gap: 40px;
     padding: 40px;
     align-items: center;
@@ -824,16 +851,16 @@ html {
 /* #region footer */
 
 .footer {
-    background-color: var(--clr-quinary);
+    background-color: var(--clr-tertiary);
     text-align: center;
     overflow: hidden;
 }
 
     .footer p {
         margin-top: 1rem;
-        font-size: 1.2rem;
+        font-size: 24px; /* Texto Footer Regular */
         color: #333;
-        font-weight: 200;
+        font-weight: 400;
     }
 /* #endregion */
 /* #region ajustes para páginas internas (Login, Registro, etc.) */
@@ -851,7 +878,7 @@ html {
     background: none;
     border: none;
     color: #FFFFFF;
-    font-family: sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-weight: 600;
     font-size: 1.5rem;
     cursor: pointer;
@@ -865,7 +892,7 @@ html {
 /* #endregion */
 /* #region formulários de conta (Login/Registro) */
 .pagina-conta {
-    background-color: var(--clr-tertiary);
+    background-color: var(--clr-fundo);
     min-height: calc(100vh - 80px);
     display: flex;
     align-items: center;
@@ -983,7 +1010,7 @@ html {
 /* #endregion */
 /* #region página de portfólio por ambiente */
 .pagina-portfolio-ambiente {
-    background-color: var(--clr-tertiary);
+    background-color: var(--clr-fundo);
     padding: 3rem 0;
     min-height: 60vh;
 }
