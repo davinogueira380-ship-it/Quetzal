@@ -1,4 +1,4 @@
-﻿@model List<UsuarioViewModel>
+@model List<UsuarioViewModel>
 @{
     ViewData["Title"] = "Clientes";
 }
@@ -50,7 +50,7 @@
                             else if (item.Ativo)
                             {
                                 <form asp-action="Desativar" asp-route-id="@item.Id" method="post" class="d-inline">
-                                    <button type="submit" class="btn-admin-secundario"
+                                    <button type="submit" class="btn-admin-status"
                                         onclick="return confirm('Desativar o acesso deste usuário?');">
                                         <i class="fa-solid fa-user-slash"></i> Desativar
                                     </button>
@@ -59,7 +59,7 @@
                             else
                             {
                                 <form asp-action="Ativar" asp-route-id="@item.Id" method="post" class="d-inline">
-                                    <button type="submit" class="btn-admin-secundario"
+                                    <button type="submit" class="btn-admin-status"
                                         onclick="return confirm('Reativar o acesso deste usuário?');">
                                         <i class="fa-solid fa-user-check"></i> Ativar
                                     </button>

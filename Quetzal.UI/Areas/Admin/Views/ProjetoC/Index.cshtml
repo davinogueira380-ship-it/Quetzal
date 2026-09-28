@@ -56,7 +56,7 @@
                                 @if (item.Ativo)
                                 {
                                     <form asp-action="Desativar" asp-route-id="@item.Id" method="post" class="d-inline">
-                                        <button type="submit" class="btn-admin-secundario"
+                                        <button type="submit" class="btn-admin-status"
                                                 onclick="return confirm('Desativar este projeto?');">
                                             <i class="fa-solid fa-eye-slash"></i> Desativar
                                         </button>
@@ -65,7 +65,7 @@
                                 else
                                 {
                                     <form asp-action="Reativar" asp-route-id="@item.Id" method="post" class="d-inline">
-                                        <button type="submit" class="btn-admin-secundario"
+                                        <button type="submit" class="btn-admin-status"
                                                 onclick="return confirm('Reativar este projeto?');">
                                             <i class="fa-solid fa-eye"></i> Reativar
                                         </button>
