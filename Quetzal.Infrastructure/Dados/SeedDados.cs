@@ -16,7 +16,7 @@ namespace Quetzal.Infrastructure.Dados
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
             // Garante que as migrations existentes sejam aplicadas
-            await context.Database.MigrateAsync();
+           // await context.Database.MigrateAsync();
 
             // ================================================================
             // SEED DE IDENTITY
