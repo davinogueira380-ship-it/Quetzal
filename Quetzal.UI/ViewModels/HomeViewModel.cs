@@ -6,6 +6,10 @@
     {
         public List<PortfolioViewModel> Portfolios { get; set; } = new();
         public List<ImagemCarrosselViewModel> ImagensCarrossel { get; set; } = new();
+
+        // Nomes distintos de ambiente entre os portfólios exibidos, usados
+        // nos links de filtro logo abaixo da seção #portfolio.
+        public List<string> AmbientesFiltro { get; set; } = new();
     }
 
     public class ImagemCarrosselViewModel

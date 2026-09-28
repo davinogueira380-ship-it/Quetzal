@@ -34,6 +34,7 @@ namespace Quetzal.UI.Controllers
                     NomeProjeto = p.NomeProjeto,
                     Descricao = p.Descricao ?? string.Empty,
                     ImagemUpload = p.ImagemUpload,
+                    AmbienteNome = p.AmbienteNome ?? string.Empty,
                     DataCadastro = p.DataCadastro,
                     FotosSelecionadas = p.FotosSelecionadas
                         .OrderBy(f => f.Ordem)
@@ -58,6 +59,15 @@ namespace Quetzal.UI.Controllers
                             TextoAlternativo = p.NomeProjeto
                         }))
                     .Take(8)
+                    .ToList(),
+
+                // Só os ambientes que têm projeto publicado aparecem no filtro.
+                AmbientesFiltro = portfoliosOrdenados
+                    .Select(p => p.AmbienteNome)
+                    .Where(nome => !string.IsNullOrWhiteSpace(nome))
+                    .Select(nome => nome!)
+                    .Distinct()
+                    .OrderBy(nome => nome)
                     .ToList()
             };
 
@@ -94,6 +104,10 @@ namespace Quetzal.UI.Controllers
 
             return $"data:{tipoImagem};base64,{foto}";
         }
+
+
+
+
 
 
         [HttpPost]
@@ -145,6 +159,7 @@ namespace Quetzal.UI.Controllers
             public string NomeProjeto { get; set; } = string.Empty;
             public string? Descricao { get; set; }
             public string? ImagemUpload { get; set; }
+            public string? AmbienteNome { get; set; }
             public List<PortfolioFotoApiModelo> FotosSelecionadas { get; set; } = new();
             public DateTime DataCadastro { get; set; }
         }

@@ -19,6 +19,10 @@
         // Util para exibir multiplos erros de formulario ao usuario
         public List<string> Erros { get; set; } = new List<string>();
 
+        // Codigo HTTP quando a falha veio de um status de erro sem corpo padronizado
+        // (ex: 409 Conflict, 500). Nulo quando nao ha erro HTTP.
+        public int? CodigoHttp { get; set; }
+
         // Metodo estatico auxiliar para criar uma resposta de sucesso sem dados
         // Util para operacoes como deletar que nao retornam objeto
         public static ApiResposta<T> Ok(string mensagem = "Operacao realizada com sucesso.")
@@ -42,12 +46,13 @@
         }
 
         // Metodo estatico auxiliar para criar uma resposta de erro
-        public static ApiResposta<T> Falha(string mensagem)
+        public static ApiResposta<T> Falha(string mensagem, int? codigoHttp = null)
         {
             return new ApiResposta<T>
             {
                 Sucesso = false,
-                Mensagem = mensagem
+                Mensagem = mensagem,
+                CodigoHttp = codigoHttp
             };
         }
     }

@@ -54,7 +54,9 @@ public class ApiCliente
                 return resultado ?? ApiResposta<T>.Falha("Resposta vazia da API.");
             }
 
-            return ApiResposta<T>.Falha($"Erro HTTP: {(int)resposta.StatusCode} {resposta.StatusCode}");
+            return ApiResposta<T>.Falha(
+                $"Erro HTTP: {(int)resposta.StatusCode} {resposta.StatusCode}",
+                (int)resposta.StatusCode);
         }
         catch (Exception ex)
         {

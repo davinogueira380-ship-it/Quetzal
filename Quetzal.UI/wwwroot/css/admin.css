@@ -1,22 +1,35 @@
+@font-face {
+  font-family: 'Montserrat';
+  src: url('../fonts/Montserrat-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 /* Painel Admin -- mesma identidade visual do site público (cores, fonte,
    botões), mas em layout funcional: sidebar + conteúdo + tabelas/formulários.
    Reaproveita as mesmas variáveis de cor definidas em site-publico.css. */
 
 :root {
   --clr-primary: #F0C4CB;
-  --clr-secondary: #C87D87;
-  --clr-tertiary: #FBEAD6;
-  --clr-quaternary: #6B7556;
+  --clr-secondary: #C97D87;   /* rosa principal mais forte */
+  --clr-tertiary: #FBEAD6;    /* header e footer */
+  --clr-quaternary: #6B7455;  /* verde principal */
   --clr-quinary: #E5BCA9;
+  --clr-fundo: #FEFBF7;       /* bege claro do fundo / frame */
+  --clr-marrom: #9C9289;      /* marrom detalhe */
+  --clr-excluir: #D44C4C;     /* vermelho botão excluir */
+  --clr-status: rgba(255, 178, 178, 0.38); /* vermelho ativar/desativar/status */
 }
 
 * {
-  font-family: bahnschrift, sans-serif;
+  font-family: 'Montserrat';
   box-sizing: border-box;
 }
 
 body.admin-body {
-  background-color: var(--clr-tertiary);
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--clr-fundo);
   margin: 0;
   min-height: 100vh;
 }
@@ -158,16 +171,16 @@ body.admin-body {
 
 .btn-admin-perigo {
   padding: 0.5rem 1.1rem;
-  border: 1px solid #b23b3b;
+  border: 1px solid var(--clr-excluir);
   background: transparent;
-  color: #b23b3b;
+  color: var(--clr-excluir);
   font-weight: 500;
   border-radius: 10px;
   transition: all .3s;
 }
 
 .btn-admin-perigo:hover {
-  background-color: #b23b3b;
+  background-color: var(--clr-excluir);
   color: white;
 }
 
@@ -258,7 +271,8 @@ body.admin-body {
 }
 
 .btn-admin-secundario,
-.btn-admin-perigo {
+.btn-admin-perigo,
+.btn-admin-status {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -286,13 +300,25 @@ body.admin-body {
     }
 
 .btn-admin-perigo {
-    border: 1px solid #b23b3b;
+    border: 1px solid var(--clr-excluir);
     background: transparent;
-    color: #b23b3b;
+    color: var(--clr-excluir);
 }
 
     .btn-admin-perigo:hover {
-        background-color: #b23b3b;
+        background-color: var(--clr-excluir);
+        color: white;
+    }
+
+/* Ativar / Desativar (toggle de status, mais suave que o Excluir) */
+.btn-admin-status {
+    border: 1px solid var(--clr-excluir);
+    background: var(--clr-status);
+    color: var(--clr-excluir);
+}
+
+    .btn-admin-status:hover {
+        background-color: var(--clr-excluir);
         color: white;
     }
 /* ── Formulários de Criar/Editar ── */
@@ -358,8 +384,8 @@ body.admin-body {
 }
 
 .badge-admin-inativo {
-  background-color: #e0e0e0;
-  color: #616161;
+  background-color: var(--clr-status);
+  color: var(--clr-excluir);
   padding: 0.3rem 0.7rem;
   border-radius: 20px;
   font-size: 0.8rem;
@@ -382,7 +408,7 @@ body.admin-body {
 
 .admin-alerta-erro {
   background-color: #fbe1e1;
-  color: #b23b3b;
+  color: var(--clr-excluir);
 }
 
 /* ── Responsivo ── */
@@ -615,8 +641,8 @@ body.admin-body {
 .foto-preview-excluir {
   width: 100%;
   margin-top: .75rem;
-  border-color: #b23b3b;
-  background: #b23b3b;
+  border-color: var(--clr-excluir);
+  background: var(--clr-excluir);
   color: white;
 }
 
