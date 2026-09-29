@@ -3,23 +3,65 @@
     ViewData["Title"] = "Meu Projeto";
 }
 
-<div class="container pt-4">
-    <p class="saudacao-cliente">Olá, @User.Identity?.Name! Aqui está o andamento do seu projeto.</p>
-</div>
-
 <div class="pagina-meu-projeto">
     <div class="container">
 
-        <div class="meu-projeto-capa">
-            @if (!string.IsNullOrWhiteSpace(Model.ImagemUpload))
-            {
-                <img src="@Model.ImagemUpload" alt="@Model.Nome">
-            }
-            <div class="conteudo">
-                <h1>@Model.Nome</h1>
-                <p>@Model.Descricao</p>
-            </div>
+        <div class="cabecalho-meu-projeto">
+            <h2>Meu Projeto</h2>
+            <p class="saudacao-cliente">Olá, @User.Identity?.Name! Aqui está o andamento do seu projeto.</p>
         </div>
+
+        <article class="card-meu-projeto">
+            <h1>@Model.Nome</h1>
+
+            <div class="atualizacoes-projeto">
+                <h3>Últimas atualizações:</h3>
+                @if (!string.IsNullOrWhiteSpace(Model.Descricao))
+                {
+                    <p>@Model.Descricao</p>
+                }
+                else
+                {
+                    <p class="sem-atualizacoes">Ainda não há atualizações publicadas para o seu projeto.</p>
+                }
+            </div>
+
+            @if (Model.Fotos.Any())
+            {
+                <div class="galeria-meu-projeto" id="galeriaMeuProjeto" data-nome="@Model.Nome">
+                    @for (var i = 0; i < Model.Fotos.Count; i++)
+                    {
+                        var indice = i;
+                        <button type="button" class="galeria-meu-projeto-item"
+                                onclick="abrirFotoProjeto(this, @indice)"
+                                aria-label="Ampliar foto @(indice + 1) de @Model.Fotos.Count">
+                            <img src="@Model.Fotos[i]" alt="@Model.Nome - foto @(indice + 1)" loading="lazy">
+                        </button>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="imagem-placeholder">
+                    <span class="icone">🖼️</span>
+                    <span class="texto">Fotos em breve</span>
+                </div>
+            }
+        </article>
 
     </div>
 </div>
+
+@if (Model.Fotos.Any())
+{
+    <!-- Imagem ampliada (mesma do site público) -->
+    <div class="galeria-portfolio-ampliada" id="galeriaPortfolioAmpliada" onclick="fecharImagemAmpliada()">
+        <button type="button" class="galeria-portfolio-fechar-ampliada" onclick="fecharImagemAmpliada()"
+                aria-label="Fechar imagem">&times;</button>
+        <button type="button" class="galeria-portfolio-seta galeria-portfolio-seta-esquerda"
+                onclick="event.stopPropagation(); mudarImagemAmpliada(-1)" aria-label="Foto anterior">&#10094;</button>
+        <img id="galeriaPortfolioImagemAmpliada" src="" alt="">
+        <button type="button" class="galeria-portfolio-seta galeria-portfolio-seta-direita"
+                onclick="event.stopPropagation(); mudarImagemAmpliada(1)" aria-label="Próxima foto">&#10095;</button>
+    </div>
+}

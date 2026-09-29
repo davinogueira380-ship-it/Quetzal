@@ -273,10 +273,13 @@ namespace Quetzal.UI.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Falhas HTTP sem corpo padronizado (409/500) ocorrem quando a API bloqueia
-        // a operação porque o projeto/imagens estão em uso no portfólio público.
+        // Quando a API bloqueia a operação porque o projeto/imagens estão em uso no
+        // portfólio público, ela responde com um status HTTP de erro sem o corpo
+        // padronizado. O ApiCliente marca essas falhas com CodigoHttp (401 já tem
+        // mensagem própria e não passa por aqui), então trocamos o texto técnico
+        // "Erro HTTP: ..." pela mensagem amigável.
         private static string MensagemDeErro<T>(ApiResposta<T> resposta)
-            => resposta.CodigoHttp is 409 or 500
+            => resposta.CodigoHttp.HasValue
                 ? MensagemProjetoNoPortfolio
                 : resposta.Mensagem ?? string.Empty;
 

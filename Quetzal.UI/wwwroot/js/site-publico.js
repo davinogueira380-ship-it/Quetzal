@@ -179,6 +179,23 @@ function fecharImagemAmpliada() {
     }
 }
 
+// Área do cliente: abre a foto ampliada a partir da galeria do projeto.
+// Lê as <img> do próprio container (evita duplicar Base64 em atributos).
+function abrirFotoProjeto(botao, indice) {
+    var galeria = botao.closest('.galeria-meu-projeto');
+    if (!galeria) {
+        return;
+    }
+
+    var nome = galeria.getAttribute('data-nome') || '';
+    galeriaPortfolioFotos = Array.prototype.map.call(
+        galeria.querySelectorAll('img'),
+        function (img) { return img.getAttribute('src'); }
+    );
+    galeriaPortfolioNome = nome;
+    ampliarImagemPortfolio(indice);
+}
+
 // Esc fecha primeiro a imagem ampliada e, se não houver, a galeria de miniaturas.
 // Setas do teclado trocam a foto enquanto a imagem ampliada estiver aberta.
 document.addEventListener('keydown', function (evento) {

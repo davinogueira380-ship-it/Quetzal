@@ -171,7 +171,8 @@ html {
 
 
 
-    li a {
+    li a,
+    .link-sair {
         color: var(--clr-quaternary);
         text-decoration: none;
         font-weight: 500; /* Texto Header Site Medium */
@@ -245,52 +246,6 @@ html {
 
 
 
-/*:root {
-    --cor-primaria: #f0c4cb;
-    --cor-secudaria: #c97d87;
-    --cor-fundo: #fbead6;
-    --cor-terciaria: #6b7455;
-}
-
-/* Botão Enviar do formulário 
-.btnDefault {
-    padding: 2rem 3rem;
-    border: 1px solid var(--cor-secudaria);
-    background: var(--cor-terciaria);
-    color: white;
-    font-weight: 500;
-    border-radius: 10px;
-    transition: all .3s;
-    text-decoration-line: none; 
-
-    &:hover {
-        cursor: pointer;
-        border: 1px solid var(--cor-terciaria);
-        background-color: var(--cor-secudaria);
-        color: black;
-    }
-}
-
-/* Botao whatsapp do formulário 
-.btnWhatsapp {
-    padding: 2rem 3rem;
-    border: 1px solid var(--cor-secudaria);
-    background: var(--cor-terciaria);
-    color: white;
-    font-weight: 500;
-    border-radius: 10px;
-    transition: all .3s;
-    text-decoration-line: none;
-
-    &:hover {
-        cursor: pointer;
-        border: 1px solid var(--cor-terciaria);
-        background-color: var(--cor-secudaria);
-        color: black;
-    }
-} */
-
-/* #endregion */
 
 /* #region inicio */
 #inicio {
@@ -1343,6 +1298,142 @@ body.sem-scroll {
 
     .galeria-portfolio-miniaturas {
         grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+}
+/* #endregion */
+
+/* #region área do cliente (Meu Projeto) */
+.pagina-meu-projeto {
+    background-color: var(--clr-fundo);
+    padding: 3rem 0 4rem;
+    min-height: 60vh;
+}
+
+.cabecalho-meu-projeto {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+    .cabecalho-meu-projeto h2 {
+        font-size: 2.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .cabecalho-meu-projeto .saudacao-cliente {
+        margin-bottom: 0;
+        font-size: 1.15rem;
+    }
+
+.card-meu-projeto {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 2.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+    .card-meu-projeto h1 {
+        color: var(--clr-quaternary);
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+    }
+
+.atualizacoes-projeto {
+    margin-bottom: 2rem;
+}
+
+    .atualizacoes-projeto h3 {
+        color: var(--clr-secondary);
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.6rem;
+    }
+
+    .atualizacoes-projeto p {
+        font-size: 1.1rem;
+        font-weight: 300;
+        line-height: 1.6;
+        text-align: justify;
+        white-space: pre-line;
+    }
+
+    .atualizacoes-projeto .sem-atualizacoes {
+        color: #666;
+        font-style: italic;
+        text-align: left;
+    }
+
+.galeria-meu-projeto {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.galeria-meu-projeto-item {
+    padding: 0;
+    border: none;
+    background: var(--clr-tertiary);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: zoom-in;
+    aspect-ratio: 4 / 3;
+}
+
+    .galeria-meu-projeto-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.3s ease;
+    }
+
+    .galeria-meu-projeto-item:hover img,
+    .galeria-meu-projeto-item:focus-visible img {
+        transform: scale(1.05);
+    }
+
+    .galeria-meu-projeto-item:focus-visible {
+        outline: 3px solid var(--clr-quaternary);
+        outline-offset: 2px;
+    }
+
+.sem-projeto-wrapper {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 3rem 2rem;
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+    .sem-projeto-wrapper .icone-sem-projeto {
+        display: block;
+        font-size: 2.5rem;
+        line-height: 1;
+        margin-bottom: 1rem;
+    }
+
+    .sem-projeto-wrapper h3 {
+        color: var(--clr-quaternary);
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+    }
+
+@media (max-width: 575.98px) {
+    .cabecalho-meu-projeto h2 {
+        font-size: 2rem;
+    }
+
+    .card-meu-projeto {
+        padding: 1.5rem;
+    }
+
+    .galeria-meu-projeto {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     }
 }
 /* #endregion */
