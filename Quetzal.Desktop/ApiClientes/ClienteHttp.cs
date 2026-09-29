@@ -10,7 +10,11 @@ namespace Quetzal.Desktop.ApiClientes
 {
     public abstract class ClienteHttp
     {
-        private const string UrlBase = "https://app-quet-api-eadkehdndch5fmdz.brazilsouth-01.azurewebsites.net";
+        // Base URL agora configurável via variável de ambiente QUETZAL_API_BASEURL
+        // Ex.: https://seu-app-service.azurewebsites.net
+        private static readonly string UrlBase =
+            Environment.GetEnvironmentVariable("QUETZAL_API_BASEURL")
+            ?? "http://localhost:5090";
 
         //private const string UrlBase = "http://localhost:5277";
 
