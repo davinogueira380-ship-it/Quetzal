@@ -37,11 +37,45 @@ namespace Quetzal.UI.Areas.Cliente.Controllers
                 Nome = dados.Nome,
                 Descricao = dados.Descricao,
                 // A API devolve a lista de fotos ordenada; a capa é a primeira.
-                ImagemUpload = dados.Fotos.FirstOrDefault(),
+                ImagemUpload = PrepararImagemParaExibicao(dados.Fotos.FirstOrDefault()),
+                Fotos = dados.Fotos
+                    .Where(f => !string.IsNullOrWhiteSpace(f))
+                    .Select(PrepararImagemParaExibicao)
+                    .ToList(),
                 Ativo = dados.Ativo
             };
 
             return View(viewModel);
+        }
+
+        // Mesma regra usada no site público: aceita Base64, caminho relativo ou URL.
+        private static string PrepararImagemParaExibicao(string? foto)
+        {
+            if (string.IsNullOrWhiteSpace(foto))
+                return string.Empty;
+
+            if (foto.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase))
+                return foto;
+
+            if (foto.StartsWith("/") ||
+                foto.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                foto.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            {
+                return foto;
+            }
+
+            string tipoImagem;
+
+            if (foto.StartsWith("iVBOR", StringComparison.Ordinal))
+                tipoImagem = "image/png";
+            else if (foto.StartsWith("UklGR", StringComparison.Ordinal))
+                tipoImagem = "image/webp";
+            else if (foto.StartsWith("Qk", StringComparison.Ordinal))
+                tipoImagem = "image/bmp";
+            else
+                tipoImagem = "image/jpeg";
+
+            return $"data:{tipoImagem};base64,{foto}";
         }
 
         // ── Modelos auxiliares para mapear a comunicação com a API ──
