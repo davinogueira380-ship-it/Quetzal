@@ -35,7 +35,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "index.html",
-      "applicationUrl": "http://localhost:5090",
+      "applicationUrl": "https://app-squetzal-api-fkcrfpbbf0bzdqf3.brazilsouth-01.azurewebsites.net",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -45,7 +45,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "index.html",
-      "applicationUrl": "http://localhost:5089",
+      "applicationUrl": "https://app-squetzal-api-fkcrfpbbf0bzdqf3.brazilsouth-01.azurewebsites.net",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
