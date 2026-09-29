@@ -1,8 +1,16 @@
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Quetzal.Application.Mapeamentos;
 using Quetzal.Application.Servicos.Implementacoes;
 using Quetzal.Application.Servicos.Interfaces;
 using Quetzal.Infrastructure;
 using Quetzal.Infrastructure.Dados;
+using Quetzal.Application.Servicos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +22,36 @@ builder.Services.AdicionarServicosDeInfraestrutura(
     builder.Configuration);
 
 builder.Services.AddDataProtection();
+
+// ================================================================
+// AUTENTICAÇÃO JWT DA API
+// ================================================================
+
+var jwtChave = builder.Configuration["Jwt:Chave"]
+    ?? throw new InvalidOperationException("Jwt:Chave não foi configurada.");
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Emissor"],
+        ValidAudience = builder.Configuration["Jwt:Audiencia"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwtChave)),
+        RoleClaimType = ClaimTypes.Role,
+        NameClaimType = ClaimTypes.Name,
+        ClockSkew = TimeSpan.Zero
+    };
+});
 
 // ================================================================
 // CONTROLLERS
@@ -82,7 +120,7 @@ var app = builder.Build();
 // ================================================================
 
 app.UseSwagger();
-app.UseSwaggerUI(c=>
+app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Quetzal API V1");
     c.RoutePrefix = string.Empty; // Define o Swagger como a página inicial
@@ -92,7 +130,7 @@ app.UseSwaggerUI(c=>
 // HTTPS
 // ================================================================
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 // ================================================================
 // AUTENTICAÇÃO E AUTORIZAÇÃO
@@ -121,5 +159,4 @@ using (var scope = app.Services.CreateScope())
 // ================================================================
 
 app.Run();
-
 

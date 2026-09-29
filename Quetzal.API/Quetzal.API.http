@@ -1,4 +1,4 @@
-@Quetzal.API_HostAddress = https://app-squetzal-api-fkcrfpbbf0bzdqf3.brazilsouth-01.azurewebsites.net
+@Quetzal.API_HostAddress = http://localhost:5090
 
 GET {{Quetzal.API_HostAddress}}/weatherforecast/
 Accept: application/json
