@@ -10,47 +10,25 @@ namespace Quetzal.Desktop.ApiClientes
 {
     public abstract class ClienteHttp
     {
-        // Base URL agora configurável via variável de ambiente QUETZAL_API_BASEURL
-        // Ex.: https://seu-app-service.azurewebsites.net
-        private static readonly string UrlBase =
-            Environment.GetEnvironmentVariable("QUETZAL_API_BASEURL")
-            ?? "https://app-quetzal-api-gch4cgdsdnethcg6.brazilsouth-01.azurewebsites.net";
-
-        // Se definir QUETZAL_HTTP_DISABLE_PROXY=1 desabilita proxy para HttpClient
-        private static readonly bool DisableProxy =
-            Environment.GetEnvironmentVariable("QUETZAL_HTTP_DISABLE_PROXY") == "1";
-
-        // Em ambientes de desenvolvimento, pode ser útil desabilitar validação de certificado
-        // definindo QUETZAL_DEBUG_DISABLE_CERT_VALIDATION=1 (NÃO RECOMENDADO em produção)
-        private static readonly bool DisableCertValidation =
-            Environment.GetEnvironmentVariable("QUETZAL_DEBUG_DISABLE_CERT_VALIDATION") == "1";
+        private const string UrlBase = "https://app-quetzal-api-gch4cgdsdnethcg6.brazilsouth-01.azurewebsites.net";
 
         private static readonly HttpClient _httpClient = CriarHttpClient();
 
         private static HttpClient CriarHttpClient()
         {
-            var handler = new HttpClientHandler();
-
-            if (DisableProxy)
+            var handler = new HttpClientHandler
             {
-                handler.UseProxy = false;
-                handler.Proxy = null;
-            }
-
-            if (DisableCertValidation)
-            {
-                // Somente para debug local com certificados autoassinados
-                handler.ServerCertificateCustomValidationCallback =
-                    (mensagem, cert, chain, erros) => true;
-            }
+                ServerCertificateCustomValidationCallback =
+                    (mensagem, cert, chain, erros) => true
+            };
 
             var cliente = new HttpClient(handler)
             {
-                BaseAddress = new Uri(UrlBase),
-                Timeout = TimeSpan.FromSeconds(30)
+                BaseAddress = new Uri(UrlBase)
             };
 
             cliente.DefaultRequestHeaders.Accept.Clear();
+
             cliente.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
