@@ -32,8 +32,27 @@ builder.Services.AddScoped<IUsuarioServico, UsuarioServico>();
 // ================================================================
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Quetzal API",
+        Version = "v1",
+        Description = "API REST do sistema Quetzal — Catálogo de Games para ensino de ASP.NET Core"
+    });
+});
+// =====================================================================
+// 6. CORS — Permite requisições de outras origens
+// =====================================================================
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 // ================================================================
 // AUTOMAPPER
 // ================================================================
@@ -67,7 +86,11 @@ var app = builder.Build();
 // ================================================================
 
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c=>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Quetzal API V1");
+    c.RoutePrefix = string.Empty; // Define o Swagger como a página inicial
+});
 
 // ================================================================
 // HTTPS

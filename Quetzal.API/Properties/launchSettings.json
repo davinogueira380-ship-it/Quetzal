@@ -6,7 +6,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5275",
+      "applicationUrl": "http://app-quetzal-api-gch4cgdsdnethcg6.brazilsouth-01.azurewebsites.net",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -16,7 +16,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7064;http://localhost:5275",
+      "applicationUrl": "https://localhost:7064;http://app-quetzal-api-gch4cgdsdnethcg6.brazilsouth-01.azurewebsites.net",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
