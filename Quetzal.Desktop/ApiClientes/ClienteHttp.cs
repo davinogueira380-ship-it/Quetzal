@@ -10,7 +10,9 @@ namespace Quetzal.Desktop.ApiClientes
 {
     public abstract class ClienteHttp
     {
-        private const string UrlBase = "https://app-quetzal-api-gch4cgdsdnethcg6.brazilsouth-01.azurewebsites.net";
+        private const string UrlBase = "https://app-quet-api-eadkehdndch5fmdz.brazilsouth-01.azurewebsites.net";
+
+        //private const string UrlBase = "http://localhost:5277";
 
         private static readonly HttpClient _httpClient = CriarHttpClient();
 

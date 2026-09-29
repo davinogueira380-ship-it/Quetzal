@@ -4,11 +4,40 @@
     ViewData["Title"] = "Início";
 
     // Fotos de um portfólio, por Ordem; cai para ImagemUpload em registros antigos.
+    // List<string> FotosDoPortfolio(PortfolioViewModel p) =>
+    //     p.FotosSelecionadas.Any()
+    //         ? p.FotosSelecionadas.OrderBy(f => f.Ordem).Select(f => f.Foto).ToList()
+    //         : (!string.IsNullOrWhiteSpace(p.ImagemUpload) ? new List<string> { p.ImagemUpload! } : new List<string>());
+
+    // Fotos de um portfólio, por Ordem; cai para ImagemUpload em registros antigos.
+
+// trecho acima foi alterado 29-09 para reduzir foto 
+
     List<string> FotosDoPortfolio(PortfolioViewModel p) =>
         p.FotosSelecionadas.Any()
-            ? p.FotosSelecionadas.OrderBy(f => f.Ordem).Select(f => f.Foto).ToList()
-            : (!string.IsNullOrWhiteSpace(p.ImagemUpload) ? new List<string> { p.ImagemUpload! } : new List<string>());
+            ? p.FotosSelecionadas
+                .OrderBy(f => f.Ordem)
+                .Select(f =>
+                    f.Foto.StartsWith("data:image", StringComparison.OrdinalIgnoreCase)
+                        ? f.Foto
+                        : $"data:image/jpeg;base64,{f.Foto}")
+                .ToList()
+            : (!string.IsNullOrWhiteSpace(p.ImagemUpload)
+                ? new List<string> { p.ImagemUpload! }
+                : new List<string>());
+
+
+
+
+
+
+
+
+
 }
+
+
+
 @* <head>
     <link rel="stylesheet" href="~/css/site-publico.css">
 </head> *@
