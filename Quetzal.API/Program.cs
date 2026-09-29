@@ -1,12 +1,8 @@
-
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Quetzal.Application.Mapeamentos;
 using Quetzal.Application.Servicos.Implementacoes;
 using Quetzal.Application.Servicos.Interfaces;
 using Quetzal.Infrastructure;
 using Quetzal.Infrastructure.Dados;
-using Quetzal.Application.Servicos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -125,4 +121,5 @@ using (var scope = app.Services.CreateScope())
 // ================================================================
 
 app.Run();
+
 

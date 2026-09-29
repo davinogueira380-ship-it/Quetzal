@@ -22,4 +22,6 @@
     <ProjectReference Include="..\Quetzal.Infrastructure\Quetzal.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="https://moonrepo.dev/schemas/v2/tasks.json" /></VisualStudio></ProjectExtensions>
+
 </Project>
