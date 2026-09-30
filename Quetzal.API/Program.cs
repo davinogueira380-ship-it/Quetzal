@@ -66,15 +66,8 @@ builder.Services.AddScoped<IUsuarioServico, UsuarioServico>();
 // ================================================================
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-    {
-        Title = "Quetzal API",
-        Version = "v1",
-        Description = "API REST do sistema Quetzal — Catálogo de Games para ensino de ASP.NET Core"
-    });
-});
+builder.Services.AddSwaggerGen();
+
 // =====================================================================
 // 6. CORS — Permite requisições de outras origens
 // =====================================================================
@@ -120,17 +113,19 @@ var app = builder.Build();
 // ================================================================
 
 app.UseSwagger();
-app.UseSwaggerUI(c =>
+app.UseSwaggerUI((c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Quetzal API V1");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SenacFlix API V1");
     c.RoutePrefix = string.Empty; // Define o Swagger como a página inicial
-});
+}));
+
+app.UseCors("AllowAll");
 
 // ================================================================
 // HTTPS
 // ================================================================
 
-//app.UseHttpsRedirection();
+
 
 // ================================================================
 // AUTENTICAÇÃO E AUTORIZAÇÃO
@@ -151,7 +146,15 @@ app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
-    await SeedDados.InicializarAsync(scope.ServiceProvider);
+    try
+    {
+        await SeedDados.InicializarAsync(scope.ServiceProvider);
+    }
+    catch (Exception ex)
+    {
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Erro ao inicializar o banco de dados.");
+    }
 }
 
 // ================================================================

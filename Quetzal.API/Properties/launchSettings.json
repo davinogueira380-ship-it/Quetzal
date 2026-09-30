@@ -1,41 +1,12 @@
-﻿//{
-//  "$schema": "https://json.schemastore.org/launchsettings.json",
-//  "profiles": {
-//    "http": {
-//      "commandName": "Project",
-//      "dotnetRunMessages": true,
-//      "launchBrowser": true,
-//      "launchUrl": "swagger",
-//      "applicationUrl": "http://app-quetzal-api-gch4cgdsdnethcg6.brazilsouth-01.azurewebsites.net",
-//      "environmentVariables": {
-//        "ASPNETCORE_ENVIRONMENT": "Development"
-//      }
-//    },
-//    "https": {
-//      "commandName": "Project",
-//      "dotnetRunMessages": true,
-//      "launchBrowser": true,
-//      "launchUrl": "swagger",
-//      "applicationUrl": "https://localhost:7064;http://app-quetzal-api-gch4cgdsdnethcg6.brazilsouth-01.azurewebsites.net",
-//      "environmentVariables": {
-//        "ASPNETCORE_ENVIRONMENT": "Development"
-//      }
-//    }
-//  }
-//}
-
-// CODIGO ABAIXA ADICIONADO PARA RODAR LOCALMENTE A API, POIS O LINK DA API NAO ESTA FUNCIONANDO
-
-
-{
+﻿{
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
     "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "index.html",
-      "applicationUrl": "https://app-squetzal-api-fkcrfpbbf0bzdqf3.brazilsouth-01.azurewebsites.net",
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5275",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -44,8 +15,8 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "index.html",
-      "applicationUrl": "https://app-squetzal-api-fkcrfpbbf0bzdqf3.brazilsouth-01.azurewebsites.net",
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7064;http://localhost:5275",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
